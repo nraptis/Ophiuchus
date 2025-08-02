@@ -293,8 +293,11 @@ struct GenerateChunks {
     
     static func generate_flexer() -> SkeletonChunkFlexer {
         let flexer = _generate_flexer()
+        return generate_flexer(flexer: flexer)
+    }
+    
+    static func generate_flexer(flexer: Flexer) -> SkeletonChunkFlexer {
         let alignment = GenerateAlignment.generate_alignment()
-        
         let id = id_queue.sync {
             let id = GenerateChunks.chunk_id
             GenerateChunks.chunk_id += 1

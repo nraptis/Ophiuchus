@@ -158,6 +158,11 @@ public class SkeletonRow: CustomStringConvertible {
     func snap_minimum_after_children_ready(menuWidthWithSafeArea: Int,
                                            safeAreaLeft: Int,
                                            safeAreaRight: Int) {
+        
+        _menuWidthWithSafeArea = menuWidthWithSafeArea
+        _safeAreaLeft = safeAreaLeft
+        _safeAreaRight = safeAreaRight
+        
         max_size = menuWidthWithSafeArea - safeAreaLeft - safeAreaRight
         max_size_2 = (max_size / 2)
         
@@ -246,6 +251,19 @@ public class SkeletonRow: CustomStringConvertible {
         } else {
             return false
         }
+    }
+    
+    func getGrowPlan_Flexer(flexers: [Flexer]) -> [SectionAndAmount] {
+        
+        //TODO: Sanity check:
+        for flexer in flexers {
+            guard flexer.row === self else {
+                fatalError("This flexer is not for this row...")
+            }
+        }
+        
+        return [SectionAndAmount(section: sections[0], amount: 1)]
+        
     }
     
     struct SectionAndAmount {
