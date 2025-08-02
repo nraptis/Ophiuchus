@@ -1,0 +1,126 @@
+//
+//  SkeletonSection.swift
+//  Ophiuchus
+//
+//  Created by Nick on 7/3/25.
+//
+
+import Foundation
+
+public class SkeletonSection: ExploderConforming {
+    
+    public var current_size = 0
+    public var children_size = 0
+    public var didGrowOnCurrentPass = false
+    
+    public let id: Int
+    
+    var skeletonNodes = [SkeletonNode]()
+    let layoutNodes: [WiseLayoutNode]
+    let alignment: LayoutAlignment
+    
+    unowned var row: SkeletonRow!
+    unowned var group_unsafe: ExploderGroup<SkeletonSection>!
+    unowned var group: ExploderGroup<SkeletonSection>!
+    
+    public var x = 0
+    public var width = 0
+    
+    var isLeftOfCenter = false
+    var indexInRow = -1
+    
+    init(id: Int,
+         layoutNodes: [WiseLayoutNode],
+         alignment: LayoutAlignment) {
+        self.id = id
+        self.layoutNodes = layoutNodes
+        self.alignment = alignment
+    }
+    
+    func growChildrenByOne_Unsafe_Bubble() {
+        if children_size < current_size {
+            children_size += 1
+        } else {
+            growByOne_Unsafe_Bubble()
+            children_size = current_size
+        }
+        didGrowOnCurrentPass = true
+    }
+    
+    func growByOne_Unsafe_Bubble() {
+        current_size += 1
+        row.growChildrenByOne_Unsafe(section: self)
+        didGrowOnCurrentPass = true
+    }
+    
+    func computeSize(layoutPriority: LayoutPriority) -> Int {
+        var result = 0
+        for skeletonNode in skeletonNodes {
+            result += skeletonNode.computeSize(layoutPriority: layoutPriority)
+        }
+        return result
+    }
+    
+    public func adopt(layoutStrategy: InterfaceLayoutStrategy) {
+        skeletonNodes.removeAll(keepingCapacity: true)
+        for layoutNode in layoutNodes {
+            skeletonNodes.append(contentsOf: layoutNode.skeletonNodes)
+        }
+    }
+    
+    public func adopt_test() {
+        skeletonNodes.removeAll(keepingCapacity: true)
+        for layoutNode in layoutNodes {
+            skeletonNodes.append(contentsOf: layoutNode.skeletonNodes)
+        }
+    }
+    
+    
+    public func log_me(name: String, row_index: Int, section_index: Int) {
+        print("\t\tSection \(section_index) from row \(row_index) with \(skeletonNodes.count) nodes, from \(name)...")
+        
+    }
+    
+    func position_content_after_size_computation() {
+        var width_of_all_nodes = 0
+        for node in skeletonNodes {
+            width_of_all_nodes += node.current_size
+        }
+        
+        var layout_x = 0
+        switch alignment {
+        case .none, .left:
+            for node in skeletonNodes {
+                node.x = layout_x
+                layout_x += node.current_size
+            }
+        case .center:
+            layout_x = current_size / 2 - width_of_all_nodes / 2
+            if layout_x < 0 { layout_x = 0 }
+            for node in skeletonNodes {
+                node.x = layout_x
+                layout_x += node.current_size
+            }
+        case .right:
+            layout_x = current_size - width_of_all_nodes
+            if layout_x < 0 { layout_x = 0 }
+            for node in skeletonNodes {
+                node.x = layout_x
+                layout_x += node.current_size
+            }
+        }
+        
+        for node in skeletonNodes {
+            node.position_content_after_size_computation()
+        }
+        
+    }
+    
+    func canGrowByOne() -> Bool {
+        if row.canGrowByOne(section: self) {
+            return true
+        }
+        return false
+    }
+    
+}
