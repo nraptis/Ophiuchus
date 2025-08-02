@@ -26,7 +26,7 @@ public enum FlexerIdentifier: UInt8 {
 
 public class Flexer: ExploderConforming {
     
-    public var current_size = 0
+    public var currentSize = 0
     var target_size = 0
     
     let desired_size_required: Int // For example, getting to "squeezed" padding.
@@ -124,16 +124,16 @@ public class Flexer: ExploderConforming {
         }
         if available_space > 0 {
             let desired_size = getDesiredSize(layoutPriority: layoutPriority)
-            let amount_to_ingest = desired_size - current_size
+            let amount_to_ingest = desired_size - currentSize
             if amount_to_ingest > 0 {
                 if amount_to_ingest < available_space {
                     // We take exactly "amount_to_ingest"
-                    current_size += amount_to_ingest
+                    currentSize += amount_to_ingest
                     let result = available_space - amount_to_ingest
                     return result
                 } else {
                     // We take ALL of the "available_space"
-                    current_size += available_space
+                    currentSize += available_space
                     let result = 0
                     return result
                 }
@@ -183,13 +183,13 @@ public class Flexer: ExploderConforming {
     }
     
     func canGrowByOne() -> Bool {
-        if chunk.children_size < chunk.current_size {
+        if chunk.children_size < chunk.currentSize {
             return true
         }
-        if node.children_size < node.current_size {
+        if node.children_size < node.currentSize {
             return true
         }
-        if section.children_size < section.current_size {
+        if section.children_size < section.currentSize {
             return true
         }
         if row.canGrowByOne(section: section) {
@@ -199,7 +199,7 @@ public class Flexer: ExploderConforming {
     }
     
     func growByOne_Unsafe_Bubble() {
-        current_size += 1
+        currentSize += 1
         //node.growChildrenByOne_Unsafe_Bubble()
         chunk.growChildrenByOne_Unsafe_Bubble()
     }

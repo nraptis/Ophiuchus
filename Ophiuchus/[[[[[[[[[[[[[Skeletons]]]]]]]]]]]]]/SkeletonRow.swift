@@ -8,6 +8,7 @@
 import Foundation
 
 enum SkeletonRowInitialLayoutType {
+    case invalid
     case doesNotIncludeCenterSection
     case centerSectionProperlyCentered
     case centerSectionSkewed
@@ -72,8 +73,7 @@ public class SkeletonRow: CustomStringConvertible {
     let sections: [SkeletonSection]
     let attemptedCenteredSection: SkeletonSection?
     var attemptedCenteredSectionIndex = 0
-    var initialLayoutType = SkeletonRowInitialLayoutType.doesNotIncludeCenterSection
-    
+    var initialLayoutType = SkeletonRowInitialLayoutType.invalid
     
     public init() {
         self.sections = []
@@ -172,12 +172,12 @@ public class SkeletonRow: CustomStringConvertible {
             center_size = 0
             for section in sections {
                 if section === attemptedCenteredSection {
-                    center_size = section.current_size
+                    center_size = section.currentSize
                 } else {
                     if section.isLeftOfCenter == true {
-                        left_size += section.current_size
+                        left_size += section.currentSize
                     } else {
-                        right_size += section.current_size
+                        right_size += section.currentSize
                     }
                 }
             }
@@ -189,7 +189,7 @@ public class SkeletonRow: CustomStringConvertible {
         } else {
             children_size = 0
             for section in sections {
-                children_size += section.current_size
+                children_size += section.currentSize
             }
             remaining_size = max_size - children_size
             initialLayoutType = .doesNotIncludeCenterSection
@@ -265,6 +265,114 @@ public class SkeletonRow: CustomStringConvertible {
         return [SectionAndAmount(section: sections[0], amount: 1)]
         
     }
+    
+    func canAcceptAllGrowthPlansSimultaneously(growthPlans: [GrowthPlan],
+                                               menuWidthWithSafeArea: Int,
+                                               safeAreaLeft: Int,
+                                               safeAreaRight: Int) -> Bool {
+        for growthPlan in growthPlans {
+            guard growthPlan.row === self else {
+                fatalError("This growth plan is not for this row...")
+            }
+            if growthPlan.section.indexInRow < 0 {
+                fatalError("Expect indexInRow to be calculated.")
+            }
+            if growthPlan.section.indexInRow >= sections.count {
+                fatalError("Expect indexInRow to be in range, it's \(growthPlan.section.indexInRow) of \(sections.count).")
+            }
+            if let attemptedCenteredSection = attemptedCenteredSection {
+                if attemptedCenteredSectionIndex < 0 {
+                    fatalError("Expecting attemptedCenteredSectionIndex (\(attemptedCenteredSectionIndex)) in range [0..<\(sections.count)]")
+                }
+                if attemptedCenteredSectionIndex >= sections.count {
+                    fatalError("Expecting attemptedCenteredSectionIndex (\(attemptedCenteredSectionIndex)) in range [0..<\(sections.count)]")
+                }
+                for sectionIndex in 0..<sections.count {
+                    if sections[sectionIndex].indexInRow != sectionIndex {
+                        fatalError("Expecting the section index to be accurate, it's not.")
+                    }
+                    if sections[sectionIndex] === attemptedCenteredSection {
+                        if sectionIndex != attemptedCenteredSectionIndex {
+                            fatalError("Expecting the center section to be where I expected it to be...")
+                        }
+                    }
+                }
+            }
+            
+            switch initialLayoutType {
+                
+            case .invalid:
+                fatalError("Cannot have an invalid initial layout type...")
+            case .doesNotIncludeCenterSection:
+                break
+            case .centerSectionProperlyCentered:
+                break
+            case .centerSectionSkewed:
+                break
+            }
+            
+            // End validation loop
+        }
+        
+        switch initialLayoutType {
+        case .centerSectionProperlyCentered:
+            
+            guard let attemptedCenteredSection = attemptedCenteredSection else {
+                fatalError("How can we be \"centerSectionProperlyCentered\" and not have a center section?")
+            }
+            
+            // This is very simplified because we are
+            // operating on *SECTION* instead of spread
+            // out content. So, each section is either
+            // on the left, the right, or is the center.
+            
+            var totalConsumedSizeLeft = 0
+            var totalConsumedSizeCenter = 0
+            var totalConsumedSizeRight = 0
+            
+            for section in sections {
+                if section.indexInRow < attemptedCenteredSectionIndex {
+                    totalConsumedSizeLeft += 1
+                } else if section.indexInRow > attemptedCenteredSectionIndex {
+                    totalConsumedSizeRight += 1
+                } else {
+                    totalConsumedSizeCenter += 1
+                }
+            }
+            
+            for growthPlan in growthPlans {
+                if growthPlan.section.indexInRow < attemptedCenteredSectionIndex {
+                    totalConsumedSizeLeft += growthPlan.amount
+                } else if growthPlan.section.indexInRow > attemptedCenteredSectionIndex {
+                    totalConsumedSizeRight += growthPlan.amount
+                } else {
+                    totalConsumedSizeCenter += growthPlan.amount
+                }
+            }
+            
+            let result = SkeletonRow.isCenterSectionProperlyCentered(leftSize: totalConsumedSizeLeft,
+                                                               centerSize: totalConsumedSizeCenter,
+                                                               rightSize: totalConsumedSizeCenter,
+                                                               menuWidthWithSafeArea: menuWidthWithSafeArea,
+                                                               safeAreaLeft: safeAreaLeft,
+                                                               safeAreaRight: safeAreaRight)
+            return result
+        default:
+            var totalConsumedSize = 0
+            for section in sections {
+                totalConsumedSize += section.currentSize
+            }
+            for growthPlan in growthPlans {
+                totalConsumedSize += growthPlan.amount
+            }
+            if totalConsumedSize > (menuWidthWithSafeArea - safeAreaLeft - safeAreaRight) {
+                return false
+            } else {
+                return true
+            }
+        }
+    }
+    
     
     struct SectionAndAmount {
         let section: SkeletonSection
@@ -496,7 +604,7 @@ public class SkeletonRow: CustomStringConvertible {
                 if section !== attemptedCenteredSection {
                     if section.isLeftOfCenter == true {
                         leftSections.append(section)
-                        leftSections_totalWidth += section.current_size
+                        leftSections_totalWidth += section.currentSize
                     }
                 }
             }
@@ -507,7 +615,7 @@ public class SkeletonRow: CustomStringConvertible {
                     print("[C-Left] Expected section (\(section.x) and \(section.width)) to be at \(section_x)...")
                     return false
                 }
-                section_x += section.current_size
+                section_x += section.currentSize
             }
             
             var rightSections = [SkeletonSection]()
@@ -516,7 +624,7 @@ public class SkeletonRow: CustomStringConvertible {
                 if section !== attemptedCenteredSection {
                     if section.isLeftOfCenter == false {
                         rightSections.append(section)
-                        rightSections_totalWidth += section.current_size
+                        rightSections_totalWidth += section.currentSize
                     }
                 }
             }
@@ -525,10 +633,10 @@ public class SkeletonRow: CustomStringConvertible {
             if attemptedCenteredSection.x == possible_center_x_case_1 {
                 
                 // This case is valid, it means that we are crammed to the left section...
-                section_x += attemptedCenteredSection.current_size
+                section_x += attemptedCenteredSection.currentSize
             } else {
                 
-                let possible_center_x_case_2 = safeAreaLeft + max_size_2 - (attemptedCenteredSection.current_size / 2)
+                let possible_center_x_case_2 = safeAreaLeft + max_size_2 - (attemptedCenteredSection.currentSize / 2)
                 if possible_center_x_case_2 < possible_center_x_case_1 {
                     // This shouldn't be possible
                     print("possible_center_x_case_2 < possible_center_x_case_1")
@@ -538,10 +646,10 @@ public class SkeletonRow: CustomStringConvertible {
                 if attemptedCenteredSection.x == possible_center_x_case_2 {
                     // In this case, we are exactly centered.
                     // Generally where we want to be.
-                    section_x = possible_center_x_case_2 + attemptedCenteredSection.current_size
+                    section_x = possible_center_x_case_2 + attemptedCenteredSection.currentSize
                 } else {
                     
-                    let possible_center_x_case_3 = safeAreaLeft + max_size - rightSections_totalWidth - attemptedCenteredSection.current_size
+                    let possible_center_x_case_3 = safeAreaLeft + max_size - rightSections_totalWidth - attemptedCenteredSection.currentSize
                     if possible_center_x_case_3 > possible_center_x_case_2 {
                         // This shouldn't be possible
                         print("possible_center_x_case_3 > possible_center_x_case_2")
@@ -551,7 +659,7 @@ public class SkeletonRow: CustomStringConvertible {
                     
                     if attemptedCenteredSection.x == possible_center_x_case_3 {
                         // This is the crammed-right case...
-                        section_x = possible_center_x_case_3 + attemptedCenteredSection.current_size
+                        section_x = possible_center_x_case_3 + attemptedCenteredSection.currentSize
                     } else {
                         print("none of the center-x cases matched, this is a bad layout!")
                         return false
@@ -583,7 +691,7 @@ public class SkeletonRow: CustomStringConvertible {
                         print("[C-Right-2] Expected section (\(section.x) and \(section.width)) to be at \(section_x)...")
                         return false
                     }
-                    section_x += section.current_size
+                    section_x += section.currentSize
                 }
                 
                 // Finally, we ended at the edge or beyond...
@@ -601,7 +709,7 @@ public class SkeletonRow: CustomStringConvertible {
                     print("[U] Expected section (\(section.x) and \(section.width)) to be at \(section_x)...")
                     return false
                 }
-                section_x += section.current_size
+                section_x += section.currentSize
             }
         }
         

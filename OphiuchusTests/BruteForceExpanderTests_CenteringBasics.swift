@@ -343,22 +343,22 @@ struct BruteForceExpanderTests_CenteringBasics {
     
     func are_all_equal_to_largest(pieces: [SkeletonPiece]) -> Bool {
         if pieces.count < 2 { return true }
-        var largest = pieces[0].current_size
+        var largest = pieces[0].currentSize
         for piece in pieces {
-            if piece.current_size > largest {
-                largest = piece.current_size
+            if piece.currentSize > largest {
+                largest = piece.currentSize
             }
         }
         var all_equal = true
         for piece in pieces {
-            if piece.current_size != largest {
+            if piece.currentSize != largest {
                 all_equal = false
             }
         }
         if !all_equal {
             print("Pieces were *NOT* all equal to \(largest)!")
             for piece in pieces {
-                print("\(piece.id), size = \(piece.current_size)")
+                print("\(piece.id), size = \(piece.currentSize)")
             }
             return false
         }
@@ -367,22 +367,22 @@ struct BruteForceExpanderTests_CenteringBasics {
     
     func are_all_equal_to_largest(chunks: [any SkeletonChunkConforming]) -> Bool {
         if chunks.count < 2 { return true }
-        var largest = chunks[0].current_size
+        var largest = chunks[0].currentSize
         for chunk in chunks {
-            if chunk.current_size > largest {
-                largest = chunk.current_size
+            if chunk.currentSize > largest {
+                largest = chunk.currentSize
             }
         }
         var all_equal = true
         for chunk in chunks {
-            if chunk.current_size != largest {
+            if chunk.currentSize != largest {
                 all_equal = false
             }
         }
         if !all_equal {
             print("Chunks were *NOT* all equal to \(largest)!")
             for chunk in chunks {
-                print("\(chunk.id), size = \(chunk.current_size)")
+                print("\(chunk.id), size = \(chunk.currentSize)")
             }
             return false
         }
@@ -391,22 +391,22 @@ struct BruteForceExpanderTests_CenteringBasics {
     
     func are_all_equal_to_largest(nodes: [SkeletonNode]) -> Bool {
         if nodes.count < 2 { return true }
-        var largest = nodes[0].current_size
+        var largest = nodes[0].currentSize
         for node in nodes {
-            if node.current_size > largest {
-                largest = node.current_size
+            if node.currentSize > largest {
+                largest = node.currentSize
             }
         }
         var all_equal = true
         for node in nodes {
-            if node.current_size != largest {
+            if node.currentSize != largest {
                 all_equal = false
             }
         }
         if !all_equal {
             print("Nodes were *NOT* all equal to \(largest)!")
             for node in nodes {
-                print("\(node.id), size = \(node.current_size)")
+                print("\(node.id), size = \(node.currentSize)")
             }
             return false
         }
@@ -414,22 +414,22 @@ struct BruteForceExpanderTests_CenteringBasics {
     }
     func are_all_equal_to_largest(sections: [SkeletonSection]) -> Bool {
         if sections.count < 2 { return true }
-        var largest = sections[0].current_size
+        var largest = sections[0].currentSize
         for section in sections {
-            if section.current_size > largest {
-                largest = section.current_size
+            if section.currentSize > largest {
+                largest = section.currentSize
             }
         }
         var all_equal = true
         for section in sections {
-            if section.current_size != largest {
+            if section.currentSize != largest {
                 all_equal = false
             }
         }
         if !all_equal {
             print("Sections were *NOT* all equal to \(largest)!")
             for section in sections {
-                print("\(section.id), size = \(section.current_size)")
+                print("\(section.id), size = \(section.currentSize)")
             }
             return false
         }
@@ -457,31 +457,31 @@ struct BruteForceExpanderTests_CenteringBasics {
             let count_nodes = Int.random(in: 0...3)
             let count_sections = Int.random(in: 0...3)
             
-            let all_pieces = SkeletonLayoutExecutor.getAllPieces(pages: pages)
+            let all_pieces = SkeletonLayoutGrouper.getAllPieces(pages: pages)
             var links_pieces = [[SkeletonPiece]]()
             for _ in 0..<count_pieces {
                 links_pieces.append(getRandomElements(input: all_pieces, count: Int.random(in: 1...5)))
             }
             
-            let all_flexers = SkeletonLayoutExecutor.getAllFlexers(pages: pages)
+            let all_flexers = SkeletonLayoutGrouper.getAllFlexers(pages: pages)
             var links_flexers = [[Flexer]]()
             for _ in 0..<count_flexers {
                 links_flexers.append(getRandomElements(input: all_flexers, count: Int.random(in: 1...5)))
             }
             
-            let all_chunks = SkeletonLayoutExecutor.getAllChunks(pages: pages)
+            let all_chunks = SkeletonLayoutGrouper.getAllChunks(pages: pages)
             var links_chunks = [[any SkeletonChunkConforming]]()
             for _ in 0..<count_chunks {
                 links_chunks.append(getRandomElements(input: all_chunks, count: Int.random(in: 1...5)))
             }
             
-            let all_nodes = SkeletonLayoutExecutor.getAllNodes(pages: pages)
+            let all_nodes = SkeletonLayoutGrouper.getAllNodes(pages: pages)
             var links_nodes = [[SkeletonNode]]()
             for _ in 0..<count_nodes {
                 links_nodes.append(getRandomElements(input: all_nodes, count: Int.random(in: 1...5)))
             }
             
-            let all_sections = SkeletonLayoutExecutor.getAllSections(pages: pages)
+            let all_sections = SkeletonLayoutGrouper.getAllSections(pages: pages)
             var links_sections = [[SkeletonSection]]()
             for _ in 0..<count_sections {
                 links_sections.append(getRandomElements(input: all_sections, count: Int.random(in: 1...5)))
@@ -499,11 +499,11 @@ struct BruteForceExpanderTests_CenteringBasics {
             let sectionRules = links_sections.map { get_linkage_rule(sections: $0) }
             
             SkeletonLayoutExecutor.layout(pages: pages,
-                                          rules_Pieces: pieceRules,
-                                          rules_Flexers: flexerRules,
-                                          rules_Chunks: chunkRules,
-                                          rules_Nodes: nodeRules,
-                                          rules_Sections: sectionRules,
+                                          pieceRules: pieceRules,
+                                          flexerRules: flexerRules,
+                                          chunkRules: chunkRules,
+                                          nodeRules: nodeRules,
+                                          sectionRules: sectionRules,
                                           menuWidthWithSafeArea: menuWidthWithSafeArea,
                                           safeAreaLeft: safeAreaLeft,
                                           safeAreaRight: safeAreaRight)
@@ -575,31 +575,31 @@ struct BruteForceExpanderTests_CenteringBasics {
             let count_nodes = Int.random(in: 0...3)
             let count_sections = Int.random(in: 0...3)
             
-            let all_pieces = SkeletonLayoutExecutor.getAllPieces(pages: pages)
+            let all_pieces = SkeletonLayoutGrouper.getAllPieces(pages: pages)
             var links_pieces = [[SkeletonPiece]]()
             for _ in 0..<count_pieces {
                 links_pieces.append(getRandomElements(input: all_pieces, count: Int.random(in: 1...5)))
             }
             
-            let all_flexers = SkeletonLayoutExecutor.getAllFlexers(pages: pages)
+            let all_flexers = SkeletonLayoutGrouper.getAllFlexers(pages: pages)
             var links_flexers = [[Flexer]]()
             for _ in 0..<count_flexers {
                 links_flexers.append(getRandomElements(input: all_flexers, count: Int.random(in: 1...5)))
             }
             
-            let all_chunks = SkeletonLayoutExecutor.getAllChunks(pages: pages)
+            let all_chunks = SkeletonLayoutGrouper.getAllChunks(pages: pages)
             var links_chunks = [[any SkeletonChunkConforming]]()
             for _ in 0..<count_chunks {
                 links_chunks.append(getRandomElements(input: all_chunks, count: Int.random(in: 1...5)))
             }
             
-            let all_nodes = SkeletonLayoutExecutor.getAllNodes(pages: pages)
+            let all_nodes = SkeletonLayoutGrouper.getAllNodes(pages: pages)
             var links_nodes = [[SkeletonNode]]()
             for _ in 0..<count_nodes {
                 links_nodes.append(getRandomElements(input: all_nodes, count: Int.random(in: 1...5)))
             }
             
-            let all_sections = SkeletonLayoutExecutor.getAllSections(pages: pages)
+            let all_sections = SkeletonLayoutGrouper.getAllSections(pages: pages)
             var links_sections = [[SkeletonSection]]()
             for _ in 0..<count_sections {
                 links_sections.append(getRandomElements(input: all_sections, count: Int.random(in: 1...5)))
@@ -617,11 +617,11 @@ struct BruteForceExpanderTests_CenteringBasics {
             let sectionRules = links_sections.map { get_linkage_rule(sections: $0) }
             
             SkeletonLayoutExecutor.layout(pages: pages,
-                                          rules_Pieces: pieceRules,
-                                          rules_Flexers: flexerRules,
-                                          rules_Chunks: chunkRules,
-                                          rules_Nodes: nodeRules,
-                                          rules_Sections: sectionRules,
+                                          pieceRules: pieceRules,
+                                          flexerRules: flexerRules,
+                                          chunkRules: chunkRules,
+                                          nodeRules: nodeRules,
+                                          sectionRules: sectionRules,
                                           menuWidthWithSafeArea: menuWidthWithSafeArea,
                                           safeAreaLeft: safeAreaLeft,
                                           safeAreaRight: safeAreaRight)

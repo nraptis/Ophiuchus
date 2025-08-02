@@ -68,7 +68,7 @@ struct LinkPriorityGroupPieceTests {
                 }
             }
             
-            let groups = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages,
+            let groups = SkeletonLayoutGrouper.getPieceGroups(pages: pages,
                                                                      rules: rules)
             for group in groups {
                 if group.linkedList.count > 1 {
@@ -170,7 +170,7 @@ struct LinkPriorityGroupPieceTests {
                     }
                 }
                 
-                let groups = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages,
+                let groups = SkeletonLayoutGrouper.getPieceGroups(pages: pages,
                                                                           rules: rules)
                 for group in groups {
                     if group.linkedList.count > 1 {

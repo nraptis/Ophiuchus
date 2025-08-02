@@ -32,13 +32,13 @@ public class ExploderGroupChunks {
         var second_smallest_value = Int.max
         
         for element in linkedList {
-            let current_size = element.current_size
-            if current_size < smallest_value {
+            let currentSize = element.currentSize
+            if currentSize < smallest_value {
                 second_smallest_value = smallest_value
-                smallest_value = current_size
+                smallest_value = currentSize
             } else {
-                if current_size > smallest_value && current_size < second_smallest_value {
-                    second_smallest_value = current_size
+                if currentSize > smallest_value && currentSize < second_smallest_value {
+                    second_smallest_value = currentSize
                 }
             }
         }
@@ -48,7 +48,7 @@ public class ExploderGroupChunks {
         }
         let smallest = linkedList[0]
         for element in linkedList {
-            if element.current_size == smallest_value {
+            if element.currentSize == smallest_value {
                 smallestList.append(element)
             }
         }

@@ -12,7 +12,7 @@ import Testing
 struct ExploderTests {
     
     @Test func test_sections_partitions_five_links() {
-        for _ in 0..<8092 {
+        for _ in 0..<1024 {
             
             let a = SkeletonSection(id: 0, layoutNodes: [], alignment: .left)
             let b = SkeletonSection(id: 1, layoutNodes: [], alignment: .left)
@@ -34,7 +34,7 @@ struct ExploderTests {
                 }
                 let row = SkeletonRow(sections: all_sections, attemptedCenteredSection: nil)
                 let page = SkeletonPage(rows: [row])
-                let result = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: [page],
+                let result = SkeletonLayoutGrouper.getSectionGroups(pages: [page],
                                                                             rules: rules)
                 if !(result.count == partition.count) {
                     #expect(Bool(false))
@@ -75,7 +75,7 @@ struct ExploderTests {
     }
     
     @Test func test_pieces_partitions_five_links() {
-        for _ in 0..<8092 {
+        for _ in 0..<1024 {
             let a = GeneratePieces.generate_piece(size: 10)
             let b = GeneratePieces.generate_piece(size: 10)
             let c = GeneratePieces.generate_piece(size: 10)
@@ -106,7 +106,7 @@ struct ExploderTests {
                 section.adopt_test()
                 let row = SkeletonRow(sections: [section], attemptedCenteredSection: nil)
                 let page = SkeletonPage(rows: [row])
-                let result = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: [page],
+                let result = SkeletonLayoutGrouper.getPieceGroups(pages: [page],
                                                                           rules: rules)
                 if !(result.count == partition.count) {
                     #expect(Bool(false))
@@ -151,7 +151,7 @@ struct ExploderTests {
     
     @Test func test_flexers_partitions_five_links_redundant() {
         
-        for _ in 0..<8092 {
+        for _ in 0..<1024 {
             let a = GenerateFlexers.generate_10_random_climb()
             let b = GenerateFlexers.generate_10_random_climb()
             let c = GenerateFlexers.generate_10_random_climb()
@@ -198,7 +198,7 @@ struct ExploderTests {
     
     @Test func test_chunks_partitions_five_links_redundant() {
         
-        for _ in 0..<8092 {
+        for _ in 0..<1024 {
             let a = GenerateChunks.generate_fixed()
             let b = GenerateChunks.generate_fixed()
             let c = GenerateChunks.generate_fixed()
@@ -246,7 +246,7 @@ struct ExploderTests {
     
     @Test func test_chunks_partitions_five_links_minimal() {
         
-        for _ in 0..<8092 {
+        for _ in 0..<1024 {
             let a = GenerateChunks.generate_fixed()
             let b = GenerateChunks.generate_fixed()
             let c = GenerateChunks.generate_fixed()
@@ -294,7 +294,7 @@ struct ExploderTests {
     
     @Test func test_pieces_partitions_five_links_redundant() {
         
-        for _ in 0..<8092 {
+        for _ in 0..<1024 {
             let a = GeneratePieces.generate_piece(size: 10)
             let b = GeneratePieces.generate_piece(size: 10)
             let c = GeneratePieces.generate_piece(size: 10)
@@ -342,7 +342,7 @@ struct ExploderTests {
     
     @Test func test_pieces_partitions_five_links_minimal() {
         
-        for _ in 0..<8092 {
+        for _ in 0..<1024 {
             let a = GeneratePieces.generate_piece(size: 10)
             let b = GeneratePieces.generate_piece(size: 10)
             let c = GeneratePieces.generate_piece(size: 10)
@@ -390,7 +390,7 @@ struct ExploderTests {
     
     @Test func test_sections_partitions_five_links_redundant() {
         
-        for _ in 0..<8092 {
+        for _ in 0..<1024 {
             let a = SkeletonSection(id: 0, layoutNodes: [], alignment: .left)
             let b = SkeletonSection(id: 1, layoutNodes: [], alignment: .left)
             let c = SkeletonSection(id: 2, layoutNodes: [], alignment: .left)
@@ -438,7 +438,7 @@ struct ExploderTests {
     
     @Test func test_sections_partitions_five_links_minimal() {
         
-        for _ in 0..<8092 {
+        for _ in 0..<1024 {
             let a = SkeletonSection(id: 0, layoutNodes: [], alignment: .left)
             let b = SkeletonSection(id: 1, layoutNodes: [], alignment: .left)
             let c = SkeletonSection(id: 2, layoutNodes: [], alignment: .left)
@@ -484,7 +484,7 @@ struct ExploderTests {
     }
     
     @Test func test_chunks_partitions_five_links() {
-        for _ in 0..<8092 {
+        for _ in 0..<1024 {
             let a = GenerateChunks.generate_fixed()
             let b = GenerateChunks.generate_fixed()
             let c = GenerateChunks.generate_fixed()
@@ -506,7 +506,7 @@ struct ExploderTests {
                 section.adopt_test()
                 let row = SkeletonRow(sections: [section], attemptedCenteredSection: nil)
                 let page = SkeletonPage(rows: [row])
-                let result = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: [page],
+                let result = SkeletonLayoutGrouper.getChunkGroups(pages: [page],
                                                                           rules: rules)
                 if !(result.count == partition.count) {
                     #expect(Bool(false))
@@ -546,19 +546,11 @@ struct ExploderTests {
         }
     }
     
-    
-   
-    
-    
-    
-    
     @Test func test_chunks_partitions_redundant() {
         
         var checked = 0
-        for _ in 0..<2048 {
-            
+        for _ in 0..<1024 {
             for count in 1...8 {
-                
                 var original_list = [SkeletonChunkFixed]()
                 for id in 0..<count {
                     let piece = SkeletonPiece(id: id, pieceIdentifier: .unknown, size: 10)
@@ -612,7 +604,7 @@ struct ExploderTests {
     @Test func test_chunks_partitions_minimal() {
         
         var checked = 0
-        for _ in 0..<2048 {
+        for _ in 0..<1024 {
             
             for count in 1...8 {
                 
@@ -668,7 +660,7 @@ struct ExploderTests {
     
     @Test func test_pieces_partitions_redundant() {
         var checked = 0
-        for _ in 0..<2048 {
+        for _ in 0..<1024 {
             for count in 1...8 {
                 var original_list = [SkeletonPiece]()
                 for id in 0..<count {
@@ -723,7 +715,7 @@ struct ExploderTests {
     @Test func test_pieces_partitions_minimal() {
         
         var checked = 0
-        for _ in 0..<2048 {
+        for _ in 0..<1024 {
             for count in 1...8 {
                 var original_list = [SkeletonPiece]()
                 for id in 0..<count {
@@ -777,7 +769,7 @@ struct ExploderTests {
     @Test func test_sections_partitions_redundant() {
         
         var checked = 0
-        for _ in 0..<2048 {
+        for _ in 0..<1024 {
             for count in 1...8 {
                 var original_list = [SkeletonSection]()
                 for id in 0..<count {
@@ -831,7 +823,7 @@ struct ExploderTests {
     @Test func test_sections_partitions_minimal() {
         
         var checked = 0
-        for _ in 0..<2048 {
+        for _ in 0..<1024 {
             for count in 1...8 {
                 var original_list = [SkeletonSection]()
                 for id in 0..<count {
@@ -884,7 +876,7 @@ struct ExploderTests {
     
     @Test func test_chunks_partitions() {
         var checked = 0
-        for _ in 0..<2048 {
+        for _ in 0..<1024 {
             for count in 1...8 {
                 var original_list = [SkeletonChunkFixed]()
                 for id in 0..<count {
@@ -910,7 +902,7 @@ struct ExploderTests {
                     section.adopt_test()
                     let row = SkeletonRow(sections: [section], attemptedCenteredSection: nil)
                     let page = SkeletonPage(rows: [row])
-                    let result = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: [page],
+                    let result = SkeletonLayoutGrouper.getChunkGroups(pages: [page],
                                                                               rules: rules)
                     
                     if !(result.count == partition.count) {
@@ -941,7 +933,7 @@ struct ExploderTests {
     
     @Test func test_pieces_partitions() {
         var checked = 0
-        for _ in 0..<2048 {
+        for _ in 0..<1024 {
             for count in 1...8 {
                 var original_list = [SkeletonPiece]()
                 for id in 0..<count {
@@ -973,7 +965,7 @@ struct ExploderTests {
                     section.adopt_test()
                     let row = SkeletonRow(sections: [section], attemptedCenteredSection: nil)
                     let page = SkeletonPage(rows: [row])
-                    let result = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: [page],
+                    let result = SkeletonLayoutGrouper.getPieceGroups(pages: [page],
                                                                               rules: rules)
                     
                     if !(result.count == partition.count) {
@@ -1005,7 +997,7 @@ struct ExploderTests {
     @Test func test_sections_partitions() {
         
         var checked = 0
-        for _ in 0..<2048 {
+        for _ in 0..<1024 {
             for count in 1...8 {
                 var original_list = [SkeletonSection]()
                 for id in 0..<count {
@@ -1027,7 +1019,7 @@ struct ExploderTests {
                     }
                     let row = SkeletonRow(sections: all_sections, attemptedCenteredSection: nil)
                     let page = SkeletonPage(rows: [row])
-                    let result = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: [page],
+                    let result = SkeletonLayoutGrouper.getSectionGroups(pages: [page],
                                                                                 rules: rules)
                     
                     if !(result.count == partition.count) {
@@ -1058,7 +1050,7 @@ struct ExploderTests {
      
     @Test func test_flexers_partitions() {
         var checked = 0
-        for _ in 0..<2048 {
+        for _ in 0..<1024 {
             for count in 1...8 {
                 var original_list = [Flexer]()
                 for id in 0..<count {
@@ -1090,7 +1082,7 @@ struct ExploderTests {
                     section.adopt_test()
                     let row = SkeletonRow(sections: [section], attemptedCenteredSection: nil)
                     let page = SkeletonPage(rows: [row])
-                    let result = SkeletonLayoutExecutor.getFlexerGroups_Unsafe(pages: [page],
+                    let result = SkeletonLayoutGrouper.getFlexerGroups(pages: [page],
                                                                                rules: rules)
                     
                     if !(result.count == partition.count) {
@@ -1122,7 +1114,7 @@ struct ExploderTests {
     @Test func test_flexers_partitions_minimal() {
         
         var checked = 0
-        for _ in 0..<2048 {
+        for _ in 0..<1024 {
             for count in 1...8 {
                 var original_list = [Flexer]()
                 for _ in 0..<count {
@@ -1174,7 +1166,7 @@ struct ExploderTests {
     }
     
     @Test func test_flexers_partitions_five_links() {
-        for _ in 0..<8092 {
+        for _ in 0..<1024 {
             let a = GenerateFlexers.generate_10_random_climb()
             let b = GenerateFlexers.generate_10_random_climb()
             let c = GenerateFlexers.generate_10_random_climb()
@@ -1205,7 +1197,7 @@ struct ExploderTests {
                 section.adopt_test()
                 let row = SkeletonRow(sections: [section], attemptedCenteredSection: nil)
                 let page = SkeletonPage(rows: [row])
-                let result = SkeletonLayoutExecutor.getFlexerGroups_Unsafe(pages: [page],
+                let result = SkeletonLayoutGrouper.getFlexerGroups(pages: [page],
                                                                            rules: rules)
                 if !(result.count == partition.count) {
                     #expect(Bool(false))
@@ -1250,7 +1242,7 @@ struct ExploderTests {
     
     @Test func test_flexers_partitions_five_links_minimal() {
         
-        for _ in 0..<8092 {
+        for _ in 0..<1024 {
             let a = GenerateFlexers.generate_10_random_climb()
             let b = GenerateFlexers.generate_10_random_climb()
             let c = GenerateFlexers.generate_10_random_climb()

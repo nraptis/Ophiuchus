@@ -19,7 +19,7 @@ import Foundation
 
 public class SkeletonPiece: ExploderConforming {
     
-    public var current_size = 0
+    public var currentSize = 0
     let original_size: Int
     public let id: Int
     public let pieceIdentifier: PieceIdentifier
@@ -35,18 +35,18 @@ public class SkeletonPiece: ExploderConforming {
          size: Int) {
         self.id = id
         self.pieceIdentifier = pieceIdentifier
-        self.current_size = size
+        self.currentSize = size
         self.original_size = size
     }
     
     func canGrowByOne() -> Bool {
-        if chunk.children_size < chunk.current_size {
+        if chunk.children_size < chunk.currentSize {
             return true
         }
-        if node.children_size < node.current_size {
+        if node.children_size < node.currentSize {
             return true
         }
-        if section.children_size < section.current_size {
+        if section.children_size < section.currentSize {
             return true
         }
         if row.canGrowByOne(section: section) {
@@ -66,7 +66,7 @@ public class SkeletonPiece: ExploderConforming {
     */
     
     func growByOne_Unsafe_Bubble() {
-        current_size += 1
+        currentSize += 1
         //node.growChildrenByOne_Unsafe_Bubble()
         chunk.growChildrenByOne_Unsafe_Bubble()
         

@@ -18,6 +18,37 @@ struct GenerateSections {
         GenerateSections.generate_section(nodes: [node])
     }
     
+    //GenerateSections.generate_section(skeleton_node: node_a)
+    
+    static func generate_fixed(size: Int) -> SkeletonSection {
+        let layoutNode = GenerateNodes.generate_fixed_layout(size: size)
+        let result = generate_section(nodes: [layoutNode])
+        return result
+    }
+    
+    static func generate_section(skeleton_node: SkeletonNode) -> SkeletonSection {
+        let result = generate_section(skeleton_nodes: [skeleton_node])
+        return result
+    }
+    
+    static func generate_section(skeleton_nodes: [SkeletonNode]) -> SkeletonSection {
+        var layoutNodes: [WiseLayoutNode] = []
+        for skeleton_node in skeleton_nodes {
+            let layoutNode = WiseLayoutNode(recipe_id: skeleton_node.id,
+                                            toolInterfaceElement: .invalid,
+                                            toolInterfaceElementType: .invalid,
+                                            interfaceProvider: .invalid,
+                                            configuration: 0,
+                                            is_stacked: true,
+                                            layoutScheme: EmptyLayoutScheme.self,
+                                            layoutSchemeFlavor: .stackedLarge,
+                                            skeletonNodes: [skeleton_node])
+            layoutNodes.append(layoutNode)
+        }
+        let result = GenerateSections.generate_section(nodes: layoutNodes)
+        return result
+    }
+    
     static func generate_section(nodes: [WiseLayoutNode]) -> SkeletonSection {
         let id = id_queue.sync {
             let id = GenerateSections.section_id

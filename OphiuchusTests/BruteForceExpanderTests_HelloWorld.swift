@@ -35,10 +35,10 @@ struct BruteForceExpanderTests_HelloWorld {
         
         let rule = SkeletonLinkageRule_Pieces(pieces: [piece_a, piece_b], layoutPriority: .required)
         
-        let piece_groups = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [rule])
-        let chunk_groups = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [])
-        let node_groups = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [])
-        let section_groups = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [])
+        let piece_groups = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [rule])
+        let chunk_groups = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [])
+        let node_groups = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [])
+        let section_groups = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [])
         
         let menuWidthWithSafeArea = 800
         let safeAreaLeft = 16
@@ -61,16 +61,16 @@ struct BruteForceExpanderTests_HelloWorld {
                                                                layoutPriority: .required)
         
         
-        if !(piece_a.current_size == 20) {
+        if !(piece_a.currentSize == 20) {
             print("In this simple test, both should end up with a width of 20.")
-            print("piece_a had a size of \(piece_a.current_size)")
+            print("piece_a had a size of \(piece_a.currentSize)")
             #expect(Bool(false))
             return
         }
         
-        if !(piece_b.current_size == 20) {
+        if !(piece_b.currentSize == 20) {
             print("In this simple test, both should end up with a width of 20.")
-            print("piece_b had a size of \(piece_b.current_size)")
+            print("piece_b had a size of \(piece_b.currentSize)")
             
             #expect(Bool(false))
             return
@@ -113,10 +113,10 @@ struct BruteForceExpanderTests_HelloWorld {
         let piece_rule = SkeletonLinkageRule_Pieces(pieces: [piece_a, piece_b_1, piece_b_2], layoutPriority: .required)
         let chunk_rule = SkeletonLinkageRule_Chunks(chunks: [chunk_a, chunk_b], layoutPriority: .required)
         
-        let piece_groups = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [piece_rule])
-        let chunk_groups = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [chunk_rule])
-        let node_groups = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [])
-        let section_groups = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [])
+        let piece_groups = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [piece_rule])
+        let chunk_groups = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [chunk_rule])
+        let node_groups = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [])
+        let section_groups = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [])
         
         let menuWidthWithSafeArea = 20000
         let safeAreaLeft = 32
@@ -126,13 +126,13 @@ struct BruteForceExpanderTests_HelloWorld {
                                                         menuWidthWithSafeArea: menuWidthWithSafeArea,
                                                         safeAreaLeft: safeAreaLeft,
                                                         safeAreaRight: safeAreaRight)
-        if !(node_a.skeletonNodes[0].current_size == 20) {
+        if !(node_a.skeletonNodes[0].currentSize == 20) {
             print("Node a should be size 20.")
             #expect(Bool(false))
             return
         }
         
-        if !(node_b.skeletonNodes[0].current_size == 10) {
+        if !(node_b.skeletonNodes[0].currentSize == 10) {
             print("Node a should be size 20.")
             #expect(Bool(false))
             return
@@ -146,8 +146,8 @@ struct BruteForceExpanderTests_HelloWorld {
                                                                sections: section_groups,
                                                                layoutPriority: .required)
         
-        if !(piece_b_1.current_size == piece_a.current_size) {
-            print("piece_b_1 and piece_a are \(piece_b_1.current_size) and \(piece_a.current_size).")
+        if !(piece_b_1.currentSize == piece_a.currentSize) {
+            print("piece_b_1 and piece_a are \(piece_b_1.currentSize) and \(piece_a.currentSize).")
             #expect(Bool(false))
             return
         }
@@ -220,10 +220,10 @@ struct BruteForceExpanderTests_HelloWorld {
                 }
             }
             
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [])
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [])
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [])
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [])
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [])
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [])
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [])
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [])
             
             for layoutPriority in [.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 
@@ -439,10 +439,10 @@ struct BruteForceExpanderTests_HelloWorld {
                 }
             }
             
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [])
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [])
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [])
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [])
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [])
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [])
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [])
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [])
             
             for layoutPriority in [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 
@@ -666,10 +666,10 @@ struct BruteForceExpanderTests_HelloWorld {
                 }
             }
             
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [])
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [])
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [])
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [])
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [])
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [])
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [])
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [])
             
             for layoutPriority in [.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 
@@ -890,10 +890,10 @@ struct BruteForceExpanderTests_HelloWorld {
                 }
             }
             
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [])
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [])
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [])
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [])
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [])
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [])
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [])
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [])
             
             for layoutPriority in [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 

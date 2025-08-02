@@ -47,7 +47,7 @@ public class SkeletonNode: ExploderConforming {
         return result
     }
     
-    public var current_size = 0
+    public var currentSize = 0
     public var children_size = 0
     public var didGrowOnCurrentPass = false
     
@@ -73,11 +73,11 @@ public class SkeletonNode: ExploderConforming {
     }
     
     func growChildrenByOne_Unsafe_Bubble() {
-        if children_size < current_size {
+        if children_size < currentSize {
             children_size += 1
         } else {
-            current_size += 1
-            children_size = current_size
+            currentSize += 1
+            children_size = currentSize
         }
         section.growChildrenByOne_Unsafe_Bubble()
         didGrowOnCurrentPass = true
@@ -174,7 +174,7 @@ public class SkeletonNode: ExploderConforming {
         
         var width_of_all_chunks = 0
         for chunk in chunks {
-            width_of_all_chunks += chunk.current_size
+            width_of_all_chunks += chunk.currentSize
         }
         
         var layout_x = 0
@@ -182,28 +182,28 @@ public class SkeletonNode: ExploderConforming {
         case .none, .left:
             for chunk in chunks {
                 chunk.x = layout_x
-                layout_x += chunk.current_size
+                layout_x += chunk.currentSize
             }
         case .center:
-            layout_x = current_size / 2 - width_of_all_chunks / 2
+            layout_x = currentSize / 2 - width_of_all_chunks / 2
             if layout_x < 0 { layout_x = 0 }
             for chunk in chunks {
                 chunk.x = layout_x
-                layout_x += chunk.current_size
+                layout_x += chunk.currentSize
             }
         case .right:
-            layout_x = current_size - width_of_all_chunks
+            layout_x = currentSize - width_of_all_chunks
             if layout_x < 0 { layout_x = 0 }
             for chunk in chunks {
                 chunk.x = layout_x
-                layout_x += chunk.current_size
+                layout_x += chunk.currentSize
             }
         }
         
     }
     
     func canGrowByOne() -> Bool {
-        if section.children_size < section.current_size {
+        if section.children_size < section.currentSize {
             return true
         }
         if row.canGrowByOne(section: section) {

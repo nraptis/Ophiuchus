@@ -9,7 +9,7 @@ import Foundation
 
 public class SkeletonSection: ExploderConforming {
     
-    public var current_size = 0
+    public var currentSize = 0
     public var children_size = 0
     public var didGrowOnCurrentPass = false
     
@@ -38,17 +38,17 @@ public class SkeletonSection: ExploderConforming {
     }
     
     func growChildrenByOne_Unsafe_Bubble() {
-        if children_size < current_size {
+        if children_size < currentSize {
             children_size += 1
         } else {
             growByOne_Unsafe_Bubble()
-            children_size = current_size
+            children_size = currentSize
         }
         didGrowOnCurrentPass = true
     }
     
     func growByOne_Unsafe_Bubble() {
-        current_size += 1
+        currentSize += 1
         row.growChildrenByOne_Unsafe(section: self)
         didGrowOnCurrentPass = true
     }
@@ -84,7 +84,7 @@ public class SkeletonSection: ExploderConforming {
     func position_content_after_size_computation() {
         var width_of_all_nodes = 0
         for node in skeletonNodes {
-            width_of_all_nodes += node.current_size
+            width_of_all_nodes += node.currentSize
         }
         
         var layout_x = 0
@@ -92,21 +92,21 @@ public class SkeletonSection: ExploderConforming {
         case .none, .left:
             for node in skeletonNodes {
                 node.x = layout_x
-                layout_x += node.current_size
+                layout_x += node.currentSize
             }
         case .center:
-            layout_x = current_size / 2 - width_of_all_nodes / 2
+            layout_x = currentSize / 2 - width_of_all_nodes / 2
             if layout_x < 0 { layout_x = 0 }
             for node in skeletonNodes {
                 node.x = layout_x
-                layout_x += node.current_size
+                layout_x += node.currentSize
             }
         case .right:
-            layout_x = current_size - width_of_all_nodes
+            layout_x = currentSize - width_of_all_nodes
             if layout_x < 0 { layout_x = 0 }
             for node in skeletonNodes {
                 node.x = layout_x
-                layout_x += node.current_size
+                layout_x += node.currentSize
             }
         }
         

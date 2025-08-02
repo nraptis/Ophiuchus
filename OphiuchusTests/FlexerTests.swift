@@ -779,7 +779,7 @@ struct FlexerTests {
                                              LayoutPriority.finally] {
                                 
                                 for _ in 0..<64 {
-                                    let current_size = Int.random(in: 0...256)
+                                    let currentSize = Int.random(in: 0...256)
                                     
                                     for _ in 0..<64 {
                                         
@@ -790,7 +790,7 @@ struct FlexerTests {
                                                             desired_size_medium,
                                                             desired_size_low,
                                                             desired_size_finally)
-                                        flexor.current_size = current_size
+                                        flexor.currentSize = currentSize
                                         
                                         // Let's see what we expect the result to be.
                                         let expected_ceiling: Int
@@ -809,26 +809,26 @@ struct FlexerTests {
                                         
                                         let expected_result: Int
                                         let expected_new_size: Int
-                                        if current_size >= expected_ceiling {
-                                            expected_new_size = current_size
+                                        if currentSize >= expected_ceiling {
+                                            expected_new_size = currentSize
                                             expected_result = available_space
                                         } else {
                                             
-                                            let distance_to_ceiling = expected_ceiling - current_size
+                                            let distance_to_ceiling = expected_ceiling - currentSize
                                             if distance_to_ceiling > available_space {
                                                 // we take all available_space
-                                                expected_new_size = current_size + available_space
+                                                expected_new_size = currentSize + available_space
                                                 expected_result = 0
                                             } else {
                                                 // we take only distance_to_ceiling
-                                                expected_new_size = current_size + distance_to_ceiling
+                                                expected_new_size = currentSize + distance_to_ceiling
                                                 expected_result = available_space - distance_to_ceiling
                                             }
                                         }
                                         
                                         let actual_result = flexor.ingestIfPossible(available_space: available_space,
                                                                                     layoutPriority: layoutPriority)
-                                        let actual_new_size = flexor.current_size
+                                        let actual_new_size = flexor.currentSize
                                         
                                         if actual_result != expected_result {
                                             #expect(Bool(false))

@@ -29,13 +29,13 @@ public class ExploderGroup<Element: ExploderConforming> {
         var second_smallest_value = Int.max
         
         for element in linkedList {
-            let current_size = element.current_size
-            if current_size < smallest_value {
+            let currentSize = element.currentSize
+            if currentSize < smallest_value {
                 second_smallest_value = smallest_value
-                smallest_value = current_size
+                smallest_value = currentSize
             } else {
-                if current_size > smallest_value && current_size < second_smallest_value {
-                    second_smallest_value = current_size
+                if currentSize > smallest_value && currentSize < second_smallest_value {
+                    second_smallest_value = currentSize
                 }
             }
         }
@@ -45,7 +45,7 @@ public class ExploderGroup<Element: ExploderConforming> {
         }
         
         for element in linkedList {
-            if element.current_size == smallest_value {
+            if element.currentSize == smallest_value {
                 smallestList.append(element)
             }
         }
@@ -55,22 +55,22 @@ public class ExploderGroup<Element: ExploderConforming> {
     func is_largest(_ element: Element) -> Bool {
         var largest_size = -999_999
         for _element in linkedList {
-            if _element.current_size > largest_size {
-                largest_size = _element.current_size
+            if _element.currentSize > largest_size {
+                largest_size = _element.currentSize
             }
         }
-        if element.current_size == largest_size {
+        if element.currentSize == largest_size {
             return true
         } else {
             return false
         }
     }
     
-    func is_all_same_current_size() -> Bool {
+    func is_all_same_currentSize() -> Bool {
         if linkedList.count <= 1 { return true }
-        let chosen_size = linkedList[0].current_size
+        let chosen_size = linkedList[0].currentSize
         for _element in linkedList {
-            if _element.current_size != chosen_size { return false }
+            if _element.currentSize != chosen_size { return false }
         }
         return true
     }

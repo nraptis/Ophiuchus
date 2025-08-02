@@ -163,12 +163,12 @@ struct LayoutTests_Simple {
                                                                        safeAreaLeft: 0,
                                                                        safeAreaRight: 0)
         
-        if piece.current_size != 24 {
+        if piece.currentSize != 24 {
             #expect(Bool(false))
             return
         }
         
-        if chunk.current_size != 24 {
+        if chunk.currentSize != 24 {
             #expect(Bool(false))
             return
         }
@@ -178,7 +178,7 @@ struct LayoutTests_Simple {
             return
         }
         
-        if node.skeletonNodes[0].current_size != 24 {
+        if node.skeletonNodes[0].currentSize != 24 {
             #expect(Bool(false))
             return
         }
@@ -188,7 +188,7 @@ struct LayoutTests_Simple {
             return
         }
         
-        if section.current_size != 24 {
+        if section.currentSize != 24 {
             #expect(Bool(false))
             return
         }
@@ -306,7 +306,7 @@ struct LayoutTests_Simple {
                                                                            safeAreaLeft: 64,
                                                                            safeAreaRight: 64)
             
-            if chunk_a.current_size != 4 {
+            if chunk_a.currentSize != 4 {
                 #expect(Bool(false))
                 return
             }
@@ -316,7 +316,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if chunk_b.current_size != 0 {
+            if chunk_b.currentSize != 0 {
                 #expect(Bool(false))
                 return
             }
@@ -326,7 +326,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if chunk_c.current_size != 0 {
+            if chunk_c.currentSize != 0 {
                 #expect(Bool(false))
                 return
             }
@@ -336,7 +336,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if chunk_d.current_size != 40 {
+            if chunk_d.currentSize != 40 {
                 #expect(Bool(false))
                 return
             }
@@ -346,7 +346,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if chunk_e.current_size != 4400 {
+            if chunk_e.currentSize != 4400 {
                 #expect(Bool(false))
                 return
             }
@@ -356,7 +356,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if chunk_f.current_size != 440000 {
+            if chunk_f.currentSize != 440000 {
                 #expect(Bool(false))
                 return
             }
@@ -366,7 +366,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if chunk_g.current_size != 4000000 {
+            if chunk_g.currentSize != 4000000 {
                 #expect(Bool(false))
                 return
             }
@@ -376,7 +376,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if chunk_h.current_size != 40000000 {
+            if chunk_h.currentSize != 40000000 {
                 #expect(Bool(false))
                 return
             }
@@ -386,7 +386,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if node_a.skeletonNodes[0].current_size != 4 {
+            if node_a.skeletonNodes[0].currentSize != 4 {
                 #expect(Bool(false))
                 return
             }
@@ -396,7 +396,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if node_b.skeletonNodes[0].current_size != 4440 {
+            if node_b.skeletonNodes[0].currentSize != 4440 {
                 #expect(Bool(false))
                 return
             }
@@ -406,7 +406,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if node_c.skeletonNodes[0].current_size != 440000 {
+            if node_c.skeletonNodes[0].currentSize != 440000 {
                 #expect(Bool(false))
                 return
             }
@@ -416,7 +416,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if node_d.skeletonNodes[0].current_size != 44000000 {
+            if node_d.skeletonNodes[0].currentSize != 44000000 {
                 #expect(Bool(false))
                 return
             }
@@ -426,7 +426,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if section_a.current_size != 4444 {
+            if section_a.currentSize != 4444 {
                 #expect(Bool(false))
                 return
             }
@@ -436,7 +436,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if section_b.current_size != 440000 {
+            if section_b.currentSize != 440000 {
                 #expect(Bool(false))
                 return
             }
@@ -446,7 +446,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if section_c.current_size != 44000000 {
+            if section_c.currentSize != 44000000 {
                 #expect(Bool(false))
                 return
             }

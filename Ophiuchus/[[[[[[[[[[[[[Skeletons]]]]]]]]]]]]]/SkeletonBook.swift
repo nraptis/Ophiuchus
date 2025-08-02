@@ -9,32 +9,32 @@ import Foundation
 
 public class SkeletonBook {
     public let pages: [SkeletonPage]
-    public let rules_Sections: [SkeletonLinkageRule_Sections]
-    public let rules_Nodes: [SkeletonLinkageRule_Nodes]
-    public let rules_Chunks: [SkeletonLinkageRule_Chunks]
-    public let rules_Flexers: [SkeletonLinkageRule_Flexers]
-    public let rules_Pieces: [SkeletonLinkageRule_Pieces]
+    public let sectionRules: [SkeletonLinkageRule_Sections]
+    public let nodeRules: [SkeletonLinkageRule_Nodes]
+    public let chunkRules: [SkeletonLinkageRule_Chunks]
+    public let flexerRules: [SkeletonLinkageRule_Flexers]
+    public let pieceRules: [SkeletonLinkageRule_Pieces]
     init(pages: [SkeletonPage],
-         rules_Sections: [SkeletonLinkageRule_Sections],
-         rules_Nodes: [SkeletonLinkageRule_Nodes],
-         rules_Chunks: [SkeletonLinkageRule_Chunks],
-         rules_Flexers: [SkeletonLinkageRule_Flexers],
-         rules_Pieces: [SkeletonLinkageRule_Pieces]) {
+         sectionRules: [SkeletonLinkageRule_Sections],
+         nodeRules: [SkeletonLinkageRule_Nodes],
+         chunkRules: [SkeletonLinkageRule_Chunks],
+         flexerRules: [SkeletonLinkageRule_Flexers],
+         pieceRules: [SkeletonLinkageRule_Pieces]) {
         self.pages = pages
-        self.rules_Sections = rules_Sections
-        self.rules_Nodes = rules_Nodes
-        self.rules_Chunks = rules_Chunks
-        self.rules_Flexers = rules_Flexers
-        self.rules_Pieces = rules_Pieces
+        self.sectionRules = sectionRules
+        self.nodeRules = nodeRules
+        self.chunkRules = chunkRules
+        self.flexerRules = flexerRules
+        self.pieceRules = pieceRules
     }
     
     public init() {
         self.pages = []
-        self.rules_Sections = []
-        self.rules_Nodes = []
-        self.rules_Chunks = []
-        self.rules_Flexers = []
-        self.rules_Pieces = []
+        self.sectionRules = []
+        self.nodeRules = []
+        self.chunkRules = []
+        self.flexerRules = []
+        self.pieceRules = []
     }
     
     func prepare(menuWidthWithSafeArea: Int,

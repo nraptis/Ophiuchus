@@ -11,7 +11,7 @@ public class SkeletonChunkHeroStacked: SkeletonChunkConforming {
     
     public let id: Int
     public let chunkIdentifier: ChunkIdentifier
-    public var current_size = 0
+    public var currentSize = 0
     public var children_size = 0
     public var didGrowOnCurrentPass = false
     

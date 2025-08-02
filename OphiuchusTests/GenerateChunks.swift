@@ -308,6 +308,63 @@ struct GenerateChunks {
                                          chunkIdentifier: .unknown,
                                          flexer: flexer,
                                          alignment: alignment)
+        flexer.chunk = result
+        return result
+    }
+    
+    static func generate_flexer_two(flexer1: Flexer, flexer2: Flexer) -> any SkeletonChunkConforming {
+        let alignment = GenerateAlignment.generate_alignment()
+        let id = id_queue.sync {
+            let id = GenerateChunks.chunk_id
+            GenerateChunks.chunk_id += 1
+            if GenerateChunks.chunk_id > 1_000_000_000 { GenerateChunks.chunk_id = 0 }
+            return id
+        }
+        
+        if Bool.random() {
+            let result = SkeletonChunkPadding(id: id,
+                                               chunkIdentifier: .unknown,
+                                               left: flexer1,
+                                               right: flexer2,
+                                               alignment: alignment)
+            flexer1.chunk = result
+            flexer2.chunk = result
+            return result
+        } else {
+            let piece = GeneratePieces.generate_piece(size: 10)
+            let result = SkeletonChunkHeroStacked(id: id,
+                                                  chunkIdentifier: .unknown,
+                                                  left: flexer1,
+                                                  center: piece,
+                                                  right: flexer2,
+                                                  alignment: alignment)
+            flexer1.chunk = result
+            flexer2.chunk = result
+            return result
+        }
+    }
+    
+    static func generate_flexer_three(flexer1: Flexer, flexer2: Flexer, flexer3: Flexer) -> any SkeletonChunkConforming {
+        let alignment = GenerateAlignment.generate_alignment()
+        let id = id_queue.sync {
+            let id = GenerateChunks.chunk_id
+            GenerateChunks.chunk_id += 1
+            if GenerateChunks.chunk_id > 1_000_000_000 { GenerateChunks.chunk_id = 0 }
+            return id
+        }
+        let piece1 = GeneratePieces.generate_piece(size: 10)
+        let piece2 = GeneratePieces.generate_piece(size: 10)
+        let result = SkeletonChunkHeroLong(id: id,
+                                           chunkIdentifier: .unknown,
+                                           left: flexer1,
+                                           icon: piece1,
+                                           spacing: flexer2,
+                                           label: piece2,
+                                           right: flexer3,
+                                           alignment: alignment)
+        flexer1.chunk = result
+        flexer2.chunk = result
+        flexer3.chunk = result
         return result
     }
     

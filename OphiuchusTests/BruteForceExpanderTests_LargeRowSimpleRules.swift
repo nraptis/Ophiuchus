@@ -47,7 +47,7 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
     
     func get_random_pieces(pages: [SkeletonPage], n: Int) -> [SkeletonPiece] {
         
-        let all_pieces = SkeletonLayoutExecutor.getAllPieces(pages: pages)
+        let all_pieces = SkeletonLayoutGrouper.getAllPieces(pages: pages)
         let result = getRandomElements(input: all_pieces, count: n)
         return result
     }
@@ -58,22 +58,22 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
     
     func are_all_equal_to_largest(pieces: [SkeletonPiece]) -> Bool {
         if pieces.count < 2 { return true }
-        var largest = pieces[0].current_size
+        var largest = pieces[0].currentSize
         for piece in pieces {
-            if piece.current_size > largest {
-                largest = piece.current_size
+            if piece.currentSize > largest {
+                largest = piece.currentSize
             }
         }
         var all_equal = true
         for piece in pieces {
-            if piece.current_size != largest {
+            if piece.currentSize != largest {
                 all_equal = false
             }
         }
         if !all_equal {
             print("Pieces were *NOT* all equal to \(largest)!")
             for piece in pieces {
-                print("\(piece.id), size = \(piece.current_size)")
+                print("\(piece.id), size = \(piece.currentSize)")
             }
             return false
         }
@@ -82,7 +82,7 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
     
     func get_random_flexers(pages: [SkeletonPage], n: Int) -> [Flexer] {
         
-        let all_flexers = SkeletonLayoutExecutor.getAllFlexers(pages: pages)
+        let all_flexers = SkeletonLayoutGrouper.getAllFlexers(pages: pages)
         let result = getRandomElements(input: all_flexers, count: n)
         return result
     }
@@ -93,22 +93,22 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
     
     func are_all_equal_to_largest(flexers: [Flexer]) -> Bool {
         if flexers.count < 2 { return true }
-        var largest = flexers[0].current_size
+        var largest = flexers[0].currentSize
         for flexer in flexers {
-            if flexer.current_size > largest {
-                largest = flexer.current_size
+            if flexer.currentSize > largest {
+                largest = flexer.currentSize
             }
         }
         var all_equal = true
         for flexer in flexers {
-            if flexer.current_size != largest {
+            if flexer.currentSize != largest {
                 all_equal = false
             }
         }
         if !all_equal {
             print("Flexers were *NOT* all equal to \(largest)!")
             for flexer in flexers {
-                print("\(flexer.id), size = \(flexer.current_size)")
+                print("\(flexer.id), size = \(flexer.currentSize)")
             }
             return false
         }
@@ -118,7 +118,7 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
     
     func get_random_chunks(pages: [SkeletonPage], n: Int) -> [any SkeletonChunkConforming] {
         
-        let all_chunks = SkeletonLayoutExecutor.getAllChunks(pages: pages)
+        let all_chunks = SkeletonLayoutGrouper.getAllChunks(pages: pages)
         let result = getRandomElements(input: all_chunks, count: n)
         return result
     }
@@ -129,22 +129,22 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
     
     func are_all_equal_to_largest(chunks: [any SkeletonChunkConforming]) -> Bool {
         if chunks.count < 2 { return true }
-        var largest = chunks[0].current_size
+        var largest = chunks[0].currentSize
         for chunk in chunks {
-            if chunk.current_size > largest {
-                largest = chunk.current_size
+            if chunk.currentSize > largest {
+                largest = chunk.currentSize
             }
         }
         var all_equal = true
         for chunk in chunks {
-            if chunk.current_size != largest {
+            if chunk.currentSize != largest {
                 all_equal = false
             }
         }
         if !all_equal {
             print("Chunks were *NOT* all equal to \(largest)!")
             for chunk in chunks {
-                print("\(chunk.id), size = \(chunk.current_size)")
+                print("\(chunk.id), size = \(chunk.currentSize)")
             }
             return false
         }
@@ -155,7 +155,7 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
     
     func get_random_nodes(pages: [SkeletonPage], n: Int) -> [SkeletonNode] {
         
-        let all_nodes = SkeletonLayoutExecutor.getAllNodes(pages: pages)
+        let all_nodes = SkeletonLayoutGrouper.getAllNodes(pages: pages)
         let result = getRandomElements(input: all_nodes, count: n)
         return result
     }
@@ -166,22 +166,22 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
     
     func are_all_equal_to_largest(nodes: [SkeletonNode]) -> Bool {
         if nodes.count < 2 { return true }
-        var largest = nodes[0].current_size
+        var largest = nodes[0].currentSize
         for node in nodes {
-            if node.current_size > largest {
-                largest = node.current_size
+            if node.currentSize > largest {
+                largest = node.currentSize
             }
         }
         var all_equal = true
         for node in nodes {
-            if node.current_size != largest {
+            if node.currentSize != largest {
                 all_equal = false
             }
         }
         if !all_equal {
             print("Nodes were *NOT* all equal to \(largest)!")
             for node in nodes {
-                print("\(node.id), size = \(node.current_size)")
+                print("\(node.id), size = \(node.currentSize)")
             }
             return false
         }
@@ -191,7 +191,7 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
     
     func get_random_sections(pages: [SkeletonPage], n: Int) -> [SkeletonSection] {
         
-        let all_sections = SkeletonLayoutExecutor.getAllSections(pages: pages)
+        let all_sections = SkeletonLayoutGrouper.getAllSections(pages: pages)
         let result = getRandomElements(input: all_sections, count: n)
         return result
     }
@@ -202,22 +202,22 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
     
     func are_all_equal_to_largest(sections: [SkeletonSection]) -> Bool {
         if sections.count < 2 { return true }
-        var largest = sections[0].current_size
+        var largest = sections[0].currentSize
         for section in sections {
-            if section.current_size > largest {
-                largest = section.current_size
+            if section.currentSize > largest {
+                largest = section.currentSize
             }
         }
         var all_equal = true
         for section in sections {
-            if section.current_size != largest {
+            if section.currentSize != largest {
                 all_equal = false
             }
         }
         if !all_equal {
             print("Sections were *NOT* all equal to \(largest)!")
             for section in sections {
-                print("\(section.id), size = \(section.current_size)")
+                print("\(section.id), size = \(section.currentSize)")
             }
             return false
         }
@@ -234,7 +234,7 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let safeAreaLeft = 0
             let safeAreaRight = 0
             
-            let all_pieces = SkeletonLayoutExecutor.getAllPieces(pages: pages)
+            let all_pieces = SkeletonLayoutGrouper.getAllPieces(pages: pages)
             let link_pieces = getRandomElements(input: all_pieces, count: 2)
             
             SkeletonLayoutExecutor.prepare_and_snap_minimum(pages: pages,
@@ -243,11 +243,11 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
                                                             safeAreaRight: safeAreaRight)
             
             let pieceRule = get_linkage_rule(pieces: link_pieces)
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [pieceRule])
-            let flexers = SkeletonLayoutExecutor.getFlexerGroups_Unsafe(pages: pages, rules: [])
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [])
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [])
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [])
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [pieceRule])
+            let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: [])
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [])
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [])
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [])
             
             for layoutPriority in [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 
@@ -277,7 +277,7 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let safeAreaLeft = 0
             let safeAreaRight = 0
             
-            let all_flexers = SkeletonLayoutExecutor.getAllFlexers(pages: pages)
+            let all_flexers = SkeletonLayoutGrouper.getAllFlexers(pages: pages)
             let link_flexers = getRandomElements(input: all_flexers, count: 2)
             
             SkeletonLayoutExecutor.prepare_and_snap_minimum(pages: pages,
@@ -286,11 +286,11 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
                                                             safeAreaRight: safeAreaRight)
             
             let flexerRule = get_linkage_rule(flexers: link_flexers)
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [])
-            let flexers = SkeletonLayoutExecutor.getFlexerGroups_Unsafe(pages: pages, rules: [flexerRule])
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [])
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [])
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [])
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [])
+            let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: [flexerRule])
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [])
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [])
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [])
             
             for layoutPriority in [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 
@@ -320,7 +320,7 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let safeAreaLeft = 0
             let safeAreaRight = 0
             
-            let all_chunks = SkeletonLayoutExecutor.getAllChunks(pages: pages)
+            let all_chunks = SkeletonLayoutGrouper.getAllChunks(pages: pages)
             let link_chunks = getRandomElements(input: all_chunks, count: 2)
             
             SkeletonLayoutExecutor.prepare_and_snap_minimum(pages: pages,
@@ -329,11 +329,11 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
                                                             safeAreaRight: safeAreaRight)
             
             let chunkRule = get_linkage_rule(chunks: link_chunks)
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [])
-            let flexers = SkeletonLayoutExecutor.getFlexerGroups_Unsafe(pages: pages, rules: [])
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [chunkRule])
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [])
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [])
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [])
+            let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: [])
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [chunkRule])
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [])
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [])
             
             for layoutPriority in [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 
@@ -363,7 +363,7 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let safeAreaLeft = 0
             let safeAreaRight = 0
             
-            let all_nodes = SkeletonLayoutExecutor.getAllNodes(pages: pages)
+            let all_nodes = SkeletonLayoutGrouper.getAllNodes(pages: pages)
             let link_nodes = getRandomElements(input: all_nodes, count: 2)
             
             SkeletonLayoutExecutor.prepare_and_snap_minimum(pages: pages,
@@ -372,11 +372,11 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
                                                             safeAreaRight: safeAreaRight)
             
             let nodeRule = get_linkage_rule(nodes: link_nodes)
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [])
-            let flexers = SkeletonLayoutExecutor.getFlexerGroups_Unsafe(pages: pages, rules: [])
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [])
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [nodeRule])
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [])
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [])
+            let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: [])
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [])
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [nodeRule])
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [])
             
             for layoutPriority in [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 
@@ -406,7 +406,7 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let safeAreaLeft = 0
             let safeAreaRight = 0
             
-            let all_sections = SkeletonLayoutExecutor.getAllSections(pages: pages)
+            let all_sections = SkeletonLayoutGrouper.getAllSections(pages: pages)
             let link_sections = getRandomElements(input: all_sections, count: 2)
             
             SkeletonLayoutExecutor.prepare_and_snap_minimum(pages: pages,
@@ -415,11 +415,11 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
                                                             safeAreaRight: safeAreaRight)
             
             let sectionRule = get_linkage_rule(sections: link_sections)
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [])
-            let flexers = SkeletonLayoutExecutor.getFlexerGroups_Unsafe(pages: pages, rules: [])
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [])
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [])
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [sectionRule])
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [])
+            let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: [])
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [])
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [])
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [sectionRule])
             
             for layoutPriority in [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 
@@ -450,19 +450,19 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let safeAreaLeft = 0
             let safeAreaRight = 0
             
-            let all_pieces = SkeletonLayoutExecutor.getAllPieces(pages: pages)
+            let all_pieces = SkeletonLayoutGrouper.getAllPieces(pages: pages)
             let link_pieces = getRandomElements(input: all_pieces, count: 2)
             
-            let all_flexers = SkeletonLayoutExecutor.getAllFlexers(pages: pages)
+            let all_flexers = SkeletonLayoutGrouper.getAllFlexers(pages: pages)
             let link_flexers = getRandomElements(input: all_flexers, count: 2)
             
-            let all_chunks = SkeletonLayoutExecutor.getAllChunks(pages: pages)
+            let all_chunks = SkeletonLayoutGrouper.getAllChunks(pages: pages)
             let link_chunks = getRandomElements(input: all_chunks, count: 2)
             
-            let all_nodes = SkeletonLayoutExecutor.getAllNodes(pages: pages)
+            let all_nodes = SkeletonLayoutGrouper.getAllNodes(pages: pages)
             let link_nodes = getRandomElements(input: all_nodes, count: 2)
             
-            let all_sections = SkeletonLayoutExecutor.getAllSections(pages: pages)
+            let all_sections = SkeletonLayoutGrouper.getAllSections(pages: pages)
             let link_sections = getRandomElements(input: all_sections, count: 2)
             
             
@@ -476,11 +476,11 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let chunkRule = get_linkage_rule(chunks: link_chunks)
             let nodeRule = get_linkage_rule(nodes: link_nodes)
             let sectionRule = get_linkage_rule(sections: link_sections)
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [pieceRule])
-            let flexers = SkeletonLayoutExecutor.getFlexerGroups_Unsafe(pages: pages, rules: [flexerRule])
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [chunkRule])
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [nodeRule])
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [sectionRule])
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [pieceRule])
+            let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: [flexerRule])
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [chunkRule])
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [nodeRule])
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [sectionRule])
             
             for layoutPriority in [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 
@@ -536,19 +536,19 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let safeAreaLeft = 0
             let safeAreaRight = 0
             
-            let all_pieces = SkeletonLayoutExecutor.getAllPieces(pages: pages)
+            let all_pieces = SkeletonLayoutGrouper.getAllPieces(pages: pages)
             let link_pieces = getRandomElements(input: all_pieces, count: Int.random(in: 2...6))
             
-            let all_flexers = SkeletonLayoutExecutor.getAllFlexers(pages: pages)
+            let all_flexers = SkeletonLayoutGrouper.getAllFlexers(pages: pages)
             let link_flexers = getRandomElements(input: all_flexers, count: Int.random(in: 2...6))
             
-            let all_chunks = SkeletonLayoutExecutor.getAllChunks(pages: pages)
+            let all_chunks = SkeletonLayoutGrouper.getAllChunks(pages: pages)
             let link_chunks = getRandomElements(input: all_chunks, count: Int.random(in: 2...6))
             
-            let all_nodes = SkeletonLayoutExecutor.getAllNodes(pages: pages)
+            let all_nodes = SkeletonLayoutGrouper.getAllNodes(pages: pages)
             let link_nodes = getRandomElements(input: all_nodes, count: Int.random(in: 2...6))
             
-            let all_sections = SkeletonLayoutExecutor.getAllSections(pages: pages)
+            let all_sections = SkeletonLayoutGrouper.getAllSections(pages: pages)
             let link_sections = getRandomElements(input: all_sections, count: Int.random(in: 2...6))
             
             SkeletonLayoutExecutor.prepare_and_snap_minimum(pages: pages,
@@ -561,11 +561,11 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let chunkRule = get_linkage_rule(chunks: link_chunks)
             let nodeRule = get_linkage_rule(nodes: link_nodes)
             let sectionRule = get_linkage_rule(sections: link_sections)
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [pieceRule])
-            let flexers = SkeletonLayoutExecutor.getFlexerGroups_Unsafe(pages: pages, rules: [flexerRule])
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [chunkRule])
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [nodeRule])
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [sectionRule])
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [pieceRule])
+            let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: [flexerRule])
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [chunkRule])
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [nodeRule])
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [sectionRule])
             
             for layoutPriority in [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 
@@ -613,23 +613,23 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let safeAreaLeft = 0
             let safeAreaRight = 0
             
-            let all_pieces = SkeletonLayoutExecutor.getAllPieces(pages: pages)
+            let all_pieces = SkeletonLayoutGrouper.getAllPieces(pages: pages)
             let link_pieces_a = getRandomElements(input: all_pieces, count: 2)
             let link_pieces_b = getRandomElements(input: all_pieces, count: 2)
             
-            let all_flexers = SkeletonLayoutExecutor.getAllFlexers(pages: pages)
+            let all_flexers = SkeletonLayoutGrouper.getAllFlexers(pages: pages)
             let link_flexers_a = getRandomElements(input: all_flexers, count: 2)
             let link_flexers_b = getRandomElements(input: all_flexers, count: 2)
             
-            let all_chunks = SkeletonLayoutExecutor.getAllChunks(pages: pages)
+            let all_chunks = SkeletonLayoutGrouper.getAllChunks(pages: pages)
             let link_chunks_a = getRandomElements(input: all_chunks, count: 2)
             let link_chunks_b = getRandomElements(input: all_chunks, count: 2)
             
-            let all_nodes = SkeletonLayoutExecutor.getAllNodes(pages: pages)
+            let all_nodes = SkeletonLayoutGrouper.getAllNodes(pages: pages)
             let link_nodes_a = getRandomElements(input: all_nodes, count: 2)
             let link_nodes_b = getRandomElements(input: all_nodes, count: 2)
             
-            let all_sections = SkeletonLayoutExecutor.getAllSections(pages: pages)
+            let all_sections = SkeletonLayoutGrouper.getAllSections(pages: pages)
             let link_sections_a = getRandomElements(input: all_sections, count: 2)
             let link_sections_b = getRandomElements(input: all_sections, count: 2)
             
@@ -653,11 +653,11 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let sectionRule_a = get_linkage_rule(sections: link_sections_a)
             let sectionRule_b = get_linkage_rule(sections: link_sections_b)
             
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [pieceRule_a, pieceRule_b])
-            let flexers = SkeletonLayoutExecutor.getFlexerGroups_Unsafe(pages: pages, rules: [flexerRule_a, flexerRule_b])
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [chunkRule_a, chunkRule_b])
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [nodeRule_a, nodeRule_b])
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [sectionRule_a, sectionRule_b])
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [pieceRule_a, pieceRule_b])
+            let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: [flexerRule_a, flexerRule_b])
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [chunkRule_a, chunkRule_b])
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [nodeRule_a, nodeRule_b])
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [sectionRule_a, sectionRule_b])
             
             for layoutPriority in [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 
@@ -737,31 +737,31 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let count_nodes = Int.random(in: 0...6)
             let count_sections = Int.random(in: 0...6)
             
-            let all_pieces = SkeletonLayoutExecutor.getAllPieces(pages: pages)
+            let all_pieces = SkeletonLayoutGrouper.getAllPieces(pages: pages)
             var links_pieces = [[SkeletonPiece]]()
             for _ in 0..<count_pieces {
                 links_pieces.append(getRandomElements(input: all_pieces, count: Int.random(in: 2...4)))
             }
             
-            let all_flexers = SkeletonLayoutExecutor.getAllFlexers(pages: pages)
+            let all_flexers = SkeletonLayoutGrouper.getAllFlexers(pages: pages)
             var links_flexers = [[Flexer]]()
             for _ in 0..<count_flexers {
                 links_flexers.append(getRandomElements(input: all_flexers, count: Int.random(in: 2...4)))
             }
             
-            let all_chunks = SkeletonLayoutExecutor.getAllChunks(pages: pages)
+            let all_chunks = SkeletonLayoutGrouper.getAllChunks(pages: pages)
             var links_chunks = [[any SkeletonChunkConforming]]()
             for _ in 0..<count_chunks {
                 links_chunks.append(getRandomElements(input: all_chunks, count: Int.random(in: 2...4)))
             }
             
-            let all_nodes = SkeletonLayoutExecutor.getAllNodes(pages: pages)
+            let all_nodes = SkeletonLayoutGrouper.getAllNodes(pages: pages)
             var links_nodes = [[SkeletonNode]]()
             for _ in 0..<count_nodes {
                 links_nodes.append(getRandomElements(input: all_nodes, count: Int.random(in: 2...4)))
             }
             
-            let all_sections = SkeletonLayoutExecutor.getAllSections(pages: pages)
+            let all_sections = SkeletonLayoutGrouper.getAllSections(pages: pages)
             var links_sections = [[SkeletonSection]]()
             for _ in 0..<count_sections {
                 links_sections.append(getRandomElements(input: all_sections, count: Int.random(in: 2...4)))
@@ -778,11 +778,11 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let nodeRules = links_nodes.map { get_linkage_rule(nodes: $0) }
             let sectionRules = links_sections.map { get_linkage_rule(sections: $0) }
             
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: pieceRules)
-            let flexers = SkeletonLayoutExecutor.getFlexerGroups_Unsafe(pages: pages, rules: flexerRules)
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: chunkRules)
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: nodeRules)
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: sectionRules)
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: pieceRules)
+            let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: flexerRules)
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: chunkRules)
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: nodeRules)
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: sectionRules)
             
             for layoutPriority in [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 
@@ -873,7 +873,7 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let safeAreaLeft = 0
             let safeAreaRight = 0
             
-            let all_pieces = SkeletonLayoutExecutor.getAllPieces(pages: pages)
+            let all_pieces = SkeletonLayoutGrouper.getAllPieces(pages: pages)
             let link_pieces = getRandomElements(input: all_pieces, count: 2)
             
             SkeletonLayoutExecutor.prepare_and_snap_minimum(pages: pages,
@@ -882,11 +882,11 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
                                                             safeAreaRight: safeAreaRight)
             
             let pieceRule = get_linkage_rule(pieces: link_pieces)
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [pieceRule])
-            let flexers = SkeletonLayoutExecutor.getFlexerGroups_Unsafe(pages: pages, rules: [])
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [])
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [])
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [])
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [pieceRule])
+            let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: [])
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [])
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [])
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [])
             
             for layoutPriority in [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 
@@ -915,7 +915,7 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let safeAreaLeft = 0
             let safeAreaRight = 0
             
-            let all_flexers = SkeletonLayoutExecutor.getAllFlexers(pages: pages)
+            let all_flexers = SkeletonLayoutGrouper.getAllFlexers(pages: pages)
             let link_flexers = getRandomElements(input: all_flexers, count: 2)
             
             SkeletonLayoutExecutor.prepare_and_snap_minimum(pages: pages,
@@ -925,11 +925,11 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             
             let flexerRule = get_linkage_rule(flexers: link_flexers)
             
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [])
-            let flexers = SkeletonLayoutExecutor.getFlexerGroups_Unsafe(pages: pages, rules: [flexerRule])
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [])
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [])
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [])
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [])
+            let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: [flexerRule])
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [])
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [])
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [])
             
             for layoutPriority in [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 
@@ -959,7 +959,7 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let safeAreaLeft = 0
             let safeAreaRight = 0
             
-            let all_chunks = SkeletonLayoutExecutor.getAllChunks(pages: pages)
+            let all_chunks = SkeletonLayoutGrouper.getAllChunks(pages: pages)
             let link_chunks = getRandomElements(input: all_chunks, count: 2)
             
             SkeletonLayoutExecutor.prepare_and_snap_minimum(pages: pages,
@@ -968,11 +968,11 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
                                                             safeAreaRight: safeAreaRight)
             
             let chunkRule = get_linkage_rule(chunks: link_chunks)
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [])
-            let flexers = SkeletonLayoutExecutor.getFlexerGroups_Unsafe(pages: pages, rules: [])
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [chunkRule])
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [])
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [])
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [])
+            let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: [])
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [chunkRule])
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [])
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [])
             
             for layoutPriority in [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 
@@ -1002,7 +1002,7 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let safeAreaLeft = 0
             let safeAreaRight = 0
             
-            let all_nodes = SkeletonLayoutExecutor.getAllNodes(pages: pages)
+            let all_nodes = SkeletonLayoutGrouper.getAllNodes(pages: pages)
             let link_nodes = getRandomElements(input: all_nodes, count: 2)
             
             SkeletonLayoutExecutor.prepare_and_snap_minimum(pages: pages,
@@ -1011,11 +1011,11 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
                                                             safeAreaRight: safeAreaRight)
             
             let nodeRule = get_linkage_rule(nodes: link_nodes)
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [])
-            let flexers = SkeletonLayoutExecutor.getFlexerGroups_Unsafe(pages: pages, rules: [])
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [])
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [nodeRule])
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [])
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [])
+            let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: [])
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [])
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [nodeRule])
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [])
             
             for layoutPriority in [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 
@@ -1045,7 +1045,7 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let safeAreaLeft = 0
             let safeAreaRight = 0
             
-            let all_sections = SkeletonLayoutExecutor.getAllSections(pages: pages)
+            let all_sections = SkeletonLayoutGrouper.getAllSections(pages: pages)
             let link_sections = getRandomElements(input: all_sections, count: 2)
             
             SkeletonLayoutExecutor.prepare_and_snap_minimum(pages: pages,
@@ -1054,11 +1054,11 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
                                                             safeAreaRight: safeAreaRight)
             
             let sectionRule = get_linkage_rule(sections: link_sections)
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [])
-            let flexers = SkeletonLayoutExecutor.getFlexerGroups_Unsafe(pages: pages, rules: [])
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [])
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [])
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [sectionRule])
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [])
+            let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: [])
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [])
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [])
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [sectionRule])
             
             for layoutPriority in [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 
@@ -1089,19 +1089,19 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let safeAreaLeft = 0
             let safeAreaRight = 0
             
-            let all_pieces = SkeletonLayoutExecutor.getAllPieces(pages: pages)
+            let all_pieces = SkeletonLayoutGrouper.getAllPieces(pages: pages)
             let link_pieces = getRandomElements(input: all_pieces, count: 2)
             
-            let all_flexers = SkeletonLayoutExecutor.getAllFlexers(pages: pages)
+            let all_flexers = SkeletonLayoutGrouper.getAllFlexers(pages: pages)
             let link_flexers = getRandomElements(input: all_flexers, count: 2)
             
-            let all_chunks = SkeletonLayoutExecutor.getAllChunks(pages: pages)
+            let all_chunks = SkeletonLayoutGrouper.getAllChunks(pages: pages)
             let link_chunks = getRandomElements(input: all_chunks, count: 2)
             
-            let all_nodes = SkeletonLayoutExecutor.getAllNodes(pages: pages)
+            let all_nodes = SkeletonLayoutGrouper.getAllNodes(pages: pages)
             let link_nodes = getRandomElements(input: all_nodes, count: 2)
             
-            let all_sections = SkeletonLayoutExecutor.getAllSections(pages: pages)
+            let all_sections = SkeletonLayoutGrouper.getAllSections(pages: pages)
             let link_sections = getRandomElements(input: all_sections, count: 2)
             
             
@@ -1115,11 +1115,11 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let chunkRule = get_linkage_rule(chunks: link_chunks)
             let nodeRule = get_linkage_rule(nodes: link_nodes)
             let sectionRule = get_linkage_rule(sections: link_sections)
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [pieceRule])
-            let flexers = SkeletonLayoutExecutor.getFlexerGroups_Unsafe(pages: pages, rules: [flexerRule])
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [chunkRule])
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [nodeRule])
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [sectionRule])
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [pieceRule])
+            let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: [flexerRule])
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [chunkRule])
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [nodeRule])
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [sectionRule])
             
             for layoutPriority in [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 
@@ -1174,19 +1174,19 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let safeAreaLeft = 0
             let safeAreaRight = 0
             
-            let all_pieces = SkeletonLayoutExecutor.getAllPieces(pages: pages)
+            let all_pieces = SkeletonLayoutGrouper.getAllPieces(pages: pages)
             let link_pieces = getRandomElements(input: all_pieces, count: Int.random(in: 2...6))
             
-            let all_flexers = SkeletonLayoutExecutor.getAllFlexers(pages: pages)
+            let all_flexers = SkeletonLayoutGrouper.getAllFlexers(pages: pages)
             let link_flexers = getRandomElements(input: all_flexers, count: Int.random(in: 2...6))
             
-            let all_chunks = SkeletonLayoutExecutor.getAllChunks(pages: pages)
+            let all_chunks = SkeletonLayoutGrouper.getAllChunks(pages: pages)
             let link_chunks = getRandomElements(input: all_chunks, count: Int.random(in: 2...6))
             
-            let all_nodes = SkeletonLayoutExecutor.getAllNodes(pages: pages)
+            let all_nodes = SkeletonLayoutGrouper.getAllNodes(pages: pages)
             let link_nodes = getRandomElements(input: all_nodes, count: Int.random(in: 2...6))
             
-            let all_sections = SkeletonLayoutExecutor.getAllSections(pages: pages)
+            let all_sections = SkeletonLayoutGrouper.getAllSections(pages: pages)
             let link_sections = getRandomElements(input: all_sections, count: Int.random(in: 2...6))
             
             SkeletonLayoutExecutor.prepare_and_snap_minimum(pages: pages,
@@ -1199,11 +1199,11 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let chunkRule = get_linkage_rule(chunks: link_chunks)
             let nodeRule = get_linkage_rule(nodes: link_nodes)
             let sectionRule = get_linkage_rule(sections: link_sections)
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [pieceRule])
-            let flexers = SkeletonLayoutExecutor.getFlexerGroups_Unsafe(pages: pages, rules: [flexerRule])
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [chunkRule])
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [nodeRule])
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [sectionRule])
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [pieceRule])
+            let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: [flexerRule])
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [chunkRule])
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [nodeRule])
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [sectionRule])
             
             for layoutPriority in [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 
@@ -1257,24 +1257,24 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let safeAreaLeft = 0
             let safeAreaRight = 0
             
-            let all_pieces = SkeletonLayoutExecutor.getAllPieces(pages: pages)
+            let all_pieces = SkeletonLayoutGrouper.getAllPieces(pages: pages)
             let link_pieces_a = getRandomElements(input: all_pieces, count: 2)
             let link_pieces_b = getRandomElements(input: all_pieces, count: 2)
             
-            let all_flexers = SkeletonLayoutExecutor.getAllFlexers(pages: pages)
+            let all_flexers = SkeletonLayoutGrouper.getAllFlexers(pages: pages)
             let link_flexers_a = getRandomElements(input: all_flexers, count: 2)
             let link_flexers_b = getRandomElements(input: all_flexers, count: 2)
             
-            let all_chunks = SkeletonLayoutExecutor.getAllChunks(pages: pages)
+            let all_chunks = SkeletonLayoutGrouper.getAllChunks(pages: pages)
             let link_chunks_a = getRandomElements(input: all_chunks, count: 2)
             let link_chunks_b = getRandomElements(input: all_chunks, count: 2)
             
             
-            let all_nodes = SkeletonLayoutExecutor.getAllNodes(pages: pages)
+            let all_nodes = SkeletonLayoutGrouper.getAllNodes(pages: pages)
             let link_nodes_a = getRandomElements(input: all_nodes, count: 2)
             let link_nodes_b = getRandomElements(input: all_nodes, count: 2)
             
-            let all_sections = SkeletonLayoutExecutor.getAllSections(pages: pages)
+            let all_sections = SkeletonLayoutGrouper.getAllSections(pages: pages)
             let link_sections_a = getRandomElements(input: all_sections, count: 2)
             let link_sections_b = getRandomElements(input: all_sections, count: 2)
             
@@ -1298,11 +1298,11 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let sectionRule_a = get_linkage_rule(sections: link_sections_a)
             let sectionRule_b = get_linkage_rule(sections: link_sections_b)
             
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: [pieceRule_a, pieceRule_b])
-            let flexers = SkeletonLayoutExecutor.getFlexerGroups_Unsafe(pages: pages, rules: [flexerRule_a, flexerRule_b])
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: [chunkRule_a, chunkRule_b])
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: [nodeRule_a, nodeRule_b])
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: [sectionRule_a, sectionRule_b])
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [pieceRule_a, pieceRule_b])
+            let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: [flexerRule_a, flexerRule_b])
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [chunkRule_a, chunkRule_b])
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [nodeRule_a, nodeRule_b])
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [sectionRule_a, sectionRule_b])
             
             for layoutPriority in [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 
@@ -1394,31 +1394,31 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let count_nodes = Int.random(in: 0...6)
             let count_sections = Int.random(in: 0...6)
             
-            let all_pieces = SkeletonLayoutExecutor.getAllPieces(pages: pages)
+            let all_pieces = SkeletonLayoutGrouper.getAllPieces(pages: pages)
             var links_pieces = [[SkeletonPiece]]()
             for _ in 0..<count_pieces {
                 links_pieces.append(getRandomElements(input: all_pieces, count: Int.random(in: 2...4)))
             }
             
-            let all_flexers = SkeletonLayoutExecutor.getAllFlexers(pages: pages)
+            let all_flexers = SkeletonLayoutGrouper.getAllFlexers(pages: pages)
             var links_flexers = [[Flexer]]()
             for _ in 0..<count_flexers {
                 links_flexers.append(getRandomElements(input: all_flexers, count: Int.random(in: 2...4)))
             }
             
-            let all_chunks = SkeletonLayoutExecutor.getAllChunks(pages: pages)
+            let all_chunks = SkeletonLayoutGrouper.getAllChunks(pages: pages)
             var links_chunks = [[any SkeletonChunkConforming]]()
             for _ in 0..<count_chunks {
                 links_chunks.append(getRandomElements(input: all_chunks, count: Int.random(in: 2...4)))
             }
             
-            let all_nodes = SkeletonLayoutExecutor.getAllNodes(pages: pages)
+            let all_nodes = SkeletonLayoutGrouper.getAllNodes(pages: pages)
             var links_nodes = [[SkeletonNode]]()
             for _ in 0..<count_nodes {
                 links_nodes.append(getRandomElements(input: all_nodes, count: Int.random(in: 2...4)))
             }
             
-            let all_sections = SkeletonLayoutExecutor.getAllSections(pages: pages)
+            let all_sections = SkeletonLayoutGrouper.getAllSections(pages: pages)
             var links_sections = [[SkeletonSection]]()
             for _ in 0..<count_sections {
                 links_sections.append(getRandomElements(input: all_sections, count: Int.random(in: 2...4)))
@@ -1435,11 +1435,11 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             let nodeRules = links_nodes.map { get_linkage_rule(nodes: $0) }
             let sectionRules = links_sections.map { get_linkage_rule(sections: $0) }
             
-            let pieces = SkeletonLayoutExecutor.getPieceGroups_Unsafe(pages: pages, rules: pieceRules)
-            let flexers = SkeletonLayoutExecutor.getFlexerGroups_Unsafe(pages: pages, rules: flexerRules)
-            let chunks = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages, rules: chunkRules)
-            let nodes = SkeletonLayoutExecutor.getNodeGroups_Unsafe(pages: pages, rules: nodeRules)
-            let sections = SkeletonLayoutExecutor.getSectionGroups_Unsafe(pages: pages, rules: sectionRules)
+            let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: pieceRules)
+            let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: flexerRules)
+            let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: chunkRules)
+            let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: nodeRules)
+            let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: sectionRules)
             
             for layoutPriority in [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally] {
                 

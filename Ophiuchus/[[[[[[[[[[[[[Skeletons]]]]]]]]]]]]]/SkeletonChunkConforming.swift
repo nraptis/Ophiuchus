@@ -24,7 +24,7 @@ public protocol SkeletonChunkConforming: AnyObject, ExploderConforming {
     var id: Int { get }
     var chunkIdentifier: ChunkIdentifier { get }
     
-    var current_size: Int { get set }
+    var currentSize: Int { get set }
     var children_size: Int { get set }
     var didGrowOnCurrentPass: Bool { get set }
     
@@ -50,17 +50,17 @@ public extension SkeletonChunkConforming {
     
     
     func growChildrenByOne_Unsafe_Bubble() {
-        if children_size < current_size {
+        if children_size < currentSize {
             children_size += 1
         } else {
             growByOne_Unsafe_Bubble()
-            children_size = current_size
+            children_size = currentSize
         }
         didGrowOnCurrentPass = true
     }
     
     func growByOne_Unsafe_Bubble() {
-        current_size += 1
+        currentSize += 1
         node.growChildrenByOne_Unsafe_Bubble()
         didGrowOnCurrentPass = true
     }
@@ -68,7 +68,7 @@ public extension SkeletonChunkConforming {
     func computeSize(layoutPriority: LayoutPriority) -> Int {
         var result = 0
         for piece in pieces {
-            result += piece.current_size
+            result += piece.currentSize
         }
         for flexer in flexers {
             result += flexer.getDesiredSize(layoutPriority: layoutPriority)
@@ -95,10 +95,10 @@ public extension SkeletonChunkConforming {
     }
     
     func canGrowByOne() -> Bool {
-        if node.children_size < node.current_size {
+        if node.children_size < node.currentSize {
             return true
         }
-        if section.children_size < section.current_size {
+        if section.children_size < section.currentSize {
             return true
         }
         if row.canGrowByOne(section: section) {

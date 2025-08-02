@@ -57,7 +57,7 @@ struct LinkPriorityGroupChunkTests {
                 }
             }
             
-            let groups = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages,
+            let groups = SkeletonLayoutGrouper.getChunkGroups(pages: pages,
                                                                      rules: rules)
             for group in groups {
                 if group.linkedList.count > 1 {
@@ -148,7 +148,7 @@ struct LinkPriorityGroupChunkTests {
                     }
                 }
                 
-                let groups = SkeletonLayoutExecutor.getChunkGroups_Unsafe(pages: pages,
+                let groups = SkeletonLayoutGrouper.getChunkGroups(pages: pages,
                                                                           rules: rules)
                 for group in groups {
                     if group.linkedList.count > 1 {

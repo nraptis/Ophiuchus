@@ -10,8 +10,36 @@ import Foundation
 
 struct GenerateRows {
     
+    static func generate_Row(flexer: Flexer) -> SkeletonRow {
+        let chunk = GenerateChunks.generate_flexer(flexer: flexer)
+        let result = generate_Row(chunk: chunk)
+        return result
+    }
+    
+    static func generate_Row(piece: SkeletonPiece) -> SkeletonRow {
+        let chunk = GenerateChunks.generate_fixed(piece: piece)
+        let result = generate_Row(chunk: chunk)
+        return result
+    }
+    
+    static func generate_Row(chunk: any SkeletonChunkConforming) -> SkeletonRow {
+        let node = GenerateNodes.generate_node(chunk: chunk)
+        let result = generate_Row(node: node)
+        return result
+    }
+    
+    static func generate_Row(node: WiseLayoutNode) -> SkeletonRow {
+        let section = GenerateSections.generate_section(node: node)
+        let result = generate_Row(section: section)
+        return result
+    }
+    
     static func generate_Row(section: SkeletonSection) -> SkeletonRow {
         GenerateRows.generate_Row(sections: [section], attemptedCenteredSection: nil)
+    }
+    
+    static func generate_Row(sections: [SkeletonSection]) -> SkeletonRow {
+        GenerateRows.generate_Row(sections: sections, attemptedCenteredSection: nil)
     }
     
     static func generate_Row(sections: [SkeletonSection], attemptedCenteredSection: SkeletonSection?) -> SkeletonRow {
@@ -41,6 +69,8 @@ struct GenerateRows {
                 }
             }
         }
+        
+        result.prepare()
         
         return result
     }

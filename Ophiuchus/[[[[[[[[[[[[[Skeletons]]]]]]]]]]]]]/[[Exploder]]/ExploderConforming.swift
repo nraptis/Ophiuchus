@@ -9,5 +9,5 @@ import Foundation
 
 public protocol ExploderConforming: AnyObject {
     var id: Int { get }
-    var current_size: Int { get }
+    var currentSize: Int { get }
 }
