@@ -27,6 +27,33 @@ public class SkeletonRow: CustomStringConvertible {
         return result
     }
     
+    static func isCenterSectionProperlyCentered(leftSize: Int,
+                                                centerSize: Int,
+                                                rightSize: Int,
+                                                menuWidthWithSafeArea: Int,
+                                                safeAreaLeft: Int,
+                                                safeAreaRight: Int) -> Bool {
+        let _max_size = menuWidthWithSafeArea - safeAreaLeft - safeAreaRight
+        let _max_size_2 = (_max_size / 2)
+        
+        let _center_size_2 = (centerSize / 2)
+        let _center_left_x = _max_size_2 - _center_size_2
+        if leftSize > _center_left_x {
+            // In this case, the left is too large.
+            return false
+        }
+        
+        let _center_right_x = _center_left_x + centerSize
+        let rightWall = _max_size - rightSize
+        
+        if _center_right_x > rightWall {
+            // In this case, the right is too large.
+            return false
+        }
+        
+        return true
+    }
+    
     var temp_size_required = 0
     var temp_size_high = 0
     var temp_size_medium = 0
