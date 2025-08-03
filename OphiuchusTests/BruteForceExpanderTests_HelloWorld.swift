@@ -179,7 +179,7 @@ struct BruteForceExpanderTests_HelloWorld {
                         let section = GenerateSections.generate_section(nodes: nodes)
                         sections.append(section)
                     }
-                    let row = SkeletonRow(sections: sections, attemptedCenteredSection: nil)
+                    let row = GenerateRows.generate_Row(sections: sections)
                     rows.append(row)
                 }
                 let page = SkeletonPage(rows: rows)
@@ -296,7 +296,7 @@ struct BruteForceExpanderTests_HelloWorld {
                         let section = GenerateSections.generate_section(nodes: nodes)
                         sections.append(section)
                     }
-                    let row = SkeletonRow(sections: sections, attemptedCenteredSection: nil)
+                    let row = GenerateRows.generate_Row(sections: sections)
                     rows.append(row)
                 }
                 let page = SkeletonPage(rows: rows)
@@ -398,7 +398,7 @@ struct BruteForceExpanderTests_HelloWorld {
                         let section = GenerateSections.generate_section(nodes: nodes)
                         sections.append(section)
                     }
-                    let row = SkeletonRow(sections: sections, attemptedCenteredSection: nil)
+                    let row = GenerateRows.generate_Row(sections: sections)
                     rows.append(row)
                 }
                 let page = SkeletonPage(rows: rows)
@@ -516,7 +516,7 @@ struct BruteForceExpanderTests_HelloWorld {
                         let section = GenerateSections.generate_section(nodes: nodes)
                         sections.append(section)
                     }
-                    let row = SkeletonRow(sections: sections, attemptedCenteredSection: nil)
+                    let row = GenerateRows.generate_Row(sections: sections)
                     rows.append(row)
                 }
                 let page = SkeletonPage(rows: rows)
@@ -625,7 +625,7 @@ struct BruteForceExpanderTests_HelloWorld {
                         sections.append(section)
                     }
                     
-                    let row = SkeletonRow(sections: sections, attemptedCenteredSection: sections.randomElement())
+                    let row = GenerateRows.generate_Row(sections: sections, attemptedCenteredSection: sections.randomElement())
                     rows.append(row)
                 }
                 let page = SkeletonPage(rows: rows)
@@ -742,7 +742,7 @@ struct BruteForceExpanderTests_HelloWorld {
                         let section = GenerateSections.generate_section(nodes: nodes)
                         sections.append(section)
                     }
-                    let row = SkeletonRow(sections: sections, attemptedCenteredSection: sections.randomElement())
+                    let row = GenerateRows.generate_Row(sections: sections, attemptedCenteredSection: sections.randomElement())
                     rows.append(row)
                 }
                 let page = SkeletonPage(rows: rows)
@@ -849,7 +849,7 @@ struct BruteForceExpanderTests_HelloWorld {
                         let section = GenerateSections.generate_section(nodes: nodes)
                         sections.append(section)
                     }
-                    let row = SkeletonRow(sections: sections, attemptedCenteredSection: sections.randomElement())
+                    let row = GenerateRows.generate_Row(sections: sections, attemptedCenteredSection: sections.randomElement())
                     rows.append(row)
                 }
                 let page = SkeletonPage(rows: rows)
@@ -994,7 +994,7 @@ struct BruteForceExpanderTests_HelloWorld {
                         let section = GenerateSections.generate_section(nodes: nodes)
                         sections.append(section)
                     }
-                    let row = SkeletonRow(sections: sections, attemptedCenteredSection: sections.randomElement())
+                    let row = GenerateRows.generate_Row(sections: sections, attemptedCenteredSection: sections.randomElement())
                     rows.append(row)
                 }
                 let page = SkeletonPage(rows: rows)

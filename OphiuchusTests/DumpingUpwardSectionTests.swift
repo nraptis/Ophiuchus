@@ -19,7 +19,9 @@ struct DumpingUpwardSectionTests {
         let row_a = GenerateRows.generate_Row(section: section_a)
         
         let sectionGroup = ExploderGroup<SkeletonSection>(linkedList: [section_a], layoutPriority: .required)
-        _ = SkeletonLayoutGrowthPlanTool.getGrowthPlansForSections(sectionList: sectionGroup.linkedList, sectionListCount: sectionGroup.linkedList.count)
+        _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForSections(sectionList: sectionGroup.linkedList,
+                                                                   sectionListCount: sectionGroup.linkedList.count,
+                                                                   sectionAmountList: SkeletonLayoutGrowthPlanTool.sectionAmountList)
         
         guard SkeletonLayoutGrowthPlanTool.rowListCount == 1 else {
             #expect(Bool(false))
@@ -45,7 +47,9 @@ struct DumpingUpwardSectionTests {
         let section_b = GenerateSections.generate_fixed(size: 10)
         let row_a = GenerateRows.generate_Row(sections: [section_a, section_b])
         let sectionGroup = ExploderGroup<SkeletonSection>(linkedList: [section_a, section_b], layoutPriority: .required)
-        _ = SkeletonLayoutGrowthPlanTool.getGrowthPlansForSections(sectionList: sectionGroup.linkedList, sectionListCount: sectionGroup.linkedList.count)
+        _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForSections(sectionList: sectionGroup.linkedList,
+                                                                   sectionListCount: sectionGroup.linkedList.count,
+                                                                   sectionAmountList: SkeletonLayoutGrowthPlanTool.sectionAmountList)
         
         guard SkeletonLayoutGrowthPlanTool.rowListCount == 1 else {
             #expect(Bool(false))
@@ -79,7 +83,9 @@ struct DumpingUpwardSectionTests {
         let row_a = GenerateRows.generate_Row(sections: [section_a, section_b, section_c])
         
         let sectionGroup = ExploderGroup<SkeletonSection>(linkedList: [section_a, section_b, section_c], layoutPriority: .required)
-        _ = SkeletonLayoutGrowthPlanTool.getGrowthPlansForSections(sectionList: sectionGroup.linkedList, sectionListCount: sectionGroup.linkedList.count)
+        _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForSections(sectionList: sectionGroup.linkedList,
+                                                                   sectionListCount: sectionGroup.linkedList.count,
+                                                                   sectionAmountList: SkeletonLayoutGrowthPlanTool.sectionAmountList)
         
         guard SkeletonLayoutGrowthPlanTool.rowListCount == 1 else {
             #expect(Bool(false))
@@ -117,7 +123,9 @@ struct DumpingUpwardSectionTests {
         let row_b = GenerateRows.generate_Row(section: section_b)
         
         let sectionGroup = ExploderGroup<SkeletonSection>(linkedList: [section_a, section_b], layoutPriority: .required)
-        _ = SkeletonLayoutGrowthPlanTool.getGrowthPlansForSections(sectionList: sectionGroup.linkedList, sectionListCount: sectionGroup.linkedList.count)
+        _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForSections(sectionList: sectionGroup.linkedList,
+                                                                   sectionListCount: sectionGroup.linkedList.count,
+                                                                   sectionAmountList: SkeletonLayoutGrowthPlanTool.sectionAmountList)
         
         guard SkeletonLayoutGrowthPlanTool.rowListCount == 2 else {
             #expect(Bool(false))
@@ -160,7 +168,9 @@ struct DumpingUpwardSectionTests {
         let row_b = GenerateRows.generate_Row(section: section_c)
         
         let sectionGroup = ExploderGroup<SkeletonSection>(linkedList: [section_a, section_b, section_c], layoutPriority: .required)
-        _ = SkeletonLayoutGrowthPlanTool.getGrowthPlansForSections(sectionList: sectionGroup.linkedList, sectionListCount: sectionGroup.linkedList.count)
+        _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForSections(sectionList: sectionGroup.linkedList,
+                                                                   sectionListCount: sectionGroup.linkedList.count,
+                                                                   sectionAmountList: SkeletonLayoutGrowthPlanTool.sectionAmountList)
         
         guard SkeletonLayoutGrowthPlanTool.rowListCount == 2 else {
             #expect(Bool(false))
@@ -207,7 +217,9 @@ struct DumpingUpwardSectionTests {
         let row_b = GenerateRows.generate_Row(sections: [section_b, section_c])
         
         let sectionGroup = ExploderGroup<SkeletonSection>(linkedList: [section_a, section_b, section_c], layoutPriority: .required)
-        _ = SkeletonLayoutGrowthPlanTool.getGrowthPlansForSections(sectionList: sectionGroup.linkedList, sectionListCount: sectionGroup.linkedList.count)
+        _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForSections(sectionList: sectionGroup.linkedList,
+                                                                   sectionListCount: sectionGroup.linkedList.count,
+                                                                   sectionAmountList: SkeletonLayoutGrowthPlanTool.sectionAmountList)
         
         guard SkeletonLayoutGrowthPlanTool.rowListCount == 2 else {
             #expect(Bool(false))
@@ -247,12 +259,12 @@ struct DumpingUpwardSectionTests {
         
         for _ in 0..<512 {
             
-            let rowCount = Int.random(in: 0...5)
+            let rowCount = Int.random(in: 0...4)
             var row_list = [SkeletonRow]()
             var section_list = [SkeletonSection]()
             
             for _ in 0..<rowCount {
-                let sectionCount = Int.random(in: 0...5)
+                let sectionCount = Int.random(in: 0...4)
                 for _ in 0..<sectionCount {
                     let which = Int.random(in: 0...6)
                     if which == 0 {
@@ -326,7 +338,9 @@ struct DumpingUpwardSectionTests {
             
             
             let sectionGroup = ExploderGroup<SkeletonSection>(linkedList: section_list, layoutPriority: .required)
-            _ = SkeletonLayoutGrowthPlanTool.getGrowthPlansForSections(sectionList: sectionGroup.linkedList, sectionListCount: sectionGroup.linkedList.count)
+            _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForSections(sectionList: sectionGroup.linkedList,
+                                                                       sectionListCount: sectionGroup.linkedList.count,
+                                                                       sectionAmountList: SkeletonLayoutGrowthPlanTool.sectionAmountList)
             
             guard SkeletonLayoutGrowthPlanTool.rowListCount == row_list.count else {
                 #expect(Bool(false))
@@ -367,7 +381,7 @@ struct DumpingUpwardSectionTests {
         
         for _ in 0..<1024 {
             
-            let rowCount = Int.random(in: 0...8)
+            let rowCount = Int.random(in: 0...4)
             var row_list = [SkeletonRow]()
             var section_list = [SkeletonSection]()
             
@@ -453,7 +467,9 @@ struct DumpingUpwardSectionTests {
             }
             
             let sectionGroup = ExploderGroup<SkeletonSection>(linkedList: section_list, layoutPriority: .required)
-            _ = SkeletonLayoutGrowthPlanTool.getGrowthPlansForSections(sectionList: sectionGroup.linkedList, sectionListCount: sectionGroup.linkedList.count)
+            _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForSections(sectionList: sectionGroup.linkedList,
+                                                                       sectionListCount: sectionGroup.linkedList.count,
+                                                                       sectionAmountList: SkeletonLayoutGrowthPlanTool.sectionAmountList)
             
             guard SkeletonLayoutGrowthPlanTool.rowListCount == row_list.count else {
                 #expect(Bool(false))

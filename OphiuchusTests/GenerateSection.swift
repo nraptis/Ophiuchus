@@ -14,6 +14,33 @@ struct GenerateSections {
     
     private static var section_id = 0
     
+    
+    static func generate_n_sections(n: Int) -> [SkeletonSection] {
+        var result = [SkeletonSection]()
+        var index = 0
+        while index < n {
+            let section = generate_fixed(size: 10)
+            result.append(section)
+            index += 1
+        }
+        return result
+    }
+    
+    static func generate_section(gap: Int) -> SkeletonSection {
+        let base = Int.random(in: 0...20)
+        let result = GenerateSections.generate_section(base: base, gap: gap)
+        return result
+    }
+    
+    static func generate_section(base: Int, gap: Int) -> SkeletonSection {
+        let result = GenerateSections.generate_fixed(size: base + gap)
+        result.childrenSize = base
+        result.currentSize = base + gap
+        return result
+    }
+    
+    
+    
     static func generate_section(node: WiseLayoutNode) -> SkeletonSection {
         GenerateSections.generate_section(nodes: [node])
     }
@@ -46,6 +73,22 @@ struct GenerateSections {
             layoutNodes.append(layoutNode)
         }
         let result = GenerateSections.generate_section(nodes: layoutNodes)
+        return result
+    }
+    
+    static func generate_section(skeleton_nodes: [SkeletonNode], gap: Int) -> SkeletonSection {
+        let base = Int.random(in: 0...20)
+        let result = GenerateSections.generate_section(skeleton_nodes: skeleton_nodes,
+                                                       base: base,
+                                                       gap: gap)
+        return result
+    }
+    
+    static func generate_section(skeleton_nodes: [SkeletonNode], base: Int, gap: Int) -> SkeletonSection {
+        
+        let result = GenerateSections.generate_section(skeleton_nodes: skeleton_nodes)
+        result.currentSize = base + gap
+        result.childrenSize = base
         return result
     }
     

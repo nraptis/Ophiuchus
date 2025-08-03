@@ -14,6 +14,40 @@ struct GenerateChunks {
     
     private static var chunk_id = 0
     
+    /*
+    static func generate_section(skeleton_nodes: [SkeletonNode], gap: Int) -> (any SkeletonChunkConforming) {
+        let base = Int.random(in: 0...20)
+        let result = GenerateSections.generate_section(skeleton_nodes: skeleton_nodes,
+                                                       base: base,
+                                                       gap: gap)
+        return result
+    }
+    
+    static func generate_section(skeleton_nodes: [SkeletonNode], base: Int, gap: Int) -> SkeletonSection {
+        
+        let result = GenerateSections.generate_section(skeleton_nodes: skeleton_nodes)
+        result.currentSize = base + gap
+        result.childrenSize = base
+        return result
+    }
+    */
+    
+    static func generate_n_chunks(n: Int) -> [any SkeletonChunkConforming] {
+        var result = [any SkeletonChunkConforming]()
+        var index = 0
+        while index < n {
+            if Bool.random() {
+                let chunk = generate_fixed(size: 10)
+                result.append(chunk)
+            } else {
+                let chunk = generate_flexer_10_flexer()
+                result.append(chunk)
+            }
+            index += 1
+        }
+        return result
+    }
+    
     static func generate_random() -> (any SkeletonChunkConforming) {
         
         let random = Int.random(in: 0...4)

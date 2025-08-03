@@ -32,7 +32,7 @@ struct ExploderTests {
                     rules.append(rule)
                     all_sections.append(contentsOf: sections)
                 }
-                let row = SkeletonRow(sections: all_sections, attemptedCenteredSection: nil)
+                let row = GenerateRows.generate_Row(sections: all_sections, attemptedCenteredSection: nil)
                 let page = SkeletonPage(rows: [row])
                 let result = SkeletonLayoutGrouper.getSectionGroups(pages: [page],
                                                                             rules: rules)
@@ -57,7 +57,7 @@ struct ExploderTests {
                 
                 for group in result {
                     for section in group.linkedList {
-                        if section.group_unsafe !== group {
+                        if section.group !== group {
                             #expect(Bool(false))
                             return
                         }
@@ -65,7 +65,7 @@ struct ExploderTests {
                 }
                 
                 for section in all_sections {
-                    if section.group_unsafe === nil {
+                    if section.group === nil {
                         #expect(Bool(false))
                         return
                     }
@@ -104,7 +104,7 @@ struct ExploderTests {
                 let node = GenerateNodes.generate_node(chunks: chunks)
                 let section = SkeletonSection(id: 0, layoutNodes: [node], alignment: .left)
                 section.adopt_test()
-                let row = SkeletonRow(sections: [section], attemptedCenteredSection: nil)
+                let row = GenerateRows.generate_Row(sections: [section], attemptedCenteredSection: nil)
                 let page = SkeletonPage(rows: [row])
                 let result = SkeletonLayoutGrouper.getPieceGroups(pages: [page],
                                                                           rules: rules)
@@ -129,7 +129,7 @@ struct ExploderTests {
                 
                 for group in result {
                     for piece in group.linkedList {
-                        if piece.group_unsafe !== group {
+                        if piece.group !== group {
                             #expect(Bool(false))
                             return
                         }
@@ -139,7 +139,7 @@ struct ExploderTests {
                 for chunk in chunks {
                     for piece in chunk.pieces {
                         
-                        if piece.group_unsafe === nil {
+                        if piece.group === nil {
                             #expect(Bool(false))
                             return
                         }
@@ -504,7 +504,7 @@ struct ExploderTests {
                 let node = GenerateNodes.generate_node(chunks: all_chunks)
                 let section = SkeletonSection(id: 0, layoutNodes: [node], alignment: .left)
                 section.adopt_test()
-                let row = SkeletonRow(sections: [section], attemptedCenteredSection: nil)
+                let row = GenerateRows.generate_Row(sections: [section], attemptedCenteredSection: nil)
                 let page = SkeletonPage(rows: [row])
                 let result = SkeletonLayoutGrouper.getChunkGroups(pages: [page],
                                                                           rules: rules)
@@ -529,7 +529,7 @@ struct ExploderTests {
                 
                 for group in result {
                     for chunk in group.linkedList {
-                        if chunk.group_unsafe !== group {
+                        if chunk.group !== group {
                             #expect(Bool(false))
                             return
                         }
@@ -537,7 +537,7 @@ struct ExploderTests {
                 }
                 
                 for chunk in all_chunks {
-                    if chunk.group_unsafe === nil {
+                    if chunk.group === nil {
                         #expect(Bool(false))
                         return
                     }
@@ -900,7 +900,9 @@ struct ExploderTests {
                     let node = GenerateNodes.generate_node(chunks: all_chunks)
                     let section = SkeletonSection(id: 0, layoutNodes: [node], alignment: .left)
                     section.adopt_test()
-                    let row = SkeletonRow(sections: [section], attemptedCenteredSection: nil)
+                    let row = GenerateRows.generate_Row(sections: [section], attemptedCenteredSection: nil)
+                    
+                    
                     let page = SkeletonPage(rows: [row])
                     let result = SkeletonLayoutGrouper.getChunkGroups(pages: [page],
                                                                               rules: rules)
@@ -963,7 +965,8 @@ struct ExploderTests {
                     let node = GenerateNodes.generate_node(chunks: chunks)
                     let section = SkeletonSection(id: 0, layoutNodes: [node], alignment: .left)
                     section.adopt_test()
-                    let row = SkeletonRow(sections: [section], attemptedCenteredSection: nil)
+                    let row = GenerateRows.generate_Row(sections: [section], attemptedCenteredSection: nil)
+                    
                     let page = SkeletonPage(rows: [row])
                     let result = SkeletonLayoutGrouper.getPieceGroups(pages: [page],
                                                                               rules: rules)
@@ -1017,7 +1020,7 @@ struct ExploderTests {
                         rules.append(rule)
                         all_sections.append(contentsOf: sections)
                     }
-                    let row = SkeletonRow(sections: all_sections, attemptedCenteredSection: nil)
+                    let row = GenerateRows.generate_Row(sections: all_sections, attemptedCenteredSection: nil)
                     let page = SkeletonPage(rows: [row])
                     let result = SkeletonLayoutGrouper.getSectionGroups(pages: [page],
                                                                                 rules: rules)
@@ -1080,7 +1083,9 @@ struct ExploderTests {
                     let node = GenerateNodes.generate_node(chunks: chunks)
                     let section = SkeletonSection(id: 0, layoutNodes: [node], alignment: .left)
                     section.adopt_test()
-                    let row = SkeletonRow(sections: [section], attemptedCenteredSection: nil)
+                    let row = GenerateRows.generate_Row(sections: [section], attemptedCenteredSection: nil)
+                    
+                    
                     let page = SkeletonPage(rows: [row])
                     let result = SkeletonLayoutGrouper.getFlexerGroups(pages: [page],
                                                                                rules: rules)
@@ -1195,7 +1200,8 @@ struct ExploderTests {
                 let node = GenerateNodes.generate_node(chunks: chunks)
                 let section = SkeletonSection(id: 0, layoutNodes: [node], alignment: .left)
                 section.adopt_test()
-                let row = SkeletonRow(sections: [section], attemptedCenteredSection: nil)
+                let row = GenerateRows.generate_Row(sections: [section], attemptedCenteredSection: nil)
+                
                 let page = SkeletonPage(rows: [row])
                 let result = SkeletonLayoutGrouper.getFlexerGroups(pages: [page],
                                                                            rules: rules)
@@ -1220,7 +1226,7 @@ struct ExploderTests {
                 
                 for group in result {
                     for flexer in group.linkedList {
-                        if flexer.group_unsafe !== group {
+                        if flexer.group !== group {
                             #expect(Bool(false))
                             return
                         }
@@ -1230,7 +1236,7 @@ struct ExploderTests {
                 for chunk in chunks {
                     for flexer in chunk.flexers {
                         
-                        if flexer.group_unsafe === nil {
+                        if flexer.group === nil {
                             #expect(Bool(false))
                             return
                         }

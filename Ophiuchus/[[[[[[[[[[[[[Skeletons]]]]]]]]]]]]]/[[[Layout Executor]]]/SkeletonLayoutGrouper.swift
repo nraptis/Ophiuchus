@@ -99,7 +99,7 @@ public struct SkeletonLayoutGrouper {
         
         for group in result {
             for piece in group.linkedList {
-                piece.group_unsafe = group
+                piece.group = group
             }
         }
         
@@ -118,7 +118,7 @@ public struct SkeletonLayoutGrouper {
         
         for group in result {
             for flexer in group.linkedList {
-                flexer.group_unsafe = group
+                flexer.group = group
             }
         }
         
@@ -137,7 +137,7 @@ public struct SkeletonLayoutGrouper {
         
         for group in result {
             for node in group.linkedList {
-                node.group_unsafe = group
+                node.group = group
             }
         }
         
@@ -156,7 +156,7 @@ public struct SkeletonLayoutGrouper {
         
         for group in result {
             for node in group.linkedList {
-                node.group_unsafe = group
+                node.group = group
             }
         }
         
@@ -175,7 +175,7 @@ public struct SkeletonLayoutGrouper {
         
         for group in result {
             for section in group.linkedList {
-                section.group_unsafe = group
+                section.group = group
             }
         }
         

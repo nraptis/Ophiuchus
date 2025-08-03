@@ -48,7 +48,7 @@ public class SkeletonNode: ExploderConforming {
     }
     
     public var currentSize = 0
-    public var children_size = 0
+    public var childrenSize = 0
     public var didGrowOnCurrentPass = false
     
     public let id: Int
@@ -57,7 +57,6 @@ public class SkeletonNode: ExploderConforming {
     
     unowned var section: SkeletonSection!
     unowned var row: SkeletonRow!
-    unowned var group_unsafe: ExploderGroup<SkeletonNode>!
     unowned var group: ExploderGroup<SkeletonNode>!
     var didGrowOnCurrentPadd = false
     
@@ -73,11 +72,11 @@ public class SkeletonNode: ExploderConforming {
     }
     
     func growChildrenByOne_Unsafe_Bubble() {
-        if children_size < currentSize {
-            children_size += 1
+        if childrenSize < currentSize {
+            childrenSize += 1
         } else {
             currentSize += 1
-            children_size = currentSize
+            childrenSize = currentSize
         }
         section.growChildrenByOne_Unsafe_Bubble()
         didGrowOnCurrentPass = true
@@ -203,7 +202,7 @@ public class SkeletonNode: ExploderConforming {
     }
     
     func canGrowByOne() -> Bool {
-        if section.children_size < section.currentSize {
+        if section.childrenSize < section.currentSize {
             return true
         }
         if row.canGrowByOne(section: section) {

@@ -10,6 +10,10 @@ import Foundation
 
 struct GenerateRows {
     
+    static let id_queue = DispatchQueue(label: "id_queue_rows")
+    private static var row_id = 0
+    
+    
     static func generate_Row(flexer: Flexer) -> SkeletonRow {
         let chunk = GenerateChunks.generate_flexer(flexer: flexer)
         let result = generate_Row(chunk: chunk)
@@ -43,7 +47,16 @@ struct GenerateRows {
     }
     
     static func generate_Row(sections: [SkeletonSection], attemptedCenteredSection: SkeletonSection?) -> SkeletonRow {
-        let result = SkeletonRow(sections: sections, attemptedCenteredSection: attemptedCenteredSection)
+        
+        let id = id_queue.sync {
+            let id = GenerateRows.row_id
+            GenerateRows.row_id += 1
+            if GenerateRows.row_id > 1_000_000_000 { GenerateRows.row_id = 0 }
+            return id
+        }
+        let result = SkeletonRow(id: id,
+                                 sections: sections,
+                                 attemptedCenteredSection: attemptedCenteredSection)
         
         for section in sections {
             section.row = result

@@ -28,7 +28,7 @@ public class SkeletonPiece: ExploderConforming {
     unowned var node: SkeletonNode!
     unowned var section: SkeletonSection!
     unowned var row: SkeletonRow!
-    unowned var group_unsafe: ExploderGroup<SkeletonPiece>!
+    unowned var group: ExploderGroup<SkeletonPiece>!
     
     init(id: Int,
          pieceIdentifier: PieceIdentifier,
@@ -43,10 +43,10 @@ public class SkeletonPiece: ExploderConforming {
         if chunk.children_size < chunk.currentSize {
             return true
         }
-        if node.children_size < node.currentSize {
+        if node.childrenSize < node.currentSize {
             return true
         }
-        if section.children_size < section.currentSize {
+        if section.childrenSize < section.currentSize {
             return true
         }
         if row.canGrowByOne(section: section) {

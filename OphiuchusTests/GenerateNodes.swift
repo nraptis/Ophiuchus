@@ -14,6 +14,28 @@ struct GenerateNodes {
     
     private static var node_id = 0
     
+    static func generate_n_nodes(n: Int) -> [WiseLayoutNode] {
+        var result = [WiseLayoutNode]()
+        var index = 0
+        while index < n {
+            let node = generate_fixed_layout(size: 10)
+            result.append(node)
+            index += 1
+        }
+        return result
+    }
+    
+    static func generate_n_skeleton_nodes(n: Int) -> [SkeletonNode] {
+        var result = [SkeletonNode]()
+        var index = 0
+        while index < n {
+            let node = generate_fixed(size: 10)
+            result.append(node)
+            index += 1
+        }
+        return result
+    }
+    
     static func generate_node(id: Int, chunk: (any SkeletonChunkConforming)) -> WiseLayoutNode {
         GenerateNodes.generate_node(id: id, chunks: [chunk])
     }
@@ -60,6 +82,19 @@ struct GenerateNodes {
         return result
     }
     
+    static func generate_node(skeletonNode: SkeletonNode) -> WiseLayoutNode {
+        let result = WiseLayoutNode(recipe_id: skeletonNode.id,
+                                    toolInterfaceElement: .invalid,
+                                    toolInterfaceElementType: .invalid,
+                                    interfaceProvider: InterfaceProvider.invalid,
+                                    configuration: 8,
+                                    is_stacked: false,
+                                    layoutScheme: EmptyLayoutScheme.self,
+                                    layoutSchemeFlavor: .long,
+                                    skeletonNodes: [skeletonNode])
+        return result
+    }
+    
     static func generate_skeleton_node(chunks: [any SkeletonChunkConforming]) -> SkeletonNode {
         let id = id_queue.sync {
             let id = GenerateNodes.node_id
@@ -82,6 +117,32 @@ struct GenerateNodes {
     
     static func generate_node(chunk: (any SkeletonChunkConforming)) -> WiseLayoutNode {
         GenerateNodes.generate_node(chunks: [chunk])
+    }
+    
+    static func generate_skeleton_node(gap: Int) -> SkeletonNode {
+        let base = Int.random(in: 0...20)
+        let result = GenerateNodes.generate_skeleton_node(base: base, gap: gap)
+        return result
+    }
+    
+    static func generate_skeleton_node(base: Int, gap: Int) -> SkeletonNode {
+        let result = GenerateNodes.generate_fixed(size: base + gap)
+        result.childrenSize = base
+        result.currentSize = base + gap
+        return result
+    }
+    
+    
+    static func generate_node(gap: Int) -> WiseLayoutNode {
+        let skeletonNode = GenerateNodes.generate_skeleton_node(gap: gap)
+        let result = GenerateNodes.generate_node(skeletonNode: skeletonNode)
+        return result
+    }
+    
+    static func generate_node(base: Int, gap: Int) -> WiseLayoutNode {
+        let skeletonNode = GenerateNodes.generate_skeleton_node(base: base, gap: gap)
+        let result = GenerateNodes.generate_node(skeletonNode: skeletonNode)
+        return result
     }
     
     static func generate_node(chunks: [any SkeletonChunkConforming]) -> WiseLayoutNode {

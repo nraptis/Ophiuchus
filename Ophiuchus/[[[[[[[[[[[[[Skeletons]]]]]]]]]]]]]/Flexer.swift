@@ -39,7 +39,7 @@ public class Flexer: ExploderConforming {
     unowned var node: SkeletonNode!
     unowned var section: SkeletonSection!
     unowned var row: SkeletonRow!
-    unowned var group_unsafe: ExploderGroup<Flexer>!
+    unowned var group: ExploderGroup<Flexer>!
     var didGrowOnCurrentPass = false
     
     public let id: Int
@@ -186,10 +186,10 @@ public class Flexer: ExploderConforming {
         if chunk.children_size < chunk.currentSize {
             return true
         }
-        if node.children_size < node.currentSize {
+        if node.childrenSize < node.currentSize {
             return true
         }
-        if section.children_size < section.currentSize {
+        if section.childrenSize < section.currentSize {
             return true
         }
         if row.canGrowByOne(section: section) {

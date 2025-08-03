@@ -35,7 +35,7 @@ struct LayoutTests_Simple {
         return result
     }
     
-    func generateRow() -> SkeletonRow {
+    func generateRow(id: Int) -> SkeletonRow {
         
         var node_id = 0
         
@@ -48,7 +48,7 @@ struct LayoutTests_Simple {
             sections.append(section)
             section_id += 1
         }
-        let result = SkeletonRow(sections: sections, attemptedCenteredSection: nil)
+        let result = SkeletonRow(id: id, sections: sections, attemptedCenteredSection: nil)
         return result
     }
     
@@ -60,8 +60,8 @@ struct LayoutTests_Simple {
                 
                 let rowCount = Int.random(in: 1...10)
                 var rows = [SkeletonRow]()
-                for _ in 0..<rowCount {
-                    let row = generateRow()
+                for row_id in 0..<rowCount {
+                    let row = generateRow(id: row_id)
                     rows.append(row)
                 }
                 
@@ -155,7 +155,7 @@ struct LayoutTests_Simple {
         
         let section = SkeletonSection(id: 0, layoutNodes: [node], alignment: .left)
         section.adopt_test()
-        let row = SkeletonRow(sections: [section], attemptedCenteredSection: nil)
+        let row = GenerateRows.generate_Row(sections: [section])
         let page = SkeletonPage(rows: [row])
         
         SkeletonLayoutExecutor.prepare_and_snap_minimum(pages: [page],
@@ -183,7 +183,7 @@ struct LayoutTests_Simple {
             return
         }
         
-        if node.skeletonNodes[0].children_size != 24 {
+        if node.skeletonNodes[0].childrenSize != 24 {
             #expect(Bool(false))
             return
         }
@@ -193,7 +193,7 @@ struct LayoutTests_Simple {
             return
         }
         
-        if section.children_size != 24 {
+        if section.childrenSize != 24 {
             #expect(Bool(false))
             return
         }
@@ -299,7 +299,7 @@ struct LayoutTests_Simple {
             section_c.adopt_test()
             
             //4444 + 440000 + 44000000 = 44444444
-            let row = SkeletonRow(sections: [section_a, section_b, section_c], attemptedCenteredSection: nil)
+            let row = GenerateRows.generate_Row(sections: [section_a, section_b, section_c])
             let page = SkeletonPage(rows: [row])
             SkeletonLayoutExecutor.prepare_and_snap_minimum(pages: [page],
                                                                            menuWidthWithSafeArea: 2048,
@@ -391,7 +391,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if node_a.skeletonNodes[0].children_size != 4 {
+            if node_a.skeletonNodes[0].childrenSize != 4 {
                 #expect(Bool(false))
                 return
             }
@@ -401,7 +401,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if node_b.skeletonNodes[0].children_size != 4440 {
+            if node_b.skeletonNodes[0].childrenSize != 4440 {
                 #expect(Bool(false))
                 return
             }
@@ -411,7 +411,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if node_c.skeletonNodes[0].children_size != 440000 {
+            if node_c.skeletonNodes[0].childrenSize != 440000 {
                 #expect(Bool(false))
                 return
             }
@@ -421,7 +421,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if node_d.skeletonNodes[0].children_size != 44000000 {
+            if node_d.skeletonNodes[0].childrenSize != 44000000 {
                 #expect(Bool(false))
                 return
             }
@@ -431,7 +431,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if section_a.children_size != 4444 {
+            if section_a.childrenSize != 4444 {
                 #expect(Bool(false))
                 return
             }
@@ -441,7 +441,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if section_b.children_size != 440000 {
+            if section_b.childrenSize != 440000 {
                 #expect(Bool(false))
                 return
             }
@@ -451,7 +451,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if section_c.children_size != 44000000 {
+            if section_c.childrenSize != 44000000 {
                 #expect(Bool(false))
                 return
             }

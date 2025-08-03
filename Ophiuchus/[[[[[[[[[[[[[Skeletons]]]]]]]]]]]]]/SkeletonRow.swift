@@ -15,6 +15,35 @@ enum SkeletonRowInitialLayoutType {
 }
 
 public class SkeletonRow: CustomStringConvertible {
+    
+    func countSectionsWithNodes() -> Int {
+        var result = 0
+        for section in sections {
+            if section.skeletonNodes.count > 0 {
+                result += 1
+            }
+        }
+        return result
+    }
+    
+    func countSectionsWithoutNodes() -> Int {
+        var result = 0
+        for section in sections {
+            if section.skeletonNodes.count == 0 {
+                result += 1
+            }
+        }
+        return result
+    }
+    
+    func countNodes() -> Int {
+        var result = 0
+        for section in sections {
+            result += section.skeletonNodes.count
+        }
+        return result
+    }
+    
     public var description: String {
         
         let isCenter = (attemptedCenteredSection !== nil)
@@ -75,16 +104,29 @@ public class SkeletonRow: CustomStringConvertible {
     var attemptedCenteredSectionIndex = 0
     var initialLayoutType = SkeletonRowInitialLayoutType.invalid
     
-    public init() {
+    public let id: Int
+    
+    public init(id: Int) {
+        self.id = id
         self.sections = []
         self.attemptedCenteredSection = nil
     }
     
-    public init(sections: [SkeletonSection],
+    public init(id: Int,
+                sections: [SkeletonSection],
          attemptedCenteredSection: SkeletonSection?) {
+        self.id = id
         self.sections = sections
         self.attemptedCenteredSection = attemptedCenteredSection
     }
+    
+    public init(id: Int,
+                sections: [SkeletonSection]) {
+        self.id = id
+        self.sections = sections
+        self.attemptedCenteredSection = nil
+    }
+    
     
     func getSectionIndex(section: SkeletonSection) -> Int? {
         for sectionIndex in 0..<sections.count {
@@ -271,14 +313,14 @@ public class SkeletonRow: CustomStringConvertible {
                                                safeAreaLeft: Int,
                                                safeAreaRight: Int) -> Bool {
         for growthPlan in growthPlans {
-            guard growthPlan.row === self else {
+            guard growthPlan.layoutRow === self else {
                 fatalError("This growth plan is not for this row...")
             }
-            if growthPlan.section.indexInRow < 0 {
+            if growthPlan.layoutSection.indexInRow < 0 {
                 fatalError("Expect indexInRow to be calculated.")
             }
-            if growthPlan.section.indexInRow >= sections.count {
-                fatalError("Expect indexInRow to be in range, it's \(growthPlan.section.indexInRow) of \(sections.count).")
+            if growthPlan.layoutSection.indexInRow >= sections.count {
+                fatalError("Expect indexInRow to be in range, it's \(growthPlan.layoutSection.indexInRow) of \(sections.count).")
             }
             if let attemptedCenteredSection = attemptedCenteredSection {
                 if attemptedCenteredSectionIndex < 0 {
@@ -341,9 +383,9 @@ public class SkeletonRow: CustomStringConvertible {
             }
             
             for growthPlan in growthPlans {
-                if growthPlan.section.indexInRow < attemptedCenteredSectionIndex {
+                if growthPlan.layoutSection.indexInRow < attemptedCenteredSectionIndex {
                     totalConsumedSizeLeft += growthPlan.amount
-                } else if growthPlan.section.indexInRow > attemptedCenteredSectionIndex {
+                } else if growthPlan.layoutSection.indexInRow > attemptedCenteredSectionIndex {
                     totalConsumedSizeRight += growthPlan.amount
                 } else {
                     totalConsumedSizeCenter += growthPlan.amount

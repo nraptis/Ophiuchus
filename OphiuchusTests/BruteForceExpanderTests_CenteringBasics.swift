@@ -30,8 +30,8 @@ struct BruteForceExpanderTests_CenteringBasics {
             let section = GenerateSections.generate_section(nodes: nodes)
             sections.append(section)
         }
-        let result = SkeletonRow(sections: sections, attemptedCenteredSection: sections.randomElement())
-        return result
+        let row = GenerateRows.generate_Row(sections: sections, attemptedCenteredSection: sections.randomElement())
+        return row
     }
     
     @Test func test_center_hello_world() {
@@ -278,7 +278,7 @@ struct BruteForceExpanderTests_CenteringBasics {
                     let section = GenerateSections.generate_section(nodes: nodes)
                     sections.append(section)
                 }
-                let row = SkeletonRow(sections: sections, attemptedCenteredSection: sections.randomElement())
+                let row = GenerateRows.generate_Row(sections: sections, attemptedCenteredSection: sections.randomElement())
                 rows.append(row)
             }
             let page = SkeletonPage(rows: rows)
@@ -312,7 +312,8 @@ struct BruteForceExpanderTests_CenteringBasics {
                     let section = GenerateSections.generate_section(nodes: nodes)
                     sections.append(section)
                 }
-                let row = SkeletonRow(sections: sections, attemptedCenteredSection: nil)
+                let row = GenerateRows.generate_Row(sections: sections)
+                
                 rows.append(row)
             }
             let page = SkeletonPage(rows: rows)

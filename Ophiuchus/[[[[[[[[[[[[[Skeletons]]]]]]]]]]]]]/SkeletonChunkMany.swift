@@ -1,21 +1,19 @@
 //
-//  SkeletonChunkFlexer.swift
+//  SkeletonChunkMany.swift
 //  Ophiuchus
 //
-//  Created by Nick on 7/4/25.
+//  Created by Nick on 8/3/25.
 //
 
 import Foundation
 
-public class SkeletonChunkFlexer: SkeletonChunkConforming {
+public class SkeletonChunkMany: SkeletonChunkConforming {
     
     public let id: Int
     public let chunkIdentifier: ChunkIdentifier
     public var currentSize = 0
     public var children_size = 0
     public var didGrowOnCurrentPass = false
-    
-    public let flexer: Flexer
     public let alignment: LayoutAlignment
     
     public unowned var node: SkeletonNode!
@@ -31,14 +29,14 @@ public class SkeletonChunkFlexer: SkeletonChunkConforming {
     
     init(id: Int,
          chunkIdentifier: ChunkIdentifier,
-         flexer: Flexer,
+         pieces: [SkeletonPiece],
+         flexers: [Flexer],
          alignment: LayoutAlignment) {
         self.id = id
         self.chunkIdentifier = chunkIdentifier
-        self.flexer = flexer
         self.alignment = alignment
-        self.pieces = []
-        self.flexers = [flexer]
+        self.pieces = pieces
+        self.flexers = flexers
     }
     
 }

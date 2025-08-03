@@ -10,7 +10,7 @@ import Foundation
 public class SkeletonSection: ExploderConforming {
     
     public var currentSize = 0
-    public var children_size = 0
+    public var childrenSize = 0
     public var didGrowOnCurrentPass = false
     
     public let id: Int
@@ -20,7 +20,6 @@ public class SkeletonSection: ExploderConforming {
     let alignment: LayoutAlignment
     
     unowned var row: SkeletonRow!
-    unowned var group_unsafe: ExploderGroup<SkeletonSection>!
     unowned var group: ExploderGroup<SkeletonSection>!
     
     public var x = 0
@@ -28,6 +27,8 @@ public class SkeletonSection: ExploderConforming {
     
     var isLeftOfCenter = false
     var indexInRow = -1
+    
+    var growthPlanIndex = -1
     
     init(id: Int,
          layoutNodes: [WiseLayoutNode],
@@ -38,11 +39,11 @@ public class SkeletonSection: ExploderConforming {
     }
     
     func growChildrenByOne_Unsafe_Bubble() {
-        if children_size < currentSize {
-            children_size += 1
+        if childrenSize < currentSize {
+            childrenSize += 1
         } else {
             growByOne_Unsafe_Bubble()
-            children_size = currentSize
+            childrenSize = currentSize
         }
         didGrowOnCurrentPass = true
     }

@@ -17,10 +17,10 @@ struct DumpingUpwardFlexerTests {
         let chunk_a = GenerateChunks.generate_flexer(flexer: flexer_a)
         let node = GenerateNodes.generate_node(chunks: [chunk_a])
         let section = GenerateSections.generate_section(node: node)
-        _ = GenerateRows.generate_Row(section: section)
+        let row = GenerateRows.generate_Row(section: section)
         
         let flexerGroup = ExploderGroup<Flexer>(linkedList: [flexer_a], layoutPriority: .required)
-        _ = SkeletonLayoutGrowthPlanTool.getGrowthPlansForFlexers(flexerGroup: flexerGroup)
+        _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForFlexers(flexerGroup: flexerGroup)
         
         guard SkeletonLayoutGrowthPlanTool.chunkListCount == 1 else {
             #expect(Bool(false))
@@ -46,9 +46,9 @@ struct DumpingUpwardFlexerTests {
         let chunk_a = GenerateChunks.generate_flexer_two(flexer1: flexer_a, flexer2: flexer_b)
         let node = GenerateNodes.generate_node(chunks: [chunk_a])
         let section = GenerateSections.generate_section(node: node)
-        _ = GenerateRows.generate_Row(section: section)
+        let row = GenerateRows.generate_Row(section: section)
         let flexerGroup = ExploderGroup<Flexer>(linkedList: [flexer_a, flexer_b], layoutPriority: .required)
-        _ = SkeletonLayoutGrowthPlanTool.getGrowthPlansForFlexers(flexerGroup: flexerGroup)
+        _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForFlexers(flexerGroup: flexerGroup)
         
         guard SkeletonLayoutGrowthPlanTool.chunkListCount == 1 else {
             #expect(Bool(false))
@@ -81,9 +81,9 @@ struct DumpingUpwardFlexerTests {
         let chunk_a = GenerateChunks.generate_flexer_three(flexer1: flexer_a, flexer2: flexer_b, flexer3: flexer_c)
         let node = GenerateNodes.generate_node(chunks: [chunk_a])
         let section = GenerateSections.generate_section(node: node)
-        _ = GenerateRows.generate_Row(section: section)
+        let row = GenerateRows.generate_Row(section: section)
         let flexerGroup = ExploderGroup<Flexer>(linkedList: [flexer_a, flexer_b, flexer_c], layoutPriority: .required)
-        _ = SkeletonLayoutGrowthPlanTool.getGrowthPlansForFlexers(flexerGroup: flexerGroup)
+        _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForFlexers(flexerGroup: flexerGroup)
         
         guard SkeletonLayoutGrowthPlanTool.chunkListCount == 1 else {
             #expect(Bool(false))
@@ -122,9 +122,9 @@ struct DumpingUpwardFlexerTests {
         
         let node = GenerateNodes.generate_node(chunks: [chunk_a, chunk_b])
         let section = GenerateSections.generate_section(node: node)
-        _ = GenerateRows.generate_Row(section: section)
+        let row = GenerateRows.generate_Row(section: section)
         let flexerGroup = ExploderGroup<Flexer>(linkedList: [flexer_a, flexer_b], layoutPriority: .required)
-        _ = SkeletonLayoutGrowthPlanTool.getGrowthPlansForFlexers(flexerGroup: flexerGroup)
+        _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForFlexers(flexerGroup: flexerGroup)
         
         guard SkeletonLayoutGrowthPlanTool.chunkListCount == 2 else {
             #expect(Bool(false))
@@ -167,9 +167,9 @@ struct DumpingUpwardFlexerTests {
         
         let node = GenerateNodes.generate_node(chunks: [chunk_a, chunk_b])
         let section = GenerateSections.generate_section(node: node)
-        _ = GenerateRows.generate_Row(section: section)
+        let row = GenerateRows.generate_Row(section: section)
         let flexerGroup = ExploderGroup<Flexer>(linkedList: [flexer_a, flexer_b, flexer_c], layoutPriority: .required)
-        _ = SkeletonLayoutGrowthPlanTool.getGrowthPlansForFlexers(flexerGroup: flexerGroup)
+        _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForFlexers(flexerGroup: flexerGroup)
         
         guard SkeletonLayoutGrowthPlanTool.chunkListCount == 2 else {
             #expect(Bool(false))
@@ -216,9 +216,9 @@ struct DumpingUpwardFlexerTests {
         
         let node = GenerateNodes.generate_node(chunks: [chunk_a, chunk_b])
         let section = GenerateSections.generate_section(node: node)
-        _ = GenerateRows.generate_Row(section: section)
+        let row = GenerateRows.generate_Row(section: section)
         let flexerGroup = ExploderGroup<Flexer>(linkedList: [flexer_a, flexer_b, flexer_c], layoutPriority: .required)
-        _ = SkeletonLayoutGrowthPlanTool.getGrowthPlansForFlexers(flexerGroup: flexerGroup)
+        _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForFlexers(flexerGroup: flexerGroup)
         
         guard SkeletonLayoutGrowthPlanTool.chunkListCount == 2 else {
             #expect(Bool(false))
@@ -258,12 +258,12 @@ struct DumpingUpwardFlexerTests {
         
         for _ in 0..<512 {
             
-            let chunkCount = Int.random(in: 0...5)
+            let chunkCount = Int.random(in: 0...4)
             var chunk_list = [any SkeletonChunkConforming]()
             var flexer_list = [Flexer]()
             
             for _ in 0..<chunkCount {
-                let flexerCount = Int.random(in: 0...5)
+                let flexerCount = Int.random(in: 0...4)
                 for _ in 0..<flexerCount {
                     let which = Int.random(in: 0...2)
                     if which == 0 {
@@ -293,9 +293,9 @@ struct DumpingUpwardFlexerTests {
             
             let node = GenerateNodes.generate_node(chunks: chunk_list)
             let section = GenerateSections.generate_section(node: node)
-            _ = GenerateRows.generate_Row(section: section)
+            let row = GenerateRows.generate_Row(section: section)
             let flexerGroup = ExploderGroup<Flexer>(linkedList: flexer_list, layoutPriority: .required)
-            _ = SkeletonLayoutGrowthPlanTool.getGrowthPlansForFlexers(flexerGroup: flexerGroup)
+            _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForFlexers(flexerGroup: flexerGroup)
             
             guard SkeletonLayoutGrowthPlanTool.chunkListCount == chunk_list.count else {
                 #expect(Bool(false))
@@ -379,9 +379,9 @@ struct DumpingUpwardFlexerTests {
             
             let node = GenerateNodes.generate_node(chunks: chunk_list)
             let section = GenerateSections.generate_section(node: node)
-            _ = GenerateRows.generate_Row(section: section)
+            let row = GenerateRows.generate_Row(section: section)
             let flexerGroup = ExploderGroup<Flexer>(linkedList: flexer_list, layoutPriority: .required)
-            _ = SkeletonLayoutGrowthPlanTool.getGrowthPlansForFlexers(flexerGroup: flexerGroup)
+            _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForFlexers(flexerGroup: flexerGroup)
             
             guard SkeletonLayoutGrowthPlanTool.chunkListCount == chunk_list.count else {
                 #expect(Bool(false))

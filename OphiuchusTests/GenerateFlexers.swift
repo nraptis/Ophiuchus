@@ -15,6 +15,17 @@ struct GenerateFlexers {
     static let table_10 = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200]
     static let table_100 = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000]
     
+    static func generate_n_flexers(n: Int) -> [Flexer] {
+        var result = [Flexer]()
+        var index = 0
+        while index < n {
+            let flexer = generate_n_m_climb(n: 10, m: 10)
+            result.append(flexer)
+            index += 1
+        }
+        return result
+    }
+    
     private static var flexer_id = 0
     static func generate_flexer(
         _ desired_size_required: Int,

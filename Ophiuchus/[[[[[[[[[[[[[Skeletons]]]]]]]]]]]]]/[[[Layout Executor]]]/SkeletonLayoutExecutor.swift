@@ -53,11 +53,11 @@ public struct SkeletonLayoutExecutor {
                             node_sum += chunk_sum
                         }
                         node.currentSize = node_sum
-                        node.children_size = node_sum
+                        node.childrenSize = node_sum
                         section_sum += node_sum
                     }
                     section.currentSize = section_sum
-                    section.children_size = section_sum
+                    section.childrenSize = section_sum
                 }
             }
         }

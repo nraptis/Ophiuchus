@@ -21,7 +21,6 @@ public class SkeletonChunkFixed: SkeletonChunkConforming {
     public unowned var node: SkeletonNode!
     public unowned var section: SkeletonSection!
     public unowned var row: SkeletonRow!
-    public unowned var group_unsafe: ExploderGroupChunks!
     public unowned var group: ExploderGroupChunks!
     
     public let pieces: [SkeletonPiece]

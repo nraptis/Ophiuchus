@@ -40,7 +40,6 @@ public protocol SkeletonChunkConforming: AnyObject, ExploderConforming {
     var pieces: [SkeletonPiece] { get }
     var flexers: [Flexer] { get }
     
-    var group_unsafe: ExploderGroupChunks! { get set }
     var group: ExploderGroupChunks! { get set }
     
     func canGrowByOne() -> Bool
@@ -95,10 +94,10 @@ public extension SkeletonChunkConforming {
     }
     
     func canGrowByOne() -> Bool {
-        if node.children_size < node.currentSize {
+        if node.childrenSize < node.currentSize {
             return true
         }
-        if section.children_size < section.currentSize {
+        if section.childrenSize < section.currentSize {
             return true
         }
         if row.canGrowByOne(section: section) {
