@@ -12,7 +12,24 @@ struct GeneratePieces {
     
     static let id_queue = DispatchQueue(label: "id_queue_pieces")
     
+    
+    
+    
     private static var piece_id = 0
+    
+    
+    
+    static func generate_n_pieces(n: Int) -> [SkeletonPiece] {
+        var result = [SkeletonPiece]()
+        var index = 0
+        while index < n {
+            let piece = generate_piece()
+            result.append(piece)
+            index += 1
+        }
+        return result
+    }
+    
     static func generate_piece(size: Int) -> SkeletonPiece {
         
         let id = id_queue.sync {

@@ -485,4 +485,102 @@ struct GrowthPlanValidator {
 
     
     
+    
+    
+    static func checkPieces(pRows: [SkeletonRow],
+                            pPieces: [SkeletonPiece],
+                            pRowGrowthPlansList: [RowGrowthPlans]) -> Bool {
+        if !checkRowsAgainstPlans(pRows: pRows,
+                                  pRowGrowthPlansList: pRowGrowthPlansList) {
+            printDump(pRows: pRows)
+            printDump(pRowGrowthPlansList: pRowGrowthPlansList)
+            return false
+        }
+        if duplicate(rows: pRows) {
+            printDump(pRows: pRows)
+            return false
+        }
+        if duplicate(list: pPieces, name: "Piece") {
+            return false
+        }
+        
+        for pRow in pRows {
+            let growthPlans = getGrowthPlans(pRow: pRow, pRowGrowthPlansList: pRowGrowthPlansList)
+            if duplicate(growthPlans: growthPlans) {
+                printDump(pRowGrowthPlansList: pRowGrowthPlansList)
+                return false
+            }
+            
+            let growthPlanSections = getSections(growthPlans: growthPlans)
+            let sectionsUnion = union(list1: growthPlanSections, list2: pRow.sections)
+            if sectionsUnion.count != growthPlanSections.count {
+                print("Fatal! The sections did not jibe, 2nd auth factor..")
+                printDump(pRowGrowthPlansList: pRowGrowthPlansList)
+                printDump(pRow: pRow)
+                return false
+            }
+            
+            for growthPlan in growthPlans {
+                
+                
+                var expectedGrowth = 0
+                
+                
+                for node in growthPlan.section.skeletonNodes {
+                    
+                    var expectedNodeGrowth = 0
+                    for chunk in node.chunks {
+                        
+                        var expectedChunkGrowth = 0
+                        
+                        let mergedPieces = union(list1: pPieces, list2: chunk.pieces)
+                        if mergedPieces.count > 0 {
+                            // This is just the number of pieces
+                            // (the ones in our rule AND this section>node>chunk)
+                            let expectedPieceGrowth = mergedPieces.count
+                            expectedChunkGrowth += expectedPieceGrowth
+                        }
+                        
+                        // We have summed all the contents of the chunk
+                        // Now we can subtract out the chunk's gap.
+                        expectedChunkGrowth -= chunk.getGap()
+                        if expectedChunkGrowth < 0 { expectedChunkGrowth = 0 }
+                        
+                        // Pass it up to the node... This is
+                        // a little harder to grip... Just the
+                        // output of the chunk as one of N input
+                        // to the node...
+                        expectedNodeGrowth += expectedChunkGrowth
+                        
+                    }
+                    
+                    // We have summed all the contents of the node
+                    // Now we can subtract out the node's gap.
+                    expectedNodeGrowth -= node.getGap()
+                    if expectedNodeGrowth < 0 { expectedNodeGrowth = 0 }
+                    
+                    // Pass it up to the section
+                    expectedGrowth += expectedNodeGrowth
+                }
+                
+                // We have summed all the contents of the section
+                // Now we can subtract out the section's gap.
+                expectedGrowth -= growthPlan.section.getGap()
+                if expectedGrowth < 0 { expectedGrowth = 0 }
+                
+                // Tada! This is how much the section must expand.
+                
+                print("expectedGrowth was \(expectedGrowth), got \(growthPlan.amount)")
+                
+                guard expectedGrowth == growthPlan.amount else {
+                    print("Fatal! Expected growth to be \(expectedGrowth), we got \(growthPlan.amount)")
+                    printDump(pRow: pRow)
+                    printDump(pGrowthPlan: growthPlan)
+                    return false
+                }
+            }
+        }
+        return true
+    }
+    
 }

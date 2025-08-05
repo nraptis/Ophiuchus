@@ -30,6 +30,20 @@ struct SkeletonLayoutGrowthPlanTool {
     
     
     
+    
+    
+    static var groupedPieceList = [[SkeletonPiece]](repeating: [SkeletonPiece](repeating: SkeletonPiece(id: -1,
+                                                                                                        pieceIdentifier: .unknown,
+                                                                                                        size: 0),
+                                                                  count: 32),
+                                              count: 256)
+    static var groupedPieceListCount = [Int](repeating: 0, count: 256)
+    
+    
+    
+    
+    
+    
     static var nodeListCount = 0
     static var nodeList = [SkeletonNode](repeating: SkeletonNode(id: -1,
                                                                  chunks: [],
@@ -243,9 +257,6 @@ struct SkeletonLayoutGrowthPlanTool {
     }
     
     static func getRowGrowthPlansForFlexers(flexerGroup: ExploderGroup<Flexer>) -> [RowGrowthPlans] {
-        
-        // First bag by chunk.
-        
         SkeletonLayoutGrowthPlanTool.chunkListCount = 0
         for flexer in flexerGroup.linkedList {
             let chunk = flexer.chunk!
@@ -263,7 +274,6 @@ struct SkeletonLayoutGrowthPlanTool {
                 groupedFlexerListCount[chunkIndex] = 0
                 SkeletonLayoutGrowthPlanTool.chunkListCount += 1
             }
-            // Add the flexer.
             groupedFlexerList[chunkIndex][groupedFlexerListCount[chunkIndex]] = flexer
             groupedFlexerListCount[chunkIndex] = groupedFlexerListCount[chunkIndex] + 1
             chunkAmountList[chunkIndex] += 1
@@ -276,14 +286,46 @@ struct SkeletonLayoutGrowthPlanTool {
             if amount < 0 { amount = 0 }
             chunkAmountList[chunkIndex] = amount
         }
-        
-        
         let result = getRowGrowthPlansForChunks(chunkList: chunkList,
                                                 chunkListCount: chunkListCount,
                                                 elementAmountList: chunkAmountList)
         return result
-        
-        //return []
+    }
+    
+    static func getRowGrowthPlansForPieces(pieceGroup: ExploderGroup<SkeletonPiece>) -> [RowGrowthPlans] {
+        SkeletonLayoutGrowthPlanTool.chunkListCount = 0
+        for piece in pieceGroup.linkedList {
+            let chunk = piece.chunk!
+            var chunkIndex = -1
+            for checkChunkIndex in 0..<SkeletonLayoutGrowthPlanTool.chunkListCount {
+                if chunkList[checkChunkIndex] === chunk {
+                    chunkIndex = checkChunkIndex
+                    break
+                }
+            }
+            if chunkIndex == -1 {
+                chunkIndex = SkeletonLayoutGrowthPlanTool.chunkListCount
+                chunkAmountList[chunkIndex] = 0
+                chunkList[chunkIndex] = chunk
+                groupedPieceListCount[chunkIndex] = 0
+                SkeletonLayoutGrowthPlanTool.chunkListCount += 1
+            }
+            groupedPieceList[chunkIndex][groupedPieceListCount[chunkIndex]] = piece
+            groupedPieceListCount[chunkIndex] = groupedPieceListCount[chunkIndex] + 1
+            chunkAmountList[chunkIndex] += 1
+        }
+        for chunkIndex in 0..<SkeletonLayoutGrowthPlanTool.chunkListCount {
+            let chunk = chunkList[chunkIndex]
+            var amount = chunkAmountList[chunkIndex]
+            let underflow = (chunk.currentSize - chunk.childrenSize)
+            amount -= underflow
+            if amount < 0 { amount = 0 }
+            chunkAmountList[chunkIndex] = amount
+        }
+        let result = getRowGrowthPlansForChunks(chunkList: chunkList,
+                                                chunkListCount: chunkListCount,
+                                                elementAmountList: chunkAmountList)
+        return result
     }
     
     static func allGrowthPlansCanSimultaneouslyExecute(growthPlansForRows: [RowGrowthPlans],
