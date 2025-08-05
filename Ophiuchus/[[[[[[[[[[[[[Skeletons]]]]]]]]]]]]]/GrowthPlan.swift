@@ -8,21 +8,21 @@
 import Foundation
 
 class GrowthPlan {
-    let layoutRow: SkeletonRow
-    let layoutSection: SkeletonSection
+    let row: SkeletonRow
+    let section: SkeletonSection
     var amount: Int
     
     init(layoutRow: SkeletonRow, layoutSection: SkeletonSection) {
-        self.layoutRow = layoutRow
-        self.layoutSection = layoutSection
+        self.row = layoutRow
+        self.section = layoutSection
         self.amount = 1
     }
     
     init(layoutRow: SkeletonRow,
          layoutSection: SkeletonSection,
          amount: Int) {
-        self.layoutRow = layoutRow
-        self.layoutSection = layoutSection
+        self.row = layoutRow
+        self.section = layoutSection
         self.amount = amount
     }
     

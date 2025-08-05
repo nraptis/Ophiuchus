@@ -7,7 +7,96 @@
 
 import Foundation
 
-public class SkeletonSection: ExploderConforming {
+public class SkeletonSection: InterfaceContainerSupplier {
+    
+    static func contains(list: [SkeletonSection], section: SkeletonSection) -> Bool {
+        for _section in list {
+            if _section === section {
+                return true
+            }
+        }
+        return false
+    }
+    
+    func contains(node: SkeletonNode) -> Bool {
+        for _node in skeletonNodes {
+            if _node === node {
+                return true
+            }
+        }
+        return false
+    }
+    
+    func contains(chunk: SkeletonChunk) -> Bool {
+        for _node in skeletonNodes {
+            for _chunk in _node.chunks {
+                if _chunk === chunk {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
+    func contains(piece: SkeletonPiece) -> Bool {
+        for _node in skeletonNodes {
+            for _chunk in _node.chunks {
+                for _piece in _chunk.pieces {
+                    if _piece === piece {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+    
+    func contains(flexer: Flexer) -> Bool {
+        for _node in skeletonNodes {
+            for _chunk in _node.chunks {
+                for _flexer in _chunk.flexers {
+                    if _flexer === flexer {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+    
+    func countChunks() -> Int {
+        var result = 0
+        
+            for node in skeletonNodes {
+                result += node.chunks.count
+            }
+        
+        return result
+    }
+    
+    func countPieces() -> Int {
+        var result = 0
+        
+            for node in skeletonNodes {
+                for chunk in node.chunks {
+                    result += chunk.pieces.count
+                }
+            }
+        
+        return result
+    }
+    
+    func countFlexers() -> Int {
+        var result = 0
+        
+            for node in skeletonNodes {
+                for chunk in node.chunks {
+                    result += chunk.flexers.count
+                }
+            }
+        
+        return result
+    }
     
     public var currentSize = 0
     public var childrenSize = 0

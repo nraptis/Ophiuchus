@@ -173,7 +173,7 @@ struct GrowthPlanTests_Small_Gapless {
         let node_a = GenerateNodes.generate_skeleton_node(chunk: chunk_a)
         let section = GenerateSections.generate_section(skeleton_node: node_a)
         let row = GenerateRows.generate_Row(section: section)
-        let chunkGroup = ExploderGroupChunks(linkedList: [chunk_a], layoutPriority: .required)
+        let chunkGroup = ExploderGroup<SkeletonChunk>(linkedList: [chunk_a], layoutPriority: .required)
         let rowGrowthPlans = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForChunks(chunkList: chunkGroup.linkedList,
                                                                                      chunkListCount: chunkGroup.linkedList.count,
                                                                                      elementAmountList: [1])
@@ -202,7 +202,7 @@ struct GrowthPlanTests_Small_Gapless {
         let node_a = GenerateNodes.generate_skeleton_node(chunks: [chunk_a, chunk_b])
         let section = GenerateSections.generate_section(skeleton_node: node_a)
         let row = GenerateRows.generate_Row(section: section)
-        let chunkGroup = ExploderGroupChunks(linkedList: [chunk_a, chunk_b], layoutPriority: .required)
+        let chunkGroup = ExploderGroup<SkeletonChunk>(linkedList: [chunk_a, chunk_b], layoutPriority: .required)
         let rowGrowthPlans = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForChunks(chunkList: chunkGroup.linkedList,
                                                                                      chunkListCount: chunkGroup.linkedList.count,
                                                                                      elementAmountList: [1, 1])
@@ -232,7 +232,7 @@ struct GrowthPlanTests_Small_Gapless {
         let node_b = GenerateNodes.generate_skeleton_node(chunks: [chunk_b])
         let section = GenerateSections.generate_section(skeleton_nodes: [node_a, node_b])
         let row = GenerateRows.generate_Row(section: section)
-        let chunkGroup = ExploderGroupChunks(linkedList: [chunk_a, chunk_b], layoutPriority: .required)
+        let chunkGroup = ExploderGroup<SkeletonChunk>(linkedList: [chunk_a, chunk_b], layoutPriority: .required)
         let rowGrowthPlans = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForChunks(chunkList: chunkGroup.linkedList,
                                                                                      chunkListCount: chunkGroup.linkedList.count,
                                                                                      elementAmountList: [1, 1])
@@ -263,7 +263,7 @@ struct GrowthPlanTests_Small_Gapless {
         let section_a = GenerateSections.generate_section(skeleton_nodes: [node_a])
         let section_b = GenerateSections.generate_section(skeleton_nodes: [node_b])
         let row = GenerateRows.generate_Row(sections: [section_a, section_b])
-        let chunkGroup = ExploderGroupChunks(linkedList: [chunk_a, chunk_b], layoutPriority: .required)
+        let chunkGroup = ExploderGroup<SkeletonChunk>(linkedList: [chunk_a, chunk_b], layoutPriority: .required)
         let rowGrowthPlans = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForChunks(chunkList: chunkGroup.linkedList,
                                                                                      chunkListCount: chunkGroup.linkedList.count,
                                                                                      elementAmountList: [1, 1])

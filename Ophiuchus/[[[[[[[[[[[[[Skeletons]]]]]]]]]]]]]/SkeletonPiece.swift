@@ -12,19 +12,29 @@ import Foundation
     
     case heroStacked
     
+    case accentIcon
+    
     case heroLongIcon
     case heroLongLabel
 }
 
-
 public class SkeletonPiece: ExploderConforming {
     
+    static func contains(list: [SkeletonPiece], piece: SkeletonPiece) -> Bool {
+        for _piece in list {
+            if _piece === piece {
+                return true
+            }
+        }
+        return false
+    }
+    
     public var currentSize = 0
-    let original_size: Int
+    let originalSize: Int
     public let id: Int
     public let pieceIdentifier: PieceIdentifier
     
-    unowned var chunk: (any SkeletonChunkConforming)!
+    unowned var chunk: SkeletonChunk!
     unowned var node: SkeletonNode!
     unowned var section: SkeletonSection!
     unowned var row: SkeletonRow!
@@ -36,11 +46,11 @@ public class SkeletonPiece: ExploderConforming {
         self.id = id
         self.pieceIdentifier = pieceIdentifier
         self.currentSize = size
-        self.original_size = size
+        self.originalSize = size
     }
     
     func canGrowByOne() -> Bool {
-        if chunk.children_size < chunk.currentSize {
+        if chunk.childrenSize < chunk.currentSize {
             return true
         }
         if node.childrenSize < node.currentSize {

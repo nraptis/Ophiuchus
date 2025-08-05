@@ -267,7 +267,7 @@ struct DumpingUpwardNodeTests {
             for _ in 0..<sectionCount {
                 let nodeCount = Int.random(in: 0...4)
                 for _ in 0..<nodeCount {
-                    let which = Int.random(in: 0...5)
+                    let which = Int.random(in: 0...4)
                     if which == 0 {
                         let node_a = GenerateNodes.generate_fixed(size: 10)
                         let section = GenerateSections.generate_section(skeleton_nodes: [node_a])
@@ -317,7 +317,6 @@ struct DumpingUpwardNodeTests {
                 }
             }
             
-            
             let row = GenerateRows.generate_Row(sections: section_list, attemptedCenteredSection: nil)
             let nodeGroup = ExploderGroup<SkeletonNode>(linkedList: node_list, layoutPriority: .required)
             _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForNodes(nodeList: nodeGroup.linkedList,
@@ -355,12 +354,12 @@ struct DumpingUpwardNodeTests {
         }
     }
     
-    @MainActor @Test func test_group_several_medium_groups_1024() {
+    @MainActor @Test func test_group_several_medium_groups_4096() {
         
-        var invalid_tests = 0
+        let invalid_tests = 0
         var valid_tests = 0
         
-        for _ in 0..<1024 {
+        for _ in 0..<4096 {
             
             let sectionCount = Int.random(in: 0...4)
             var section_list = [SkeletonSection]()
@@ -372,7 +371,7 @@ struct DumpingUpwardNodeTests {
                 valid_tests += 1
                 
                 for _ in 0..<nodeCount {
-                    let which = Int.random(in: 0...5)
+                    let which = Int.random(in: 0...4)
                     if which == 0 {
                         let node_a = GenerateNodes.generate_fixed(size: 10)
                         let section = GenerateSections.generate_section(skeleton_nodes: [node_a])

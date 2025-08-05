@@ -259,7 +259,7 @@ struct DumpingUpwardFlexerTests {
         for _ in 0..<512 {
             
             let chunkCount = Int.random(in: 0...4)
-            var chunk_list = [any SkeletonChunkConforming]()
+            var chunk_list = [SkeletonChunk]()
             var flexer_list = [Flexer]()
             
             for _ in 0..<chunkCount {
@@ -329,24 +329,19 @@ struct DumpingUpwardFlexerTests {
         
     }
     
-    @MainActor @Test func test_group_several_medium_groups_1024() {
+    @MainActor @Test func test_group_several_medium_groups_4096() {
         
         var invalid_tests = 0
         var valid_tests = 0
         
-        for _ in 0..<1024 {
+        for _ in 0..<4096 {
             
             let chunkCount = Int.random(in: 0...8)
-            var chunk_list = [any SkeletonChunkConforming]()
+            var chunk_list = [SkeletonChunk]()
             var flexer_list = [Flexer]()
             
             for _ in 0..<chunkCount {
                 let flexerCount = Int.random(in: 0...8)
-                
-                if chunkCount * flexerCount > 32 {
-                    invalid_tests += 1
-                    continue
-                }
                 
                 valid_tests += 1
                 

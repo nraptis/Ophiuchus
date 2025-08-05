@@ -10,20 +10,21 @@ import Foundation
 struct SkeletonLayoutGrowthPlanTool {
     
     static let amountListDefault = [Int](repeating: 1, count: 256)
+    static let amountListDefaultWRONG = [Int](repeating: 2, count: 256)
+    
     
     static var chunkListCount = 0
-    static var chunkList = [any SkeletonChunkConforming](repeating: SkeletonChunkFixed(id: -1,
-                                                                                       chunkIdentifier: .unknown,
-                                                                                       piece: SkeletonPiece(id: -1,
-                                                                                                            pieceIdentifier: .unknown,
-                                                                                                            size: 0),
-                                                                                       alignment: .left),
+    static var chunkList = [SkeletonChunk](repeating: SkeletonChunk(id: -1,
+                                                                    chunkIdentifier: .unknown,
+                                                                    pieces: [],
+                                                                    flexers: [],
+                                                                    alignment: .left),
                                                          count: 256)
     static var chunkAmountList = [Int](repeating: 0, count: 256)
     
     static var groupedFlexerList = [[Flexer]](repeating: [Flexer](repeating: Flexer(id: -1,
                                                                                     flexerIdentifier: .unknown),
-                                                                  count: 3),
+                                                                  count: 32),
                                               count: 256)
     static var groupedFlexerListCount = [Int](repeating: 0, count: 256)
     
@@ -38,13 +39,9 @@ struct SkeletonLayoutGrowthPlanTool {
     static var nodeAmountList = [Int](repeating: 0, count: 256)
     
     
-    static var groupedChunkList = [[any SkeletonChunkConforming]](repeating: [any SkeletonChunkConforming](repeating:
-                                                                                                            
-                                                                                                            SkeletonChunkFixed(id: -1,
+    static var groupedChunkList = [[SkeletonChunk]](repeating: [SkeletonChunk](repeating: SkeletonChunk(id: -1,
                                                                                                                                chunkIdentifier: .unknown,
-                                                                                                                               piece: SkeletonPiece(id: -1,
-                                                                                                                                                    pieceIdentifier: .unknown,
-                                                                                                                                                    size: 0), alignment: .left),
+                                                                                                                               pieces: [], flexers: [], alignment: .left),
                                                                                                            count: 256),
                                                                   count: 256)
     static var groupedChunkListCount = [Int](repeating: 0, count: 256)
@@ -80,7 +77,7 @@ struct SkeletonLayoutGrowthPlanTool {
                                                               sections: [],
                                                               attemptedCenteredSection: nil)
                                        ,
-                                       count: 16)
+                                       count: 32)
     
     static var groupedSectionList = [[SkeletonSection]](repeating: [SkeletonSection](repeating:
                                                                                         
@@ -92,6 +89,13 @@ struct SkeletonLayoutGrowthPlanTool {
                                                         count: 128)
     static var groupedSectionListCount = [Int](repeating: 0, count: 128)
     static var groupedSectionListAmount = [Int](repeating: 0, count: 128)
+    
+    static func getRowGrowthPlansForSections(sectionList: [SkeletonSection],
+                                             sectionListCount: Int) -> [RowGrowthPlans] {
+        return getRowGrowthPlansForSections(sectionList: sectionList,
+                                            sectionListCount: sectionListCount,
+                                            sectionAmountList: amountListDefault)
+    }
     
     static func getRowGrowthPlansForSections(sectionList: [SkeletonSection],
                                              sectionListCount: Int,
@@ -132,11 +136,18 @@ struct SkeletonLayoutGrowthPlanTool {
                 growthPlans.append(growthPlan)
                 
             }
-            let growthPlansForRow = RowGrowthPlans(layoutRow: layoutRow,
+            let growthPlansForRow = RowGrowthPlans(row: layoutRow,
                                                    growthPlans: growthPlans)
             result.append(growthPlansForRow)
         }
         return result
+    }
+    
+    static func getRowGrowthPlansForNodes(nodeList: [SkeletonNode],
+                                          nodeListCount: Int) -> [RowGrowthPlans] {
+        return getRowGrowthPlansForNodes(nodeList: nodeList,
+                                         nodeListCount: nodeListCount,
+                                         nodeAmountList: amountListDefault)
     }
     
     static func getRowGrowthPlansForNodes(nodeList: [SkeletonNode],
@@ -183,9 +194,14 @@ struct SkeletonLayoutGrowthPlanTool {
         //return []
     }
     
+    static func getRowGrowthPlansForChunks(chunkList: [SkeletonChunk],
+                                           chunkListCount: Int) -> [RowGrowthPlans] {
+        return getRowGrowthPlansForChunks(chunkList: chunkList,
+                                          chunkListCount: chunkListCount,
+                                          elementAmountList: amountListDefault)
+    }
     
-    
-    static func getRowGrowthPlansForChunks(chunkList: [any SkeletonChunkConforming],
+    static func getRowGrowthPlansForChunks(chunkList: [SkeletonChunk],
                                            chunkListCount: Int,
                                            elementAmountList: [Int]) -> [RowGrowthPlans] {
         SkeletonLayoutGrowthPlanTool.nodeListCount = 0
@@ -255,7 +271,7 @@ struct SkeletonLayoutGrowthPlanTool {
         for chunkIndex in 0..<SkeletonLayoutGrowthPlanTool.chunkListCount {
             let chunk = chunkList[chunkIndex]
             var amount = chunkAmountList[chunkIndex]
-            let underflow = (chunk.currentSize - chunk.children_size)
+            let underflow = (chunk.currentSize - chunk.childrenSize)
             amount -= underflow
             if amount < 0 { amount = 0 }
             chunkAmountList[chunkIndex] = amount
@@ -280,18 +296,18 @@ struct SkeletonLayoutGrowthPlanTool {
             for growthPlansForRow in growthPlansForRows {
                 var exists = false
                 for _check in validationSet {
-                    if _check === growthPlansForRow.layoutRow {
+                    if _check === growthPlansForRow.row {
                         fatalError("This should not happen, we have 2 growth plans with same row...")
                     }
                 }
-                validationSet.append(growthPlansForRow.layoutRow)
+                validationSet.append(growthPlansForRow.row)
             }
             // End of validation chunk.
         }
         
         for growthPlansForRow in growthPlansForRows {
             let growthPlans = growthPlansForRow.growthPlans
-            if !growthPlansForRow.layoutRow.canAcceptAllGrowthPlansSimultaneously(growthPlans: growthPlans,
+            if !growthPlansForRow.row.canAcceptAllGrowthPlansSimultaneously(growthPlans: growthPlans,
                                                                                   menuWidthWithSafeArea: menuWidthWithSafeArea,
                                                                                   safeAreaLeft: safeAreaLeft,
                                                                                   safeAreaRight: safeAreaRight) {

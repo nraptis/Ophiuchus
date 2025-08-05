@@ -13,7 +13,7 @@ struct LayoutTests_Simple {
     
     func generateNode(id: Int) -> WiseLayoutNode {
         let chunk_count = Int.random(in: 1...3)
-        var chunks = [any SkeletonChunkConforming]()
+        var chunks = [SkeletonChunk]()
         for _ in 0..<chunk_count {
             let chunk = GenerateChunks.generate_random()
             chunks.append(chunk)
@@ -147,9 +147,10 @@ struct LayoutTests_Simple {
         let piece = SkeletonPiece(id: 0,
                                   pieceIdentifier: .unknown,
                                   size: 24)
-        let chunk = SkeletonChunkFixed(id: 0,
+        let chunk = SkeletonChunk(id: 0,
                                        chunkIdentifier: .unknown,
-                                       piece: piece,
+                                       pieces: [piece],
+                                  flexers: [],
                                        alignment: .left)
         let node = GenerateNodes.generate_node(id: 0, chunk: chunk)
         
@@ -173,7 +174,7 @@ struct LayoutTests_Simple {
             return
         }
         
-        if chunk.children_size != 24 {
+        if chunk.childrenSize != 24 {
             #expect(Bool(false))
             return
         }
@@ -198,7 +199,7 @@ struct LayoutTests_Simple {
             return
         }
         
-        if row.children_size != 24 {
+        if row.childrenSize != 24 {
             #expect(Bool(false))
             return
         }
@@ -229,44 +230,47 @@ struct LayoutTests_Simple {
             let flexer_k = GenerateFlexers.generate_10_random_climb()
             
             //4
-            let chunk_a = SkeletonChunkFixed(id: 0,
+            let chunk_a = SkeletonChunk(id: 0,
                                              chunkIdentifier: .unknown,
-                                             piece: piece_a, alignment: .left)
+                                             pieces: [piece_a])
             
             //0
-            let chunk_b = SkeletonChunkFlexer(id: 1,
+            let chunk_b = SkeletonChunk(id: 1,
                                               chunkIdentifier: .unknown,
-                                              flexer: flexer_a, alignment: .left)
+                                              flexer: flexer_a)
             
             //0
-            let chunk_c = SkeletonChunkPadding(id: 2,
+            let chunk_c = SkeletonChunk(id: 2,
                                                chunkIdentifier: .unknown,
-                                               left: flexer_b, right: flexer_c, alignment: .center)
+                                        flexers: [flexer_b, flexer_c])
             
             //40
-            let chunk_d = SkeletonChunkHeroStacked(id: 3,
+            let chunk_d = SkeletonChunk(id: 3,
                                                    chunkIdentifier: .unknown,
-                                                   left: flexer_d, center: piece_b, right: flexer_e, alignment: .right)
+                                        piece: piece_b,
+                                        flexers: [flexer_d, flexer_e])
             
             //400 + 4000 = 4400
-            let chunk_e = SkeletonChunkHeroLong(id: 4,
+            let chunk_e = SkeletonChunk(id: 4,
                                                 chunkIdentifier: .unknown,
-                                                left: flexer_e, icon: piece_c, spacing: flexer_f, label: piece_d,
-                                                right: flexer_g, alignment: .left)
+                                        pieces: [piece_c, piece_d],
+                                        flexers: [flexer_e, flexer_f, flexer_g])
             
             //40000 + 400000 = 440000
-            let chunk_f = SkeletonChunkHeroLong(id: 5,
+            let chunk_f = SkeletonChunk(id: 5,
                                                 chunkIdentifier: .unknown,
-                                                left: flexer_e, icon: piece_e, spacing: flexer_h, label: piece_f,
-                                                right: flexer_i, alignment: .left)
+                                        
+                                        pieces: [piece_e, piece_f],
+                                        flexers: [flexer_e, flexer_h, flexer_i])
             
             //4000000
-            let chunk_g = SkeletonChunkHeroStacked(id: 6,
+            let chunk_g = SkeletonChunk(id: 6,
                                                    chunkIdentifier: .unknown,
-                                                   left: flexer_j, center: piece_g, right: flexer_k, alignment: .right)
+                                        pieces: [piece_g],
+                                        flexers: [flexer_j, flexer_k])
             
             //40000000
-            let chunk_h = SkeletonChunkFixed(id: 7,
+            let chunk_h = SkeletonChunk(id: 7,
                                              chunkIdentifier: .unknown,
                                              piece: piece_h, alignment: .left)
             
@@ -311,7 +315,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if chunk_a.children_size != 4 {
+            if chunk_a.childrenSize != 4 {
                 #expect(Bool(false))
                 return
             }
@@ -321,7 +325,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if chunk_b.children_size != 0 {
+            if chunk_b.childrenSize != 0 {
                 #expect(Bool(false))
                 return
             }
@@ -331,7 +335,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if chunk_c.children_size != 0 {
+            if chunk_c.childrenSize != 0 {
                 #expect(Bool(false))
                 return
             }
@@ -341,7 +345,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if chunk_d.children_size != 40 {
+            if chunk_d.childrenSize != 40 {
                 #expect(Bool(false))
                 return
             }
@@ -351,7 +355,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if chunk_e.children_size != 4400 {
+            if chunk_e.childrenSize != 4400 {
                 #expect(Bool(false))
                 return
             }
@@ -361,7 +365,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if chunk_f.children_size != 440000 {
+            if chunk_f.childrenSize != 440000 {
                 #expect(Bool(false))
                 return
             }
@@ -371,7 +375,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if chunk_g.children_size != 4000000 {
+            if chunk_g.childrenSize != 4000000 {
                 #expect(Bool(false))
                 return
             }
@@ -381,7 +385,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if chunk_h.children_size != 40000000 {
+            if chunk_h.childrenSize != 40000000 {
                 #expect(Bool(false))
                 return
             }
@@ -456,7 +460,7 @@ struct LayoutTests_Simple {
                 return
             }
             
-            if row.children_size != 44444444 {
+            if row.childrenSize != 44444444 {
                 #expect(Bool(false))
                 return
             }

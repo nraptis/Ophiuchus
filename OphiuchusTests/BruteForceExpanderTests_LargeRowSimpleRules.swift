@@ -25,7 +25,7 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
                     let node_count = Int.random(in: 1...4)
                     for _ in 0..<node_count {
                         let chunk_count = Int.random(in: 1...4)
-                        var chunks = [any SkeletonChunkConforming]()
+                        var chunks = [SkeletonChunk]()
                         for _ in 0..<chunk_count {
                             let chunk = GenerateChunks.generate_random_10_flexer()
                             chunks.append(chunk)
@@ -118,18 +118,18 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
     }
     
     
-    func get_random_chunks(pages: [SkeletonPage], n: Int) -> [any SkeletonChunkConforming] {
+    func get_random_chunks(pages: [SkeletonPage], n: Int) -> [SkeletonChunk] {
         
         let all_chunks = SkeletonLayoutGrouper.getAllChunks(pages: pages)
         let result = getRandomElements(input: all_chunks, count: n)
         return result
     }
     
-    func get_linkage_rule(chunks: [any SkeletonChunkConforming]) -> SkeletonLinkageRule_Chunks {
+    func get_linkage_rule(chunks: [SkeletonChunk]) -> SkeletonLinkageRule_Chunks {
         return SkeletonLinkageRule_Chunks(chunks: chunks, layoutPriority: .required)
     }
     
-    func are_all_equal_to_largest(chunks: [any SkeletonChunkConforming]) -> Bool {
+    func are_all_equal_to_largest(chunks: [SkeletonChunk]) -> Bool {
         if chunks.count < 2 { return true }
         var largest = chunks[0].currentSize
         for chunk in chunks {
@@ -752,7 +752,7 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             }
             
             let all_chunks = SkeletonLayoutGrouper.getAllChunks(pages: pages)
-            var links_chunks = [[any SkeletonChunkConforming]]()
+            var links_chunks = [[SkeletonChunk]]()
             for _ in 0..<count_chunks {
                 links_chunks.append(getRandomElements(input: all_chunks, count: Int.random(in: 2...4)))
             }
@@ -846,7 +846,7 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
                     let node_count = Int.random(in: 1...8)
                     for _ in 0..<node_count {
                         let chunk_count = Int.random(in: 1...8)
-                        var chunks = [any SkeletonChunkConforming]()
+                        var chunks = [SkeletonChunk]()
                         for _ in 0..<chunk_count {
                             let chunk = GenerateChunks.generate_random_10_flexer()
                             chunks.append(chunk)
@@ -1409,7 +1409,7 @@ struct BruteForceExpanderTests_LargeRowSimpleRules {
             }
             
             let all_chunks = SkeletonLayoutGrouper.getAllChunks(pages: pages)
-            var links_chunks = [[any SkeletonChunkConforming]]()
+            var links_chunks = [[SkeletonChunk]]()
             for _ in 0..<count_chunks {
                 links_chunks.append(getRandomElements(input: all_chunks, count: Int.random(in: 2...4)))
             }

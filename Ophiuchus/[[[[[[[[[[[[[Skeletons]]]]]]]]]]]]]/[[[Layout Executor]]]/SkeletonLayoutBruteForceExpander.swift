@@ -77,7 +77,7 @@ public struct SkeletonLayoutBruteForceExpander {
      static func expand_where_possible(pages: [SkeletonPage],
      pieces: [ExploderGroup<SkeletonPiece>],
      flexers: [ExploderGroup<Flexer>],
-     chunks: [ExploderGroupChunks],
+     chunks: [ExploderGroup<SkeletonChunk>],
      nodes: [ExploderGroup<SkeletonNode>],
      sections: [ExploderGroup<SkeletonSection>],
      layoutPriority: LayoutPriority) {
@@ -110,7 +110,7 @@ public struct SkeletonLayoutBruteForceExpander {
     static func expand_where_possible(pages: [SkeletonPage],
                                       pieces: [ExploderGroup<SkeletonPiece>],
                                       flexers: [ExploderGroup<Flexer>],
-                                      chunks: [ExploderGroupChunks],
+                                      chunks: [ExploderGroup<SkeletonChunk>],
                                       nodes: [ExploderGroup<SkeletonNode>],
                                       sections: [ExploderGroup<SkeletonSection>],
                                       layoutPriority: LayoutPriority) {
@@ -359,7 +359,7 @@ public struct SkeletonLayoutBruteForceExpander {
     static func check(pages: [SkeletonPage],
                       pieces: [ExploderGroup<SkeletonPiece>],
                       flexers: [ExploderGroup<Flexer>],
-                      chunks: [ExploderGroupChunks],
+                      chunks: [ExploderGroup<SkeletonChunk>],
                       nodes: [ExploderGroup<SkeletonNode>],
                       sections: [ExploderGroup<SkeletonSection>],
                       layoutPriority: LayoutPriority,

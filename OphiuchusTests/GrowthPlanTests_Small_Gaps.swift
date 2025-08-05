@@ -15,7 +15,7 @@ struct GrowthPlanTests_Small_Gaps {
         
         let flexer_a = GenerateFlexers.generate_flexer(10)
         let chunk_a = GenerateChunks.generate_flexer(flexer: flexer_a)
-        chunk_a.children_size = 9
+        chunk_a.childrenSize = 9
         chunk_a.currentSize = 10
         
         let node_a = GenerateNodes.generate_skeleton_node(chunk: chunk_a)
@@ -113,7 +113,7 @@ struct GrowthPlanTests_Small_Gaps {
         let section = GenerateSections.generate_section(skeleton_node: node_a)
         let row = GenerateRows.generate_Row(section: section)
         
-        let chunkGroup = ExploderGroupChunks(linkedList: [chunk_a], layoutPriority: .required)
+        let chunkGroup = ExploderGroup<SkeletonChunk>(linkedList: [chunk_a], layoutPriority: .required)
         let rowGrowthPlans = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForChunks(chunkList: chunkGroup.linkedList,
                                                                                      chunkListCount: chunkGroup.linkedList.count,
                                                                                      elementAmountList: SkeletonLayoutGrowthPlanTool.amountListDefault)
@@ -147,7 +147,7 @@ struct GrowthPlanTests_Small_Gaps {
         
         let row = GenerateRows.generate_Row(section: section)
         
-        let chunkGroup = ExploderGroupChunks(linkedList: [chunk_a], layoutPriority: .required)
+        let chunkGroup = ExploderGroup<SkeletonChunk>(linkedList: [chunk_a], layoutPriority: .required)
         let rowGrowthPlans = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForChunks(chunkList: chunkGroup.linkedList,
                                                                                      chunkListCount: chunkGroup.linkedList.count,
                                                                                      elementAmountList: SkeletonLayoutGrowthPlanTool.amountListDefault)
@@ -210,7 +210,7 @@ struct GrowthPlanTests_Small_Gaps {
                     
                     let flexers = GenerateFlexers.generate_n_flexers(n: flexer_count)
                     
-                    var chunk: any SkeletonChunkConforming
+                    var chunk: SkeletonChunk
                     if flexers.count == 1 {
                         chunk = GenerateChunks.generate_flexer(flexer: flexers[0])
                     } else if flexers.count == 2 {
@@ -223,7 +223,7 @@ struct GrowthPlanTests_Small_Gaps {
                     }
                     
                     let amount = Int.random(in: 0...100)
-                    chunk.children_size = amount
+                    chunk.childrenSize = amount
                     chunk.currentSize = amount + gap_count
                     
                     let node = GenerateNodes.generate_skeleton_node(chunk: chunk)
@@ -267,7 +267,7 @@ struct GrowthPlanTests_Small_Gaps {
                     
                     let flexers = GenerateFlexers.generate_n_flexers(n: flexer_count)
                     
-                    var chunk: any SkeletonChunkConforming
+                    var chunk: SkeletonChunk
                     if flexers.count == 1 {
                         chunk = GenerateChunks.generate_flexer(flexer: flexers[0])
                     } else if flexers.count == 2 {
@@ -323,7 +323,7 @@ struct GrowthPlanTests_Small_Gaps {
                     
                     let flexers = GenerateFlexers.generate_n_flexers(n: flexer_count)
                     
-                    var chunk: any SkeletonChunkConforming
+                    var chunk: SkeletonChunk
                     if flexers.count == 1 {
                         chunk = GenerateChunks.generate_flexer(flexer: flexers[0])
                     } else if flexers.count == 2 {

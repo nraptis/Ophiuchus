@@ -26,7 +26,7 @@ struct GenerateRows {
         return result
     }
     
-    static func generate_Row(chunk: any SkeletonChunkConforming) -> SkeletonRow {
+    static func generate_Row(chunk: SkeletonChunk) -> SkeletonRow {
         let node = GenerateNodes.generate_node(chunk: chunk)
         let result = generate_Row(node: node)
         return result

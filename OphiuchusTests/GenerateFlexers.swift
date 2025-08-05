@@ -51,6 +51,10 @@ struct GenerateFlexers {
         return result
     }
     
+    static func generate_0() -> Flexer {
+        return generate_flexer(0)
+    }
+    
     static func generate_100_climb() -> Flexer {
         return generate_flexer(100, 200, 300, 400, 500)
     }

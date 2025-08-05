@@ -26,6 +26,16 @@ public enum FlexerIdentifier: UInt8 {
 
 public class Flexer: ExploderConforming {
     
+    static func contains(list: [Flexer], flexer: Flexer) -> Bool {
+        for _flexer in list {
+            if _flexer === flexer {
+                return true
+            }
+        }
+        return false
+    }
+    
+    
     public var currentSize = 0
     var target_size = 0
     
@@ -35,7 +45,7 @@ public class Flexer: ExploderConforming {
     let desired_size_low: Int // For example, getting to "relaxed" padding.
     let desired_size_finally: Int // For example, the remaining space, which a spacer will fill.
     
-    unowned var chunk: (any SkeletonChunkConforming)!
+    unowned var chunk: SkeletonChunk!
     unowned var node: SkeletonNode!
     unowned var section: SkeletonSection!
     unowned var row: SkeletonRow!
@@ -183,7 +193,7 @@ public class Flexer: ExploderConforming {
     }
     
     func canGrowByOne() -> Bool {
-        if chunk.children_size < chunk.currentSize {
+        if chunk.childrenSize < chunk.currentSize {
             return true
         }
         if node.childrenSize < node.currentSize {

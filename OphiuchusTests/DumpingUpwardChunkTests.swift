@@ -19,7 +19,7 @@ struct DumpingUpwardChunkTests {
         let section = GenerateSections.generate_section(skeleton_node: node_a)
         let row = GenerateRows.generate_Row(section: section)
         
-        let chunkGroup = ExploderGroupChunks(linkedList: [chunk_a], layoutPriority: .required)
+        let chunkGroup = ExploderGroup<SkeletonChunk>(linkedList: [chunk_a], layoutPriority: .required)
         _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForChunks(chunkList: chunkGroup.linkedList,
                                                                  chunkListCount: chunkGroup.linkedList.count,
                                                                  elementAmountList: SkeletonLayoutGrowthPlanTool.chunkAmountList)
@@ -48,7 +48,7 @@ struct DumpingUpwardChunkTests {
         let node_a = GenerateNodes.generate_skeleton_node(chunks: [chunk_a, chunk_b])
         let section = GenerateSections.generate_section(skeleton_nodes: [node_a])
         let row = GenerateRows.generate_Row(section: section)
-        let chunkGroup = ExploderGroupChunks(linkedList: [chunk_a, chunk_b], layoutPriority: .required)
+        let chunkGroup = ExploderGroup<SkeletonChunk>(linkedList: [chunk_a, chunk_b], layoutPriority: .required)
         _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForChunks(chunkList: chunkGroup.linkedList,
                                                                  chunkListCount: chunkGroup.linkedList.count,
                                                                  elementAmountList: SkeletonLayoutGrowthPlanTool.chunkAmountList)
@@ -84,7 +84,7 @@ struct DumpingUpwardChunkTests {
         let node_a = GenerateNodes.generate_skeleton_node(chunks: [chunk_a, chunk_b, chunk_c])
         let section = GenerateSections.generate_section(skeleton_nodes: [node_a])
         let row = GenerateRows.generate_Row(section: section)
-        let chunkGroup = ExploderGroupChunks(linkedList: [chunk_a, chunk_b, chunk_c], layoutPriority: .required)
+        let chunkGroup = ExploderGroup<SkeletonChunk>(linkedList: [chunk_a, chunk_b, chunk_c], layoutPriority: .required)
         _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForChunks(chunkList: chunkGroup.linkedList,
                                                                  chunkListCount: chunkGroup.linkedList.count,
                                                                  elementAmountList: SkeletonLayoutGrowthPlanTool.chunkAmountList)
@@ -126,7 +126,7 @@ struct DumpingUpwardChunkTests {
         
         let section = GenerateSections.generate_section(skeleton_nodes: [node_a, node_b])
         let row = GenerateRows.generate_Row(section: section)
-        let chunkGroup = ExploderGroupChunks(linkedList: [chunk_a, chunk_b], layoutPriority: .required)
+        let chunkGroup = ExploderGroup<SkeletonChunk>(linkedList: [chunk_a, chunk_b], layoutPriority: .required)
         _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForChunks(chunkList: chunkGroup.linkedList,
                                                                  chunkListCount: chunkGroup.linkedList.count,
                                                                  elementAmountList: SkeletonLayoutGrowthPlanTool.chunkAmountList)
@@ -172,7 +172,7 @@ struct DumpingUpwardChunkTests {
         
         let section = GenerateSections.generate_section(skeleton_nodes: [node_a, node_b])
         let row = GenerateRows.generate_Row(section: section)
-        let chunkGroup = ExploderGroupChunks(linkedList: [chunk_a, chunk_b, chunk_c], layoutPriority: .required)
+        let chunkGroup = ExploderGroup<SkeletonChunk>(linkedList: [chunk_a, chunk_b, chunk_c], layoutPriority: .required)
         _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForChunks(chunkList: chunkGroup.linkedList,
                                                                  chunkListCount: chunkGroup.linkedList.count,
                                                                  elementAmountList: SkeletonLayoutGrowthPlanTool.chunkAmountList)
@@ -223,7 +223,7 @@ struct DumpingUpwardChunkTests {
         
         let section = GenerateSections.generate_section(skeleton_nodes: [node_a, node_b])
         let row = GenerateRows.generate_Row(section: section)
-        let chunkGroup = ExploderGroupChunks(linkedList: [chunk_a, chunk_b, chunk_c], layoutPriority: .required)
+        let chunkGroup = ExploderGroup<SkeletonChunk>(linkedList: [chunk_a, chunk_b, chunk_c], layoutPriority: .required)
         _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForChunks(chunkList: chunkGroup.linkedList,
                                                                  chunkListCount: chunkGroup.linkedList.count,
                                                                  elementAmountList: SkeletonLayoutGrowthPlanTool.chunkAmountList)
@@ -268,7 +268,7 @@ struct DumpingUpwardChunkTests {
             
             let nodeCount = Int.random(in: 0...4)
             var node_list = [SkeletonNode]()
-            var chunk_list = [any SkeletonChunkConforming]()
+            var chunk_list = [SkeletonChunk]()
             
             for _ in 0..<nodeCount {
                 let chunkCount = Int.random(in: 0...4)
@@ -313,7 +313,7 @@ struct DumpingUpwardChunkTests {
             
             let section = GenerateSections.generate_section(skeleton_nodes: node_list)
             let row = GenerateRows.generate_Row(section: section)
-            let chunkGroup = ExploderGroupChunks(linkedList: chunk_list, layoutPriority: .required)
+            let chunkGroup = ExploderGroup<SkeletonChunk>(linkedList: chunk_list, layoutPriority: .required)
             _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForChunks(chunkList: chunkGroup.linkedList,
                                                                      chunkListCount: chunkGroup.linkedList.count,
                                                                      elementAmountList: SkeletonLayoutGrowthPlanTool.chunkAmountList)
@@ -349,24 +349,19 @@ struct DumpingUpwardChunkTests {
         }
     }
     
-    @MainActor @Test func test_group_several_medium_groups_1024() {
+    @MainActor @Test func test_group_several_medium_groups_4096() {
         
         var invalid_tests = 0
         var valid_tests = 0
         
-        for _ in 0..<1024 {
+        for _ in 0..<4096 {
             
             let nodeCount = Int.random(in: 0...8)
             var node_list = [SkeletonNode]()
-            var chunk_list = [any SkeletonChunkConforming]()
+            var chunk_list = [SkeletonChunk]()
             
             for _ in 0..<nodeCount {
                 let chunkCount = Int.random(in: 0...8)
-                
-                if nodeCount * chunkCount > 32 {
-                    invalid_tests += 1
-                    continue
-                }
                 
                 valid_tests += 1
                 
@@ -410,7 +405,7 @@ struct DumpingUpwardChunkTests {
             
             let section = GenerateSections.generate_section(skeleton_nodes: node_list)
             let row = GenerateRows.generate_Row(section: section)
-            let chunkGroup = ExploderGroupChunks(linkedList: chunk_list, layoutPriority: .required)
+            let chunkGroup = ExploderGroup<SkeletonChunk>(linkedList: chunk_list, layoutPriority: .required)
             _ = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForChunks(chunkList: chunkGroup.linkedList,
                                                                      chunkListCount: chunkGroup.linkedList.count,
                                                                      elementAmountList: SkeletonLayoutGrowthPlanTool.chunkAmountList)

@@ -90,11 +90,11 @@ struct ExploderTests {
                     let rule = SkeletonLinkageRule_Pieces(pieces: pieces, layoutPriority: .required)
                     rules.append(rule)
                 }
-                var chunks = [SkeletonChunkFixed]()
+                var chunks = [SkeletonChunk]()
                 for pieces in partition {
                     var chunk_id = 0
                     for piece in pieces {
-                        let chunk = SkeletonChunkFixed(id: chunk_id,
+                        let chunk = SkeletonChunk(id: chunk_id,
                                                        chunkIdentifier: .unknown,
                                                        piece: piece, alignment: .center)
                         chunk_id += 1
@@ -495,7 +495,7 @@ struct ExploderTests {
             let partitions = getAllPartitions(original_list)
             for partition in partitions {
                 var rules = [SkeletonLinkageRule_Chunks]()
-                var all_chunks = [any SkeletonChunkConforming]()
+                var all_chunks = [SkeletonChunk]()
                 for chunks in partition {
                     let rule = SkeletonLinkageRule_Chunks(chunks: chunks, layoutPriority: .required)
                     rules.append(rule)
@@ -551,10 +551,10 @@ struct ExploderTests {
         var checked = 0
         for _ in 0..<1024 {
             for count in 1...8 {
-                var original_list = [SkeletonChunkFixed]()
+                var original_list = [SkeletonChunk]()
                 for id in 0..<count {
                     let piece = SkeletonPiece(id: id, pieceIdentifier: .unknown, size: 10)
-                    let chunk = SkeletonChunkFixed(id: id, chunkIdentifier: .unknown, piece: piece, alignment: .center)
+                    let chunk = SkeletonChunk(id: id, chunkIdentifier: .unknown, piece: piece, alignment: .center)
                     original_list.append(chunk)
                 }
                 
@@ -608,10 +608,10 @@ struct ExploderTests {
             
             for count in 1...8 {
                 
-                var original_list = [SkeletonChunkFixed]()
+                var original_list = [SkeletonChunk]()
                 for id in 0..<count {
                     let piece = SkeletonPiece(id: id, pieceIdentifier: .unknown, size: 10)
-                    let chunk = SkeletonChunkFixed(id: id, chunkIdentifier: .unknown, piece: piece, alignment: .center)
+                    let chunk = SkeletonChunk(id: id, chunkIdentifier: .unknown, piece: piece, alignment: .center)
                     original_list.append(chunk)
                 }
                 
@@ -878,10 +878,10 @@ struct ExploderTests {
         var checked = 0
         for _ in 0..<1024 {
             for count in 1...8 {
-                var original_list = [SkeletonChunkFixed]()
+                var original_list = [SkeletonChunk]()
                 for id in 0..<count {
                     let piece = SkeletonPiece(id: id, pieceIdentifier: .unknown, size: 10)
-                    let chunk = SkeletonChunkFixed(id: id, chunkIdentifier: .unknown, piece: piece, alignment: .center)
+                    let chunk = SkeletonChunk(id: id, chunkIdentifier: .unknown, piece: piece, alignment: .center)
                     original_list.append(chunk)
                 }
                 
@@ -891,7 +891,7 @@ struct ExploderTests {
                 for partition in partitions {
                     
                     var rules = [SkeletonLinkageRule_Chunks]()
-                    var all_chunks = [any SkeletonChunkConforming]()
+                    var all_chunks = [SkeletonChunk]()
                     for chunks in partition {
                         let rule = SkeletonLinkageRule_Chunks(chunks: chunks, layoutPriority: .required)
                         rules.append(rule)
@@ -953,11 +953,11 @@ struct ExploderTests {
                         let rule = SkeletonLinkageRule_Pieces(pieces: pieces, layoutPriority: .required)
                         rules.append(rule)
                     }
-                    var chunks = [SkeletonChunkFixed]()
+                    var chunks = [SkeletonChunk]()
                     for pieces in partition {
                         var chunk_id = 0
                         for piece in pieces {
-                            let chunk = SkeletonChunkFixed(id: chunk_id, chunkIdentifier: .unknown, piece: piece, alignment: .center)
+                            let chunk = SkeletonChunk(id: chunk_id, chunkIdentifier: .unknown, piece: piece, alignment: .center)
                             chunk_id += 1
                             chunks.append(chunk)
                         }
@@ -1071,11 +1071,11 @@ struct ExploderTests {
                         let rule = SkeletonLinkageRule_Flexers(flexers: flexers, layoutPriority: .required)
                         rules.append(rule)
                     }
-                    var chunks = [SkeletonChunkFlexer]()
+                    var chunks = [SkeletonChunk]()
                     for flexers in partition {
                         var chunk_id = 0
                         for flexer in flexers {
-                            let chunk = SkeletonChunkFlexer(id: chunk_id, chunkIdentifier: .unknown, flexer: flexer, alignment: .center)
+                            let chunk = SkeletonChunk(id: chunk_id, chunkIdentifier: .unknown, flexer: flexer, alignment: .center)
                             chunk_id += 1
                             chunks.append(chunk)
                         }
@@ -1186,11 +1186,11 @@ struct ExploderTests {
                     let rule = SkeletonLinkageRule_Flexers(flexers: flexers, layoutPriority: .required)
                     rules.append(rule)
                 }
-                var chunks = [SkeletonChunkFlexer]()
+                var chunks = [SkeletonChunk]()
                 for flexers in partition {
                     var chunk_id = 0
                     for flexer in flexers {
-                        let chunk = SkeletonChunkFlexer(id: chunk_id,
+                        let chunk = SkeletonChunk(id: chunk_id,
                                                         chunkIdentifier: .unknown,
                                                         flexer: flexer, alignment: .center)
                         chunk_id += 1

@@ -8,9 +8,9 @@
 import Foundation
 
 public struct SkeletonLinkageRule_Chunks {
-    let chunks: [any SkeletonChunkConforming]
+    let chunks: [SkeletonChunk]
     let layoutPriority: LayoutPriority
-    init(chunks: [any SkeletonChunkConforming], layoutPriority: LayoutPriority) {
+    init(chunks: [SkeletonChunk], layoutPriority: LayoutPriority) {
         self.chunks = chunks
         self.layoutPriority = layoutPriority
     }

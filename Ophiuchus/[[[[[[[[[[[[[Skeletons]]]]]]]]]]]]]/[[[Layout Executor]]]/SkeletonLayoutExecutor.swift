@@ -27,7 +27,7 @@ public struct SkeletonLayoutExecutor {
                     for node in section.skeletonNodes {
                         for chunk in node.chunks {
                             for piece in chunk.pieces {
-                                piece.currentSize = piece.original_size
+                                piece.currentSize = piece.originalSize
                             }
                             for flexer in chunk.flexers {
                                 flexer.currentSize = 0
@@ -49,7 +49,7 @@ public struct SkeletonLayoutExecutor {
                                 chunk_sum += piece.currentSize
                             }
                             chunk.currentSize = chunk_sum
-                            chunk.children_size = chunk_sum
+                            chunk.childrenSize = chunk_sum
                             node_sum += chunk_sum
                         }
                         node.currentSize = node_sum

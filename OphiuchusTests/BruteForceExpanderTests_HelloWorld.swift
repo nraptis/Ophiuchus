@@ -85,14 +85,11 @@ struct BruteForceExpanderTests_HelloWorld {
         let piece_b_2 = GeneratePieces.generate_piece(size: 5)
         
         let chunk_a = GenerateChunks.generate_fixed(size: 20)
-        let chunk_b = SkeletonChunkHeroLong(id: 0,
+        let chunk_b = SkeletonChunk(id: 0,
                                             chunkIdentifier: .unknown,
-                                            left: Flexer(id: 0, flexerIdentifier: .unknown),
-                                            icon: piece_b_1,
-                                            spacing: Flexer(id: 1, flexerIdentifier: .unknown),
-                                            label: piece_b_2,
-                                            right: Flexer(id: 2, flexerIdentifier: .unknown),
-                                            alignment: alignment)
+                                    
+                                    pieces: [piece_b_1, piece_b_2],
+                                    flexers: [Flexer(id: 0, flexerIdentifier: .unknown), Flexer(id: 1, flexerIdentifier: .unknown), Flexer(id: 2, flexerIdentifier: .unknown)])
         
         let piece_a = chunk_a.pieces[0]
         
@@ -168,7 +165,7 @@ struct BruteForceExpanderTests_HelloWorld {
                         let node_count = Int.random(in: 1...3)
                         for _ in 0..<node_count {
                             let chunk_count = Int.random(in: 1...3)
-                            var chunks = [any SkeletonChunkConforming]()
+                            var chunks = [SkeletonChunk]()
                             for _ in 0..<chunk_count {
                                 let chunk = GenerateChunks.generate_random_10_flexer()
                                 chunks.append(chunk)
@@ -254,8 +251,8 @@ struct BruteForceExpanderTests_HelloWorld {
                             expected_size = row.temp_size_finally
                         }
                         
-                        if row.children_size != expected_size {
-                            print("At \(layoutPriority), expected size to be \(expected_size), but it was \(row.children_size), layoutPriority was \(layoutPriority)")
+                        if row.childrenSize != expected_size {
+                            print("At \(layoutPriority), expected size to be \(expected_size), but it was \(row.childrenSize), layoutPriority was \(layoutPriority)")
                             #expect(Bool(false))
                             return
                             
@@ -284,7 +281,7 @@ struct BruteForceExpanderTests_HelloWorld {
                         let node_count = Int.random(in: 0...4)
                         for _ in 0..<node_count {
                             let chunk_count = Int.random(in: 0...4)
-                            var chunks = [any SkeletonChunkConforming]()
+                            var chunks = [SkeletonChunk]()
                             for _ in 0..<chunk_count {
                                 let chunk = GenerateChunks.generate_random_10_flexer()
                                 
@@ -359,8 +356,8 @@ struct BruteForceExpanderTests_HelloWorld {
                             expected_size = row.temp_size_finally
                         }
                         
-                        if row.children_size != expected_size {
-                            print("At \(layoutPriority), expected size to be \(expected_size), but it was \(row.children_size), layoutPriority was \(layoutPriority)")
+                        if row.childrenSize != expected_size {
+                            print("At \(layoutPriority), expected size to be \(expected_size), but it was \(row.childrenSize), layoutPriority was \(layoutPriority)")
                             #expect(Bool(false))
                             return
                             
@@ -387,7 +384,7 @@ struct BruteForceExpanderTests_HelloWorld {
                         let node_count = Int.random(in: 1...6)
                         for _ in 0..<node_count {
                             let chunk_count = Int.random(in: 1...4)
-                            var chunks = [any SkeletonChunkConforming]()
+                            var chunks = [SkeletonChunk]()
                             for _ in 0..<chunk_count {
                                 let chunk = GenerateChunks.generate_random_10_flexer()
                                 chunks.append(chunk)
@@ -471,16 +468,16 @@ struct BruteForceExpanderTests_HelloWorld {
                             expected_size = row.temp_size_finally
                         }
                         
-                        var children_size = row.children_size
-                        if children_size > expected_size {
-                            children_size = expected_size
+                        var childrenSize = row.childrenSize
+                        if childrenSize > expected_size {
+                            childrenSize = expected_size
                         }
                         
-                        if children_size != expected_size {
-                            print("row.children_size was \(row.children_size)")
+                        if childrenSize != expected_size {
+                            print("row.childrenSize was \(row.childrenSize)")
                             print("expected_size was \(expected_size)")
                             
-                            print("At \(layoutPriority), expected size to be \(expected_size), but it was \(row.children_size)")
+                            print("At \(layoutPriority), expected size to be \(expected_size), but it was \(row.childrenSize)")
                             #expect(Bool(false))
                             return
                         }
@@ -505,7 +502,7 @@ struct BruteForceExpanderTests_HelloWorld {
                         let node_count = Int.random(in: 0...2)
                         for _ in 0..<node_count {
                             let chunk_count = Int.random(in: 0...2)
-                            var chunks = [any SkeletonChunkConforming]()
+                            var chunks = [SkeletonChunk]()
                             for _ in 0..<chunk_count {
                                 let chunk = GenerateChunks.generate_random_10_flexer()
                                 chunks.append(chunk)
@@ -579,16 +576,16 @@ struct BruteForceExpanderTests_HelloWorld {
                             expected_size = row.temp_size_finally
                         }
                         
-                        var children_size = row.children_size
-                        if children_size > expected_size {
-                            children_size = expected_size
+                        var childrenSize = row.childrenSize
+                        if childrenSize > expected_size {
+                            childrenSize = expected_size
                         }
                         
-                        if children_size != expected_size {
-                            print("row.children_size was \(row.children_size)")
+                        if childrenSize != expected_size {
+                            print("row.childrenSize was \(row.childrenSize)")
                             print("expected_size was \(expected_size)")
                             
-                            print("At \(layoutPriority), expected size to be \(expected_size), but it was \(row.children_size)")
+                            print("At \(layoutPriority), expected size to be \(expected_size), but it was \(row.childrenSize)")
                             #expect(Bool(false))
                             return
                         }
@@ -613,7 +610,7 @@ struct BruteForceExpanderTests_HelloWorld {
                         let node_count = Int.random(in: 1...4)
                         for _ in 0..<node_count {
                             let chunk_count = Int.random(in: 1...4)
-                            var chunks = [any SkeletonChunkConforming]()
+                            var chunks = [SkeletonChunk]()
                             for _ in 0..<chunk_count {
                                 let chunk = GenerateChunks.generate_random_10_flexer()
                                 chunks.append(chunk)
@@ -700,8 +697,8 @@ struct BruteForceExpanderTests_HelloWorld {
                             expected_size = row.temp_size_finally
                         }
                         
-                        if row.children_size != expected_size {
-                            print("At \(layoutPriority), expected size to be \(expected_size), but it was \(row.children_size), layoutPriority was \(layoutPriority)")
+                        if row.childrenSize != expected_size {
+                            print("At \(layoutPriority), expected size to be \(expected_size), but it was \(row.childrenSize), layoutPriority was \(layoutPriority)")
                             #expect(Bool(false))
                             return
                             
@@ -730,7 +727,7 @@ struct BruteForceExpanderTests_HelloWorld {
                         let node_count = Int.random(in: 0...4)
                         for _ in 0..<node_count {
                             let chunk_count = Int.random(in: 0...4)
-                            var chunks = [any SkeletonChunkConforming]()
+                            var chunks = [SkeletonChunk]()
                             for _ in 0..<chunk_count {
                                 let chunk = GenerateChunks.generate_random_10_flexer()
                                 
@@ -805,8 +802,8 @@ struct BruteForceExpanderTests_HelloWorld {
                             expected_size = row.temp_size_finally
                         }
                         
-                        if row.children_size != expected_size {
-                            print("At \(layoutPriority), expected size to be \(expected_size), but it was \(row.children_size), layoutPriority was \(layoutPriority)")
+                        if row.childrenSize != expected_size {
+                            print("At \(layoutPriority), expected size to be \(expected_size), but it was \(row.childrenSize), layoutPriority was \(layoutPriority)")
                             #expect(Bool(false))
                             return
                             
@@ -838,7 +835,7 @@ struct BruteForceExpanderTests_HelloWorld {
                         let node_count = Int.random(in: 1...6)
                         for _ in 0..<node_count {
                             let chunk_count = Int.random(in: 1...4)
-                            var chunks = [any SkeletonChunkConforming]()
+                            var chunks = [SkeletonChunk]()
                             for _ in 0..<chunk_count {
                                 let chunk = GenerateChunks.generate_random_10_flexer()
                                 chunks.append(chunk)
@@ -922,15 +919,15 @@ struct BruteForceExpanderTests_HelloWorld {
                             expected_size = row.temp_size_finally
                         }
                         
-                        var children_size = row.children_size
-                        if children_size > expected_size {
-                            children_size = expected_size
+                        var childrenSize = row.childrenSize
+                        if childrenSize > expected_size {
+                            childrenSize = expected_size
                         }
                         
-                        if children_size != expected_size {
-                            print("row.children_size was \(row.children_size)")
+                        if childrenSize != expected_size {
+                            print("row.childrenSize was \(row.childrenSize)")
                             print("expected_size was \(expected_size)")
-                            print("At \(layoutPriority), expected size to be \(expected_size), but it was \(row.children_size)")
+                            print("At \(layoutPriority), expected size to be \(expected_size), but it was \(row.childrenSize)")
                             print("row.temp_size_required = \(row.temp_size_required)")
                             print("row.temp_size_high = \(row.temp_size_high)")
                             print("row.temp_size_medium = \(row.temp_size_medium)")
@@ -983,7 +980,7 @@ struct BruteForceExpanderTests_HelloWorld {
                         let node_count = Int.random(in: 0...2)
                         for _ in 0..<node_count {
                             let chunk_count = Int.random(in: 0...2)
-                            var chunks = [any SkeletonChunkConforming]()
+                            var chunks = [SkeletonChunk]()
                             for _ in 0..<chunk_count {
                                 let chunk = GenerateChunks.generate_random_10_flexer()
                                 chunks.append(chunk)
@@ -1057,16 +1054,16 @@ struct BruteForceExpanderTests_HelloWorld {
                             expected_size = row.temp_size_finally
                         }
                         
-                        var children_size = row.children_size
-                        if children_size > expected_size {
-                            children_size = expected_size
+                        var childrenSize = row.childrenSize
+                        if childrenSize > expected_size {
+                            childrenSize = expected_size
                         }
                         
-                        if children_size != expected_size {
-                            print("row.children_size was \(row.children_size)")
+                        if childrenSize != expected_size {
+                            print("row.childrenSize was \(row.childrenSize)")
                             print("expected_size was \(expected_size)")
                             
-                            print("At \(layoutPriority), expected size to be \(expected_size), but it was \(row.children_size)")
+                            print("At \(layoutPriority), expected size to be \(expected_size), but it was \(row.childrenSize)")
                             #expect(Bool(false))
                             return
                         }

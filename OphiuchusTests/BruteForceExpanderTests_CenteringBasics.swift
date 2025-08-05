@@ -19,7 +19,7 @@ struct BruteForceExpanderTests_CenteringBasics {
             let node_count = Int.random(in: 1...4)
             for _ in 0..<node_count {
                 let chunk_count = Int.random(in: 1...4)
-                var chunks = [any SkeletonChunkConforming]()
+                var chunks = [SkeletonChunk]()
                 for _ in 0..<chunk_count {
                     let chunk = GenerateChunks.generate_random_10_flexer()
                     chunks.append(chunk)
@@ -267,7 +267,7 @@ struct BruteForceExpanderTests_CenteringBasics {
                     let node_count = Int.random(in: 1...4)
                     for _ in 0..<node_count {
                         let chunk_count = Int.random(in: 1...4)
-                        var chunks = [any SkeletonChunkConforming]()
+                        var chunks = [SkeletonChunk]()
                         for _ in 0..<chunk_count {
                             let chunk = GenerateChunks.generate_random_10_flexer()
                             chunks.append(chunk)
@@ -301,7 +301,7 @@ struct BruteForceExpanderTests_CenteringBasics {
                     let node_count = Int.random(in: 1...4)
                     for _ in 0..<node_count {
                         let chunk_count = Int.random(in: 1...4)
-                        var chunks = [any SkeletonChunkConforming]()
+                        var chunks = [SkeletonChunk]()
                         for _ in 0..<chunk_count {
                             let chunk = GenerateChunks.generate_random_10_flexer()
                             chunks.append(chunk)
@@ -330,7 +330,7 @@ struct BruteForceExpanderTests_CenteringBasics {
         return SkeletonLinkageRule_Flexers(flexers: flexers, layoutPriority: .required)
     }
     
-    func get_linkage_rule(chunks: [any SkeletonChunkConforming]) -> SkeletonLinkageRule_Chunks {
+    func get_linkage_rule(chunks: [SkeletonChunk]) -> SkeletonLinkageRule_Chunks {
         return SkeletonLinkageRule_Chunks(chunks: chunks, layoutPriority: .required)
     }
     
@@ -366,7 +366,7 @@ struct BruteForceExpanderTests_CenteringBasics {
         return true
     }
     
-    func are_all_equal_to_largest(chunks: [any SkeletonChunkConforming]) -> Bool {
+    func are_all_equal_to_largest(chunks: [SkeletonChunk]) -> Bool {
         if chunks.count < 2 { return true }
         var largest = chunks[0].currentSize
         for chunk in chunks {
@@ -471,7 +471,7 @@ struct BruteForceExpanderTests_CenteringBasics {
             }
             
             let all_chunks = SkeletonLayoutGrouper.getAllChunks(pages: pages)
-            var links_chunks = [[any SkeletonChunkConforming]]()
+            var links_chunks = [[SkeletonChunk]]()
             for _ in 0..<count_chunks {
                 links_chunks.append(getRandomElements(input: all_chunks, count: Int.random(in: 1...5)))
             }
@@ -589,7 +589,7 @@ struct BruteForceExpanderTests_CenteringBasics {
             }
             
             let all_chunks = SkeletonLayoutGrouper.getAllChunks(pages: pages)
-            var links_chunks = [[any SkeletonChunkConforming]]()
+            var links_chunks = [[SkeletonChunk]]()
             for _ in 0..<count_chunks {
                 links_chunks.append(getRandomElements(input: all_chunks, count: Int.random(in: 1...5)))
             }

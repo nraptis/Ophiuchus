@@ -13,186 +13,134 @@ struct GrowthPlanTests_Wild_Sections {
     
     @MainActor @Test func test_growth_plan_wild_sections_1_row() {
         
-        for _ in 0..<1024 {
+        for _ in 0..<2048 {
             
-            let sectionCount = Int.random(in: 1..<24)
-            let sections = GenerateSections.generate_n_sections(n: sectionCount)
-            let row = GenerateRows.generate_Row(sections: sections)
-        
+            let sectionCount = Int.random(in: 0..<8)
+            let sections_unfiltered = GenerateSections.generate_n_sections(n: sectionCount)
+            let sections = GenerateSections.filterRandomly(list: sections_unfiltered)
+            
+            let row = GenerateRows.generate_Row(sections: sections_unfiltered)
+           
+            
             let sectionGroup = ExploderGroup<SkeletonSection>(linkedList: sections, layoutPriority: .required)
-            let rowGrowthPlans = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForSections(sectionList: sectionGroup.linkedList,
+            let pRowGrowthPlansList = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForSections(sectionList: sectionGroup.linkedList,
                                                                                            sectionListCount: sectionGroup.linkedList.count,
                                                                                            sectionAmountList: SkeletonLayoutGrowthPlanTool.amountListDefault)
             
-            guard rowGrowthPlans.count == 1 else {
-                print("rowGrowthPlans.count was \(rowGrowthPlans.count)")
+            let rows = [row]
+            if !GrowthPlanValidator.checkSections(pRows: rows,
+                                                  pSections: sections,
+                                                  pRowGrowthPlansList: pRowGrowthPlansList) {
                 #expect(Bool(false))
                 return
-            }
-            guard rowGrowthPlans[0].growthPlans.count == sections.count else {
-                #expect(Bool(false))
-                return
-            }
-            for sectionIndex in 0..<sections.count {
-                if rowGrowthPlans[0].growthPlans[sectionIndex].amount != 1 {
-                    #expect(Bool(false))
-                    return
-                }
             }
         }
     }
     
     @MainActor @Test func test_growth_plan_wild_sections_1_row_shuffled() {
-        for _ in 0..<1024 {
-            let sectionCount = Int.random(in: 1..<24)
-            var sections = GenerateSections.generate_n_sections(n: sectionCount)
-            let row = GenerateRows.generate_Row(sections: sections)
+        
+        for _ in 0..<2048 {
+            
+            let sectionCount = Int.random(in: 0..<8)
+            var sections_unfiltered = GenerateSections.generate_n_sections(n: sectionCount)
+            sections_unfiltered.shuffle()
+            
+            var sections = GenerateSections.filterRandomly(list: sections_unfiltered)
             sections.shuffle()
+            
+            let row = GenerateRows.generate_Row(sections: sections_unfiltered)
+           
+            
             let sectionGroup = ExploderGroup<SkeletonSection>(linkedList: sections, layoutPriority: .required)
-            let rowGrowthPlans = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForSections(sectionList: sectionGroup.linkedList,
+            var pRowGrowthPlansList = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForSections(sectionList: sectionGroup.linkedList,
                                                                                            sectionListCount: sectionGroup.linkedList.count,
                                                                                            sectionAmountList: SkeletonLayoutGrowthPlanTool.amountListDefault)
+            pRowGrowthPlansList.shuffle()
             
-            guard rowGrowthPlans.count == 1 else {
-                print("rowGrowthPlans.count was \(rowGrowthPlans.count)")
+            let rows = [row]
+            if !GrowthPlanValidator.checkSections(pRows: rows,
+                                                  pSections: sections,
+                                                  pRowGrowthPlansList: pRowGrowthPlansList) {
                 #expect(Bool(false))
                 return
-            }
-            guard rowGrowthPlans[0].growthPlans.count == sections.count else {
-                #expect(Bool(false))
-                return
-            }
-            for sectionIndex in 0..<sections.count {
-                if rowGrowthPlans[0].growthPlans[sectionIndex].amount != 1 {
-                    #expect(Bool(false))
-                    return
-                }
             }
         }
     }
     
-    @MainActor @Test func test_growth_plan_wild_sections_random_10_rows() {
+    @MainActor @Test func test_growth_plan_wild_sections_n_rows() {
         
-        for _ in 0..<1024 {
+        for _ in 0..<2048 {
             
-            let rowCount = Int.random(in: 1...10)
-            
+            let rowCount = Int.random(in: 0..<8)
             var rows = [SkeletonRow]()
-            var sections = [SkeletonSection]()
-            
+            var sections_final: [SkeletonSection] = []
             for _ in 0..<rowCount {
-                let sectionCount = Int.random(in: 1..<8)
-                let subsections = GenerateSections.generate_n_sections(n: sectionCount)
-                let row = GenerateRows.generate_Row(sections: subsections)
-                sections.append(contentsOf: subsections)
+                
+                let sectionCount = Int.random(in: 0..<8)
+                let sections_unfiltered = GenerateSections.generate_n_sections(n: sectionCount)
+                let sections = GenerateSections.filterRandomly(list: sections_unfiltered)
+                
+                let row = GenerateRows.generate_Row(sections: sections_unfiltered)
                 rows.append(row)
+                
+                
+            
+                sections_final.append(contentsOf: sections)
             }
             
-            let sectionGroup = ExploderGroup<SkeletonSection>(linkedList: sections, layoutPriority: .required)
-            let rowGrowthPlans = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForSections(sectionList: sectionGroup.linkedList,
-                                                                                           sectionListCount: sectionGroup.linkedList.count,
-                                                                                           sectionAmountList: SkeletonLayoutGrowthPlanTool.amountListDefault)
+            let sectionGroup = ExploderGroup<SkeletonSection>(linkedList: sections_final, layoutPriority: .required)
+            let pRowGrowthPlansList = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForSections(sectionList: sectionGroup.linkedList,
+                                                                                                sectionListCount: sectionGroup.linkedList.count,
+                                                                                                sectionAmountList: SkeletonLayoutGrowthPlanTool.amountListDefault)
             
-            
-            guard rowGrowthPlans.count == rows.count else {
-                print("rowGrowthPlans.count was \(rowGrowthPlans.count)")
+            if !GrowthPlanValidator.checkSections(pRows: rows,
+                                                  pSections: sections_final,
+                                                  pRowGrowthPlansList: pRowGrowthPlansList) {
                 #expect(Bool(false))
                 return
-            }
-            
-            // Let's make sure all the rows got a growth plan
-            for layoutRow in rows {
-                
-                var rowGrowthPlan: RowGrowthPlans?
-                for _rowGrowthPlan in rowGrowthPlans {
-                    if _rowGrowthPlan.layoutRow === layoutRow {
-                        rowGrowthPlan = _rowGrowthPlan
-                        break
-                    }
-                }
-                guard let rowGrowthPlan = rowGrowthPlan else {
-                    print("a row did not have an associated growth plan.")
-                    #expect(Bool(false))
-                    return
-                }
-                
-                guard rowGrowthPlan.growthPlans.count == layoutRow.sections.count else {
-                    #expect(Bool(false))
-                    return
-                }
-                
-                for sectionIndex in 0..<layoutRow.sections.count {
-                    let growthPlan = rowGrowthPlan.growthPlans[sectionIndex]
-                    guard growthPlan.amount == 1 else {
-                        #expect(Bool(false))
-                        return
-                    }
-                }
             }
         }
     }
     
-    @MainActor @Test func test_growth_plan_wild_sections_random_10_rows_shuffled() {
+    @MainActor @Test func test_growth_plan_wild_sections_n_rows_shuffled() {
         
-        for _ in 0..<1024 {
+        for _ in 0..<2048 {
             
-            let rowCount = Int.random(in: 1...10)
-            
+            let rowCount = Int.random(in: 0..<8)
             var rows = [SkeletonRow]()
-            var sections = [SkeletonSection]()
-            
+            var rows_orphaned = [SkeletonRow]()
+            var sections_final: [SkeletonSection] = []
             for _ in 0..<rowCount {
-                let sectionCount = Int.random(in: 1..<8)
-                var subsections = GenerateSections.generate_n_sections(n: sectionCount)
-                subsections.shuffle()
-                let row = GenerateRows.generate_Row(sections: subsections)
-                sections.append(contentsOf: subsections)
-                rows.append(row)
+                
+                let sectionCount = Int.random(in: 0..<8)
+                var sections_unfiltered = GenerateSections.generate_n_sections(n: sectionCount)
+                sections_unfiltered.shuffle()
+                var sections = GenerateSections.filterRandomly(list: sections_unfiltered)
+                sections.shuffle()
+                
+                let row = GenerateRows.generate_Row(sections: sections_unfiltered)
+                if Bool.random() {
+                    rows.append(row)
+                } else {
+                    rows_orphaned.append(row)
+                }
+            
+                sections_final.append(contentsOf: sections)
             }
-            sections.shuffle()
+            sections_final.shuffle()
             rows.shuffle()
             
-            let sectionGroup = ExploderGroup<SkeletonSection>(linkedList: sections, layoutPriority: .required)
-            let rowGrowthPlans = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForSections(sectionList: sectionGroup.linkedList,
-                                                                                           sectionListCount: sectionGroup.linkedList.count,
-                                                                                           sectionAmountList: SkeletonLayoutGrowthPlanTool.amountListDefault)
+            let sectionGroup = ExploderGroup<SkeletonSection>(linkedList: sections_final, layoutPriority: .required)
+            let pRowGrowthPlansList = SkeletonLayoutGrowthPlanTool.getRowGrowthPlansForSections(sectionList: sectionGroup.linkedList,
+                                                                                                sectionListCount: sectionGroup.linkedList.count,
+                                                                                                sectionAmountList: SkeletonLayoutGrowthPlanTool.amountListDefault)
             
-            guard rowGrowthPlans.count == rows.count else {
-                print("rowGrowthPlans.count was \(rowGrowthPlans.count)")
+            if !GrowthPlanValidator.checkSections(pRows: rows,
+                                                  pSections: sections_final,
+                                                  pRowGrowthPlansList: pRowGrowthPlansList) {
                 #expect(Bool(false))
                 return
             }
-            
-            // Let's make sure all the rows got a growth plan
-            for layoutRow in rows {
-                
-                var rowGrowthPlan: RowGrowthPlans?
-                for _rowGrowthPlan in rowGrowthPlans {
-                    if _rowGrowthPlan.layoutRow === layoutRow {
-                        rowGrowthPlan = _rowGrowthPlan
-                        break
-                    }
-                }
-                guard let rowGrowthPlan = rowGrowthPlan else {
-                    print("a row did not have an associated growth plan.")
-                    #expect(Bool(false))
-                    return
-                }
-                
-                guard rowGrowthPlan.growthPlans.count == layoutRow.sections.count else {
-                    #expect(Bool(false))
-                    return
-                }
-                
-                for sectionIndex in 0..<layoutRow.sections.count {
-                    let growthPlan = rowGrowthPlan.growthPlans[sectionIndex]
-                    guard growthPlan.amount == 1 else {
-                        #expect(Bool(false))
-                        return
-                    }
-                }
-            }
         }
     }
-    
 }

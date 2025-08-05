@@ -8,16 +8,25 @@
 import Foundation
 
 struct RowGrowthPlans {
-    let layoutRow: SkeletonRow
+    let row: SkeletonRow
     let growthPlans: [GrowthPlan]
     
-    func getGrowthPlan(layoutSection: SkeletonSection) -> GrowthPlan? {
+    func getGrowthPlan(section: SkeletonSection) -> GrowthPlan? {
         for growthPlan in growthPlans {
-            if growthPlan.layoutSection === layoutSection {
+            if growthPlan.section === section {
                 return growthPlan
             }
         }
         return nil
+    }
+    
+    func contains(section: SkeletonSection) -> Bool {
+        for growthPlan in growthPlans {
+            if growthPlan.section === section {
+                return true
+            }
+        }
+        return false
     }
     
 }

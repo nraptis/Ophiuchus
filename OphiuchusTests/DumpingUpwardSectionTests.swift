@@ -266,7 +266,7 @@ struct DumpingUpwardSectionTests {
             for _ in 0..<rowCount {
                 let sectionCount = Int.random(in: 0...4)
                 for _ in 0..<sectionCount {
-                    let which = Int.random(in: 0...6)
+                    let which = Int.random(in: 0...5)
                     if which == 0 {
                         let section_a = GenerateSections.generate_fixed(size: 10)
                         let row = GenerateRows.generate_Row(sections: [section_a])
@@ -374,12 +374,12 @@ struct DumpingUpwardSectionTests {
     }
     
     
-    @MainActor @Test func test_group_several_medium_groups_1024() {
+    @MainActor @Test func test_group_several_medium_groups_4096() {
         
         var invalid_tests = 0
         var valid_tests = 0
         
-        for _ in 0..<1024 {
+        for _ in 0..<4096 {
             
             let rowCount = Int.random(in: 0...4)
             var row_list = [SkeletonRow]()
@@ -388,15 +388,10 @@ struct DumpingUpwardSectionTests {
             for _ in 0..<rowCount {
                 let sectionCount = Int.random(in: 0...8)
                 
-                if rowCount * sectionCount > 32 {
-                    invalid_tests += 1
-                    continue
-                }
-                
                 valid_tests += 1
                 
                 for _ in 0..<sectionCount {
-                    let which = Int.random(in: 0...6)
+                    let which = Int.random(in: 0...5)
                     if which == 0 {
                         let section_a = GenerateSections.generate_fixed(size: 10)
                         let row = GenerateRows.generate_Row(sections: [section_a])

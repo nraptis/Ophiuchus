@@ -15,7 +15,7 @@ struct GenerateChunks {
     private static var chunk_id = 0
     
     /*
-    static func generate_section(skeleton_nodes: [SkeletonNode], gap: Int) -> (any SkeletonChunkConforming) {
+    static func generate_section(skeleton_nodes: [SkeletonNode], gap: Int) -> SkeletonChunk {
         let base = Int.random(in: 0...20)
         let result = GenerateSections.generate_section(skeleton_nodes: skeleton_nodes,
                                                        base: base,
@@ -32,8 +32,8 @@ struct GenerateChunks {
     }
     */
     
-    static func generate_n_chunks(n: Int) -> [any SkeletonChunkConforming] {
-        var result = [any SkeletonChunkConforming]()
+    static func generate_n_chunks(n: Int) -> [SkeletonChunk] {
+        var result = [SkeletonChunk]()
         var index = 0
         while index < n {
             if Bool.random() {
@@ -48,7 +48,7 @@ struct GenerateChunks {
         return result
     }
     
-    static func generate_random() -> (any SkeletonChunkConforming) {
+    static func generate_random() -> SkeletonChunk {
         
         let random = Int.random(in: 0...4)
         if random == 0 {
@@ -64,7 +64,7 @@ struct GenerateChunks {
         }
     }
     
-    static func generate_random_10_flexer() -> (any SkeletonChunkConforming) {
+    static func generate_random_10_flexer() -> SkeletonChunk {
         let random = Int.random(in: 0...4)
         if random == 0 {
             return generate_fixed()
@@ -80,7 +80,7 @@ struct GenerateChunks {
     }
     
     
-    static func generate_fixed() -> SkeletonChunkFixed {
+    static func generate_fixed() -> SkeletonChunk {
         
         let random = Int.random(in: 0...10)
         let size: Int
@@ -94,7 +94,52 @@ struct GenerateChunks {
         return generate_fixed(size: size)
     }
     
-    static func generate_fixed(id: Int) -> SkeletonChunkFixed {
+    static func generate_gapped(flexers: [Flexer], gap: Int) -> SkeletonChunk {
+        let base = Int.random(in: 0...20)
+        return GenerateChunks.generate_gapped(flexers: flexers,
+                                           base: base,
+                                           gap: gap)
+    }
+    
+    static func generate_gapped(flexers: [Flexer], base: Int, gap: Int) -> SkeletonChunk {
+        let result = GenerateChunks.generate_flexers(flexers: flexers)
+        result.currentSize = base + gap
+        result.childrenSize = base
+        return result
+    }
+    
+    
+    static func generate_gapped(pieces: [SkeletonPiece], gap: Int) -> SkeletonChunk {
+        let base = Int.random(in: 0...20)
+        return GenerateChunks.generate_gapped(pieces: pieces,
+                                           base: base,
+                                           gap: gap)
+    }
+    
+    static func generate_gapped(pieces: [SkeletonPiece], base: Int, gap: Int) -> SkeletonChunk {
+        let result = GenerateChunks.generate(pieces: pieces, flexers: [])
+        result.currentSize = base + gap
+        result.childrenSize = base
+        return result
+    }
+    
+    static func generate_gapped(pieces: [SkeletonPiece], flexers: [Flexer], gap: Int) -> SkeletonChunk {
+        let base = Int.random(in: 0...20)
+        return GenerateChunks.generate_gapped(pieces: pieces,
+                                              flexers: flexers,
+                                           base: base,
+                                           gap: gap)
+    }
+    
+    static func generate_gapped(pieces: [SkeletonPiece], flexers: [Flexer], base: Int, gap: Int) -> SkeletonChunk {
+        let result = GenerateChunks.generate(pieces: pieces, flexers: flexers)
+        result.currentSize = base + gap
+        result.childrenSize = base
+        return result
+    }
+    
+    
+    static func generate_fixed(id: Int) -> SkeletonChunk {
         
         let random = Int.random(in: 0...10)
         let size: Int
@@ -108,7 +153,7 @@ struct GenerateChunks {
         return generate_fixed(id: id, size: size)
     }
     
-    static func generate_hero_long() -> SkeletonChunkHeroLong {
+    static func generate_hero_long() -> SkeletonChunk {
         let random1 = Int.random(in: 0...10)
         let random2 = Int.random(in: 0...10)
         
@@ -131,7 +176,7 @@ struct GenerateChunks {
         return generate_hero_long(size_icon: size_icon, size_text: size_text)
     }
     
-    static func generate_hero_long(size_icon: Int, size_text: Int) -> SkeletonChunkHeroLong {
+    static func generate_hero_long(size_icon: Int, size_text: Int) -> SkeletonChunk {
         let left = _generate_flexer()
         let icon = GeneratePieces.generate_piece(size: size_icon)
         let center = _generate_flexer()
@@ -146,19 +191,15 @@ struct GenerateChunks {
             return id
         }
         
-        let result = SkeletonChunkHeroLong(id: id,
-                                           chunkIdentifier: .unknown,
-                                           left: left,
-                                           icon: icon,
-                                           spacing: center,
-                                           label: label,
-                                           right: right,
-                                           alignment: alignment)
-        
+        let result = SkeletonChunk(id: id,
+                                   chunkIdentifier: .unknown,
+                                   pieces: [icon, label],
+                                   flexers: [left, center, right],
+                                   alignment: alignment)
         return result
     }
     
-    static func generate_hero_long_10_flexer(size_icon: Int, size_text: Int) -> SkeletonChunkHeroLong {
+    static func generate_hero_long_10_flexer(size_icon: Int, size_text: Int) -> SkeletonChunk {
         let left = GenerateFlexers.generate_10_random_climb()
         let icon = GeneratePieces.generate_piece(size: size_icon)
         let center = GenerateFlexers.generate_10_random_climb()
@@ -173,18 +214,15 @@ struct GenerateChunks {
             return id
         }
         
-        let result = SkeletonChunkHeroLong(id: id,
-                                           chunkIdentifier: .unknown,
-                                           left: left,
-                                           icon: icon,
-                                           spacing: center,
-                                           label: label,
-                                           right: right,
-                                           alignment: alignment)
+        let result = SkeletonChunk(id: id,
+                                   chunkIdentifier: .unknown,
+                                   pieces: [icon, label],
+                                   flexers: [left, center, right],
+                                   alignment: alignment)
         return result
     }
     
-    static func generate_hero_long_10_flexer() -> SkeletonChunkHeroLong {
+    static func generate_hero_long_10_flexer() -> SkeletonChunk {
         let left = GenerateFlexers.generate_10_random_climb()
         let icon = GeneratePieces.generate_piece(size: Int.random(in: 12...96))
         let center = GenerateFlexers.generate_10_random_climb()
@@ -199,18 +237,15 @@ struct GenerateChunks {
             return id
         }
         
-        let result = SkeletonChunkHeroLong(id: id,
-                                           chunkIdentifier: .unknown,
-                                           left: left,
-                                           icon: icon,
-                                           spacing: center,
-                                           label: label,
-                                           right: right,
-                                           alignment: alignment)
+        let result = SkeletonChunk(id: id,
+                                   chunkIdentifier: .unknown,
+                                   pieces: [icon, label],
+                                   flexers: [left, center, right],
+                                   alignment: alignment)
         return result
     }
     
-    static func generate_hero_stacked() -> SkeletonChunkHeroStacked {
+    static func generate_hero_stacked() -> SkeletonChunk {
         let random = Int.random(in: 0...10)
         let size: Int
         if random < 8 {
@@ -223,7 +258,7 @@ struct GenerateChunks {
         return generate_hero_stacked(size: size)
     }
     
-    static func generate_hero_stacked(size: Int) -> SkeletonChunkHeroStacked {
+    static func generate_hero_stacked(size: Int) -> SkeletonChunk {
         let left = _generate_flexer()
         let center = GeneratePieces.generate_piece(size: size)
         let right = _generate_flexer()
@@ -235,16 +270,15 @@ struct GenerateChunks {
             if GenerateChunks.chunk_id > 1_000_000_000 { GenerateChunks.chunk_id = 0 }
             return id
         }
-        let result = SkeletonChunkHeroStacked(id: id,
-                                              chunkIdentifier: .unknown,
-                                              left: left,
-                                              center: center,
-                                              right: right,
-                                              alignment: alignment)
+        let result = SkeletonChunk(id: id,
+                                   chunkIdentifier: .unknown,
+                                   pieces: [center],
+                                   flexers: [left, right],
+                                   alignment: alignment)
         return result
     }
     
-    static func generate_hero_stacked_10_flexer(size: Int) -> SkeletonChunkHeroStacked {
+    static func generate_hero_stacked_10_flexer(size: Int) -> SkeletonChunk {
         let left = GenerateFlexers.generate_10_random_climb()
         let center = GeneratePieces.generate_piece(size: size)
         let right = GenerateFlexers.generate_10_random_climb()
@@ -256,16 +290,15 @@ struct GenerateChunks {
             if GenerateChunks.chunk_id > 1_000_000_000 { GenerateChunks.chunk_id = 0 }
             return id
         }
-        let result = SkeletonChunkHeroStacked(id: id,
-                                              chunkIdentifier: .unknown,
-                                              left: left,
-                                              center: center,
-                                              right: right,
-                                              alignment: alignment)
+        let result = SkeletonChunk(id: id,
+                                   chunkIdentifier: .unknown,
+                                   pieces: [center],
+                                   flexers: [left, right],
+                                   alignment: alignment)
         return result
     }
     
-    static func generate_hero_stacked_10_flexer() -> SkeletonChunkHeroStacked {
+    static func generate_hero_stacked_10_flexer() -> SkeletonChunk {
         let left = GenerateFlexers.generate_10_random_climb()
         let center = GeneratePieces.generate_piece(size: Int.random(in: 12...96))
         let right = GenerateFlexers.generate_10_random_climb()
@@ -277,16 +310,16 @@ struct GenerateChunks {
             if GenerateChunks.chunk_id > 1_000_000_000 { GenerateChunks.chunk_id = 0 }
             return id
         }
-        let result = SkeletonChunkHeroStacked(id: id,
-                                              chunkIdentifier: .unknown,
-                                              left: left,
-                                              center: center,
-                                              right: right,
-                                              alignment: alignment)
+        let result = SkeletonChunk(id: id,
+                                   chunkIdentifier: .unknown,
+                                   pieces: [center],
+                                   flexers: [left, right],
+                                   alignment: alignment)
+        
         return result
     }
     
-    static func generate_pading() -> SkeletonChunkPadding {
+    static func generate_pading() -> SkeletonChunk {
         let left = _generate_flexer()
         let right = _generate_flexer()
         let alignment = GenerateAlignment.generate_alignment()
@@ -297,15 +330,15 @@ struct GenerateChunks {
             if GenerateChunks.chunk_id > 1_000_000_000 { GenerateChunks.chunk_id = 0 }
             return id
         }
-        let result = SkeletonChunkPadding(id: id,
-                                          chunkIdentifier: .unknown,
-                                          left: left,
-                                          right: right,
-                                          alignment: alignment)
+        let result = SkeletonChunk(id: id,
+                                   chunkIdentifier: .unknown,
+                                   pieces: [],
+                                   flexers: [left, right],
+                                   alignment: alignment)
         return result
     }
     
-    static func generate_pading_10_flexer() -> SkeletonChunkPadding {
+    static func generate_pading_10_flexer() -> SkeletonChunk {
         let left = GenerateFlexers.generate_10_random_climb()
         let right = GenerateFlexers.generate_10_random_climb()
         let alignment = GenerateAlignment.generate_alignment()
@@ -316,21 +349,26 @@ struct GenerateChunks {
             if GenerateChunks.chunk_id > 1_000_000_000 { GenerateChunks.chunk_id = 0 }
             return id
         }
-        let result = SkeletonChunkPadding(id: id,
-                                          chunkIdentifier: .unknown,
-                                          left: left,
-                                          right: right,
-                                          alignment: alignment)
+        
+        let result = SkeletonChunk(id: id,
+                                   chunkIdentifier: .unknown,
+                                   pieces: [],
+                                   flexers: [left, right],
+                                   alignment: alignment)
         return result
     }
     
     
-    static func generate_flexer() -> SkeletonChunkFlexer {
+    static func generate_flexer() -> SkeletonChunk {
         let flexer = _generate_flexer()
         return generate_flexer(flexer: flexer)
     }
     
-    static func generate_flexer(flexer: Flexer) -> SkeletonChunkFlexer {
+    static func generate_flexer(flexer: Flexer) -> SkeletonChunk {
+        return generate_flexers(flexers: [flexer])
+    }
+    
+    static func generate_flexers(flexers: [Flexer]) -> SkeletonChunk {
         let alignment = GenerateAlignment.generate_alignment()
         let id = id_queue.sync {
             let id = GenerateChunks.chunk_id
@@ -338,15 +376,15 @@ struct GenerateChunks {
             if GenerateChunks.chunk_id > 1_000_000_000 { GenerateChunks.chunk_id = 0 }
             return id
         }
-        let result = SkeletonChunkFlexer(id: id,
-                                         chunkIdentifier: .unknown,
-                                         flexer: flexer,
-                                         alignment: alignment)
-        flexer.chunk = result
+        
+        let result = SkeletonChunk(id: id,
+                                   chunkIdentifier: .unknown,
+                                   flexers: flexers,
+                                   alignment: alignment)
         return result
     }
     
-    static func generate_flexer_two(flexer1: Flexer, flexer2: Flexer) -> any SkeletonChunkConforming {
+    static func generate_flexer_two(flexer1: Flexer, flexer2: Flexer) -> SkeletonChunk {
         let alignment = GenerateAlignment.generate_alignment()
         let id = id_queue.sync {
             let id = GenerateChunks.chunk_id
@@ -356,29 +394,24 @@ struct GenerateChunks {
         }
         
         if Bool.random() {
-            let result = SkeletonChunkPadding(id: id,
-                                               chunkIdentifier: .unknown,
-                                               left: flexer1,
-                                               right: flexer2,
-                                               alignment: alignment)
-            flexer1.chunk = result
-            flexer2.chunk = result
+            let result = SkeletonChunk(id: id,
+                                       chunkIdentifier: .unknown,
+                                       pieces: [],
+                                       flexers: [flexer1, flexer2],
+                                       alignment: alignment)
             return result
         } else {
             let piece = GeneratePieces.generate_piece(size: 10)
-            let result = SkeletonChunkHeroStacked(id: id,
-                                                  chunkIdentifier: .unknown,
-                                                  left: flexer1,
-                                                  center: piece,
-                                                  right: flexer2,
-                                                  alignment: alignment)
-            flexer1.chunk = result
-            flexer2.chunk = result
+            let result = SkeletonChunk(id: id,
+                                       chunkIdentifier: .unknown,
+                                       pieces: [piece],
+                                       flexers: [flexer1, flexer2],
+                                       alignment: alignment)
             return result
         }
     }
     
-    static func generate_flexer_three(flexer1: Flexer, flexer2: Flexer, flexer3: Flexer) -> any SkeletonChunkConforming {
+    static func generate_flexer_three(flexer1: Flexer, flexer2: Flexer, flexer3: Flexer) -> SkeletonChunk {
         let alignment = GenerateAlignment.generate_alignment()
         let id = id_queue.sync {
             let id = GenerateChunks.chunk_id
@@ -386,23 +419,39 @@ struct GenerateChunks {
             if GenerateChunks.chunk_id > 1_000_000_000 { GenerateChunks.chunk_id = 0 }
             return id
         }
-        let piece1 = GeneratePieces.generate_piece(size: 10)
-        let piece2 = GeneratePieces.generate_piece(size: 10)
-        let result = SkeletonChunkHeroLong(id: id,
-                                           chunkIdentifier: .unknown,
-                                           left: flexer1,
-                                           icon: piece1,
-                                           spacing: flexer2,
-                                           label: piece2,
-                                           right: flexer3,
-                                           alignment: alignment)
-        flexer1.chunk = result
-        flexer2.chunk = result
-        flexer3.chunk = result
-        return result
+        
+        let random = Int.random(in: 0...2)
+        if random == 0 {
+            let result = SkeletonChunk(id: id,
+                                       chunkIdentifier: .unknown,
+                                       pieces: [],
+                                       flexers: [flexer1, flexer2, flexer3],
+                                       alignment: alignment)
+            return result
+        } else if random == 1 {
+            let piece1 = GeneratePieces.generate_piece(size: 10)
+            let result = SkeletonChunk(id: id,
+                                       chunkIdentifier: .unknown,
+                                       pieces: [piece1],
+                                       flexers: [flexer1, flexer2, flexer3],
+                                       alignment: alignment)
+            return result
+        } else {
+            let piece1 = GeneratePieces.generate_piece(size: 10)
+            let piece2 = GeneratePieces.generate_piece(size: 10)
+            let result = SkeletonChunk(id: id,
+                                       chunkIdentifier: .unknown,
+                                       pieces: [piece1, piece2],
+                                       flexers: [flexer1, flexer2, flexer3],
+                                       alignment: alignment)
+            return result
+        }
+        
+       
+        
     }
     
-    static func generate_flexer_10_flexer() -> SkeletonChunkFlexer {
+    static func generate_flexer_10_flexer() -> SkeletonChunk {
         let flexer = GenerateFlexers.generate_10_random_climb()
         let alignment = GenerateAlignment.generate_alignment()
         
@@ -412,27 +461,54 @@ struct GenerateChunks {
             if GenerateChunks.chunk_id > 1_000_000_000 { GenerateChunks.chunk_id = 0 }
             return id
         }
-        let result = SkeletonChunkFlexer(id: id,
-                                         chunkIdentifier: .unknown,
-                                         flexer: flexer,
-                                         alignment: alignment)
+        let result = SkeletonChunk(id: id,
+                                   chunkIdentifier: .unknown,
+                                   pieces: [],
+                                   flexers: [flexer],
+                                   alignment: alignment)
         
         return result
     }
     
-    static func generate_fixed(size: Int) -> SkeletonChunkFixed {
+    static func generate_fixed(size: Int) -> SkeletonChunk {
         let piece = GeneratePieces.generate_piece(size: size)
         let result = generate_fixed(piece: piece)
         return result
     }
     
-    static func generate_fixed(id: Int, size: Int) -> SkeletonChunkFixed {
+    static func generate_fixed(id: Int, size: Int) -> SkeletonChunk {
         let piece = GeneratePieces.generate_piece(size: size)
         let result = generate_fixed(id: id, piece: piece)
         return result
     }
     
-    static func generate_fixed(piece: SkeletonPiece) -> SkeletonChunkFixed {
+    static func generate_fixed(piece: SkeletonPiece) -> SkeletonChunk {
+        let id = id_queue.sync {
+            let id = GenerateChunks.chunk_id
+            GenerateChunks.chunk_id += 1
+            if GenerateChunks.chunk_id > 1_000_000_000 { GenerateChunks.chunk_id = 0 }
+            return id
+        }
+        let result = generate_fixed(id: id, piece: piece)
+        return result
+    }
+    
+    static func generate_fixed(id: Int, piece: SkeletonPiece) -> SkeletonChunk {
+        let alignment = GenerateAlignment.generate_alignment()
+        let result = SkeletonChunk(id: id,
+                                   chunkIdentifier: .unknown,
+                                   pieces: [piece],
+                                   flexers: [],
+                                   alignment: alignment)
+        return result
+    }
+    
+    static func generate_piece(piece: SkeletonPiece) -> SkeletonChunk {
+        let result = GenerateChunks.generate_pieces(pieces: [piece])
+        return result
+    }
+    
+    static func generate_pieces(pieces: [SkeletonPiece]) -> SkeletonChunk {
         let alignment = GenerateAlignment.generate_alignment()
         let id = id_queue.sync {
             let id = GenerateChunks.chunk_id
@@ -440,21 +516,32 @@ struct GenerateChunks {
             if GenerateChunks.chunk_id > 1_000_000_000 { GenerateChunks.chunk_id = 0 }
             return id
         }
-        let result = SkeletonChunkFixed(id: id,
-                                        chunkIdentifier: .unknown,
-                                        piece: piece,
-                                        alignment: alignment)
+        
+        let result = SkeletonChunk(id: id,
+                                   chunkIdentifier: .unknown,
+                                   pieces: pieces,
+                                   flexers: [],
+                                   alignment: alignment)
         return result
     }
     
-    static func generate_fixed(id: Int, piece: SkeletonPiece) -> SkeletonChunkFixed {
+    static func generate(pieces: [SkeletonPiece], flexers: [Flexer]) -> SkeletonChunk {
         let alignment = GenerateAlignment.generate_alignment()
-        let result = SkeletonChunkFixed(id: id,
-                                        chunkIdentifier: .unknown,
-                                        piece: piece,
-                                        alignment: alignment)
+        let id = id_queue.sync {
+            let id = GenerateChunks.chunk_id
+            GenerateChunks.chunk_id += 1
+            if GenerateChunks.chunk_id > 1_000_000_000 { GenerateChunks.chunk_id = 0 }
+            return id
+        }
+        
+        let result = SkeletonChunk(id: id,
+                                   chunkIdentifier: .unknown,
+                                   pieces: pieces,
+                                   flexers: flexers,
+                                   alignment: alignment)
         return result
     }
+
     
     private static func _generate_flexer() -> Flexer {
         let flexer: Flexer

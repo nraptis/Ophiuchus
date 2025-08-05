@@ -14,12 +14,21 @@ struct GenerateSections {
     
     private static var section_id = 0
     
+    static func filterRandomly(list: [SkeletonSection]) -> [SkeletonSection] {
+        var result = [SkeletonSection]()
+        for item in list {
+            if Bool.random() {
+                result.append(item)
+            }
+        }
+        return result
+    }
     
     static func generate_n_sections(n: Int) -> [SkeletonSection] {
         var result = [SkeletonSection]()
         var index = 0
         while index < n {
-            let section = generate_fixed(size: 10)
+            let section = generate_section(nodes: [])
             result.append(section)
             index += 1
         }
@@ -46,6 +55,7 @@ struct GenerateSections {
     }
     
     //GenerateSections.generate_section(skeleton_node: node_a)
+    
     
     static func generate_fixed(size: Int) -> SkeletonSection {
         let layoutNode = GenerateNodes.generate_fixed_layout(size: size)

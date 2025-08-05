@@ -16,6 +16,79 @@ enum SkeletonRowInitialLayoutType {
 
 public class SkeletonRow: CustomStringConvertible {
     
+    static func contains(list: [SkeletonRow], row: SkeletonRow) -> Bool {
+        for _row in list {
+            if _row === row {
+                return true
+            }
+        }
+        return false
+    }
+    
+    func contains(section: SkeletonSection) -> Bool {
+        for _section in sections {
+            if _section === section {
+                return true
+            }
+        }
+        return false
+    }
+    
+    func contains(node: SkeletonNode) -> Bool {
+        for _section in sections {
+            for _node in _section.skeletonNodes {
+                if _node === node {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
+    func contains(chunk: SkeletonChunk) -> Bool {
+        for _section in sections {
+            for _node in _section.skeletonNodes {
+                for _chunk in _node.chunks {
+                    if _chunk === chunk {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+    
+    func contains(piece: SkeletonPiece) -> Bool {
+        for _section in sections {
+            for _node in _section.skeletonNodes {
+                for _chunk in _node.chunks {
+                    for _piece in _chunk.pieces {
+                        if _piece === piece {
+                            return true
+                        }
+                    }
+                }
+            }
+        }
+        return false
+    }
+    
+    func contains(flexer: Flexer) -> Bool {
+        for _section in sections {
+            for _node in _section.skeletonNodes {
+                for _chunk in _node.chunks {
+                    for _flexer in _chunk.flexers {
+                        if _flexer === flexer {
+                            return true
+                        }
+                    }
+                }
+            }
+        }
+        return false
+    }
+    
+    
     func countSectionsWithNodes() -> Int {
         var result = 0
         for section in sections {
@@ -44,11 +117,45 @@ public class SkeletonRow: CustomStringConvertible {
         return result
     }
     
+    func countChunks() -> Int {
+        var result = 0
+        for section in sections {
+            for node in section.skeletonNodes {
+                result += node.chunks.count
+            }
+        }
+        return result
+    }
+    
+    func countPieces() -> Int {
+        var result = 0
+        for section in sections {
+            for node in section.skeletonNodes {
+                for chunk in node.chunks {
+                    result += chunk.pieces.count
+                }
+            }
+        }
+        return result
+    }
+    
+    func countFlexers() -> Int {
+        var result = 0
+        for section in sections {
+            for node in section.skeletonNodes {
+                for chunk in node.chunks {
+                    result += chunk.flexers.count
+                }
+            }
+        }
+        return result
+    }
+    
     public var description: String {
         
         let isCenter = (attemptedCenteredSection !== nil)
         let id = ObjectIdentifier(self)
-        var result = "SkeletonRow[\(id)] cs: \(children_size), rs: \(remaining_size), sec: \(sections.count), ctr: \(isCenter)"
+        var result = "SkeletonRow[\(id)] cs: \(childrenSize), rs: \(remaining_size), sec: \(sections.count), ctr: \(isCenter)"
         if isCenter {
             result += " cl: \(left_size), cc: \(center_size) cr: \(right_size)"
         } else {
@@ -90,7 +197,7 @@ public class SkeletonRow: CustomStringConvertible {
     var temp_size_low = 0
     var temp_size_finally = 0
     
-    var children_size = 0
+    var childrenSize = 0
     var remaining_size = 0
     
     var max_size = 0
@@ -223,17 +330,17 @@ public class SkeletonRow: CustomStringConvertible {
                     }
                 }
             }
-            children_size = (left_size + center_size + right_size)
-            remaining_size = max_size - children_size
+            childrenSize = (left_size + center_size + right_size)
+            remaining_size = max_size - childrenSize
             
             // initialLayoutType
             
         } else {
-            children_size = 0
+            childrenSize = 0
             for section in sections {
-                children_size += section.currentSize
+                childrenSize += section.currentSize
             }
-            remaining_size = max_size - children_size
+            remaining_size = max_size - childrenSize
             initialLayoutType = .doesNotIncludeCenterSection
         }
     }
@@ -252,7 +359,7 @@ public class SkeletonRow: CustomStringConvertible {
             }
         }
         remaining_size -= 1
-        children_size += 1
+        childrenSize += 1
     }
     
     func canGrowByOne(section: SkeletonSection) -> Bool {
@@ -313,14 +420,14 @@ public class SkeletonRow: CustomStringConvertible {
                                                safeAreaLeft: Int,
                                                safeAreaRight: Int) -> Bool {
         for growthPlan in growthPlans {
-            guard growthPlan.layoutRow === self else {
+            guard growthPlan.row === self else {
                 fatalError("This growth plan is not for this row...")
             }
-            if growthPlan.layoutSection.indexInRow < 0 {
+            if growthPlan.section.indexInRow < 0 {
                 fatalError("Expect indexInRow to be calculated.")
             }
-            if growthPlan.layoutSection.indexInRow >= sections.count {
-                fatalError("Expect indexInRow to be in range, it's \(growthPlan.layoutSection.indexInRow) of \(sections.count).")
+            if growthPlan.section.indexInRow >= sections.count {
+                fatalError("Expect indexInRow to be in range, it's \(growthPlan.section.indexInRow) of \(sections.count).")
             }
             if let attemptedCenteredSection = attemptedCenteredSection {
                 if attemptedCenteredSectionIndex < 0 {
@@ -383,9 +490,9 @@ public class SkeletonRow: CustomStringConvertible {
             }
             
             for growthPlan in growthPlans {
-                if growthPlan.layoutSection.indexInRow < attemptedCenteredSectionIndex {
+                if growthPlan.section.indexInRow < attemptedCenteredSectionIndex {
                     totalConsumedSizeLeft += growthPlan.amount
-                } else if growthPlan.layoutSection.indexInRow > attemptedCenteredSectionIndex {
+                } else if growthPlan.section.indexInRow > attemptedCenteredSectionIndex {
                     totalConsumedSizeRight += growthPlan.amount
                 } else {
                     totalConsumedSizeCenter += growthPlan.amount
@@ -772,7 +879,7 @@ public class SkeletonRow: CustomStringConvertible {
             
         } else {
             print("\tRow has no center section, this is a traditional layout.")
-            print("\tRow has \(children_size) children_size.")
+            print("\tRow has \(childrenSize) childrenSize.")
         }
         
         print("\tRow has \(max_size) max_size, \(remaining_size) remaining_size.")

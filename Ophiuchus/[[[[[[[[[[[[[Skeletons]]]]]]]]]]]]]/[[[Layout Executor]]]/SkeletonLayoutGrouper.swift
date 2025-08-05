@@ -35,8 +35,8 @@ public struct SkeletonLayoutGrouper {
         return result
     }
     
-    static func getAllChunks(pages: [SkeletonPage]) -> [any SkeletonChunkConforming] {
-        var result = [any SkeletonChunkConforming]()
+    static func getAllChunks(pages: [SkeletonPage]) -> [SkeletonChunk] {
+        var result = [SkeletonChunk]()
         for page in pages {
             for row in page.rows {
                 for section in row.sections {
@@ -126,15 +126,14 @@ public struct SkeletonLayoutGrouper {
     }
     
     public static func getChunkGroups(pages: [SkeletonPage],
-                                      rules: [SkeletonLinkageRule_Chunks]) -> [ExploderGroupChunks] {
+                                      rules: [SkeletonLinkageRule_Chunks]) -> [ExploderGroup<SkeletonChunk>] {
         let chunks = SkeletonLayoutGrouper.getAllChunks(pages: pages)
         var links = [ExploderLink]()
         for rule in rules {
             let rule_links = rule.getLinks()
             links.append(contentsOf: rule_links)
         }
-        let result = ExploderChunks.explode(nodes: chunks, links: links)
-        
+        let result = Exploder.explode(nodes: chunks, links: links)
         for group in result {
             for node in group.linkedList {
                 node.group = group

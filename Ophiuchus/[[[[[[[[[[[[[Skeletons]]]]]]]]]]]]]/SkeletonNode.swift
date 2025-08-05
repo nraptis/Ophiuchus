@@ -7,7 +7,69 @@
 
 import Foundation
 
-public class SkeletonNode: ExploderConforming {
+public class SkeletonNode: InterfaceContainerSupplier {
+    
+    
+    
+    static func contains(list: [SkeletonNode], node: SkeletonNode) -> Bool {
+        for _node in list {
+            if _node === node {
+                return true
+            }
+        }
+        return false
+    }
+    
+    func contains(chunk: SkeletonChunk) -> Bool {
+        for _chunk in chunks {
+            if _chunk === chunk {
+                return true
+            }
+        }
+        return false
+    }
+    
+    func contains(piece: SkeletonPiece) -> Bool {
+        for _chunk in chunks {
+            for _piece in _chunk.pieces {
+                if _piece === piece {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
+    func contains(flexer: Flexer) -> Bool {
+        for _chunk in chunks {
+            for _flexer in _chunk.flexers {
+                if _flexer === flexer {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
+    func countPieces() -> Int {
+        var result = 0
+        
+                for chunk in chunks {
+                    result += chunk.pieces.count
+                }
+        
+        return result
+    }
+    
+    func countFlexers() -> Int {
+        var result = 0
+        
+                for chunk in chunks {
+                    result += chunk.flexers.count
+                }
+        
+        return result
+    }
     
     public static func quick(size: Int, flex: Int) -> SkeletonNode {
         
@@ -16,10 +78,11 @@ public class SkeletonNode: ExploderConforming {
         
         let chunk_1_id = SkeletonIdentifierFactory.get_id()
         
-        let chunk_1 = SkeletonChunkFixed(id: chunk_1_id,
-                                       chunkIdentifier: .unknown,
-                                       piece: piece,
-                                       alignment: .center)
+        let chunk_1 = SkeletonChunk(id: chunk_1_id,
+                                    chunkIdentifier: .unknown,
+                                    pieces: [piece],
+                                    flexers: [],
+                                    alignment: .center)
         
         let flexer_id = SkeletonIdentifierFactory.get_id()
         let flexer = Flexer(id: flexer_id,
@@ -30,17 +93,18 @@ public class SkeletonNode: ExploderConforming {
                             flex)
         
         let chunk_2_id = SkeletonIdentifierFactory.get_id()
-        let chunk_2 = SkeletonChunkFlexer(id: chunk_2_id,
-                                          chunkIdentifier: .unknown,
-                                          flexer: flexer,
-                                          alignment: .center)
+        let chunk_2 = SkeletonChunk(id: chunk_2_id,
+                                    chunkIdentifier: .unknown,
+                                    pieces: [],
+                                    flexers: [flexer],
+                                    alignment: .center)
         let id = SkeletonIdentifierFactory.get_id()
         let result = SkeletonNode(id: id, chunks: [chunk_1, chunk_2],
                                   alignment: .center)
         return result
     }
     
-    public static func generate(chunks: [any SkeletonChunkConforming], alignment: LayoutAlignment) -> SkeletonNode {
+    public static func generate(chunks: [SkeletonChunk], alignment: LayoutAlignment) -> SkeletonNode {
         let id = SkeletonIdentifierFactory.get_id()
         let result = SkeletonNode(id: id, chunks: chunks,
                                   alignment: alignment)
@@ -52,7 +116,7 @@ public class SkeletonNode: ExploderConforming {
     public var didGrowOnCurrentPass = false
     
     public let id: Int
-    let chunks: [any SkeletonChunkConforming]
+    let chunks: [SkeletonChunk]
     let alignment: LayoutAlignment
     
     unowned var section: SkeletonSection!
@@ -64,7 +128,7 @@ public class SkeletonNode: ExploderConforming {
     var width = 0
     
     init(id: Int,
-         chunks: [any SkeletonChunkConforming],
+         chunks: [SkeletonChunk],
          alignment: LayoutAlignment) {
         self.id = id
         self.chunks = chunks
@@ -146,7 +210,7 @@ public class SkeletonNode: ExploderConforming {
         return nil
     }
     
-    func getChunk(chunkIdentifier: ChunkIdentifier) -> (any SkeletonChunkConforming)? {
+    func getChunk(chunkIdentifier: ChunkIdentifier) -> SkeletonChunk? {
         for chunk in chunks {
             if chunk.chunkIdentifier == chunkIdentifier {
                 return chunk
@@ -157,7 +221,7 @@ public class SkeletonNode: ExploderConforming {
     }
     
     static func getChunk(skeletonNodes: [SkeletonNode],
-                         chunkIdentifier: ChunkIdentifier) -> (any SkeletonChunkConforming)? {
+                         chunkIdentifier: ChunkIdentifier) -> SkeletonChunk? {
         for skeletonNode in skeletonNodes {
             for chunk in skeletonNode.chunks {
                 if chunk.chunkIdentifier == chunkIdentifier {

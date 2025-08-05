@@ -8,6 +8,7 @@
 import Foundation
 
 public protocol ExploderConforming: AnyObject {
+    
     var id: Int { get }
     var currentSize: Int { get }
 }

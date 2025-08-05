@@ -36,11 +36,31 @@ struct GenerateNodes {
         return result
     }
     
-    static func generate_node(id: Int, chunk: (any SkeletonChunkConforming)) -> WiseLayoutNode {
+    static func filterRandomly(skeleton_nodes: [SkeletonNode]) -> [SkeletonNode] {
+        var result = [SkeletonNode]()
+        for item in skeleton_nodes {
+            if Bool.random() {
+                result.append(item)
+            }
+        }
+        return result
+    }
+    
+    static func filterRandomly(layout_nodes: [WiseLayoutNode]) -> [WiseLayoutNode] {
+        var result = [WiseLayoutNode]()
+        for item in layout_nodes {
+            if Bool.random() {
+                result.append(item)
+            }
+        }
+        return result
+    }
+    
+    static func generate_node(id: Int, chunk: SkeletonChunk) -> WiseLayoutNode {
         GenerateNodes.generate_node(id: id, chunks: [chunk])
     }
     
-    static func generate_skeleton_node(chunk: (any SkeletonChunkConforming)) -> SkeletonNode {
+    static func generate_skeleton_node(chunk: SkeletonChunk) -> SkeletonNode {
         let result = generate_skeleton_node(chunks: [chunk])
         return result
     }
@@ -95,7 +115,7 @@ struct GenerateNodes {
         return result
     }
     
-    static func generate_skeleton_node(chunks: [any SkeletonChunkConforming]) -> SkeletonNode {
+    static func generate_skeleton_node(chunks: [SkeletonChunk]) -> SkeletonNode {
         let id = id_queue.sync {
             let id = GenerateNodes.node_id
             GenerateNodes.node_id += 1
@@ -107,7 +127,7 @@ struct GenerateNodes {
         return result
     }
     
-    static func generate_skeleton_node(id: Int, chunks: [any SkeletonChunkConforming]) -> SkeletonNode {
+    static func generate_skeleton_node(id: Int, chunks: [SkeletonChunk]) -> SkeletonNode {
         let alignment = GenerateAlignment.generate_alignment()
         let result = SkeletonNode(id: id,
                                   chunks: chunks,
@@ -115,7 +135,7 @@ struct GenerateNodes {
         return result
     }
     
-    static func generate_node(chunk: (any SkeletonChunkConforming)) -> WiseLayoutNode {
+    static func generate_node(chunk: SkeletonChunk) -> WiseLayoutNode {
         GenerateNodes.generate_node(chunks: [chunk])
     }
     
@@ -145,7 +165,7 @@ struct GenerateNodes {
         return result
     }
     
-    static func generate_node(chunks: [any SkeletonChunkConforming]) -> WiseLayoutNode {
+    static func generate_node(chunks: [SkeletonChunk]) -> WiseLayoutNode {
         
         let id = id_queue.sync {
             let id = GenerateNodes.node_id
@@ -158,7 +178,47 @@ struct GenerateNodes {
                                            chunks: chunks)
     }
     
-    static func generate_node(id: Int, chunks: [any SkeletonChunkConforming]) -> WiseLayoutNode {
+    static func generate_skeleton_node(chunks: [SkeletonChunk], gap: Int) -> SkeletonNode {
+        
+        
+        let base = Int.random(in: 0...20)
+        return GenerateNodes.generate_skeleton_node(chunks: chunks,
+                                           base: base,
+                                           gap: gap)
+    }
+    
+    static func generate_node(chunks: [SkeletonChunk], gap: Int) -> WiseLayoutNode {
+        let skeletonNode = generate_skeleton_node(chunks: chunks,
+                                                  gap: gap)
+        let result = GenerateNodes.generate_node(skeletonNode: skeletonNode)
+        return result
+    }
+    
+    static func generate_skeleton_node(chunks: [SkeletonChunk], base: Int, gap: Int) -> SkeletonNode {
+        
+        let id = id_queue.sync {
+            let id = GenerateNodes.node_id
+            GenerateNodes.node_id += 1
+            if GenerateNodes.node_id > 1_000_000_000 { GenerateNodes.node_id = 0 }
+            return id
+        }
+        
+        let result = GenerateNodes.generate_skeleton_node(id: id,
+                                           chunks: chunks)
+        result.currentSize = base + gap
+        result.childrenSize = base
+        return result
+    }
+    
+    static func generate_node(chunks: [SkeletonChunk], base: Int, gap: Int) -> WiseLayoutNode {
+        let skeletonNode = generate_skeleton_node(chunks: chunks,
+                                                  base: base,
+                                                  gap: gap)
+        let result = GenerateNodes.generate_node(skeletonNode: skeletonNode)
+        return result
+    }
+    
+    static func generate_node(id: Int, chunks: [SkeletonChunk]) -> WiseLayoutNode {
 
         //let skeleton_node = generate_skeleton_node(chunks: chunks)
         

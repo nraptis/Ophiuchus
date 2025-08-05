@@ -11,7 +11,7 @@ import Testing
 
 struct LinkPriorityGroupChunkTests {
     
-    func to_rule(item: [any SkeletonChunkConforming], layoutPriority: LayoutPriority) -> SkeletonLinkageRule_Chunks {
+    func to_rule(item: [SkeletonChunk], layoutPriority: LayoutPriority) -> SkeletonLinkageRule_Chunks {
         let result = SkeletonLinkageRule_Chunks(chunks: item, layoutPriority: layoutPriority)
         return result
     }
