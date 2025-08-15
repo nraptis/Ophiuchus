@@ -86,4 +86,20 @@ import Foundation
         }
     }
     
+    func toString() -> String {
+        
+        switch self {
+        case .required:
+            "LayoutPriority.required"
+        case .high:
+            "LayoutPriority.high"
+        case .medium:
+            "LayoutPriority.medium"
+        case .low:
+            "LayoutPriority.low"
+        case .finally:
+            "LayoutPriority.finally"
+        }
+    }
+    
 }

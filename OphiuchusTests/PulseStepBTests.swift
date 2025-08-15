@@ -1,5 +1,5 @@
 //
-//  PulseStepBTests_A.swift
+//  PulseStepBTests.swift
 //  OphiuchusTests
 //
 //  Created by Nick on 8/12/25.
@@ -9,7 +9,7 @@ import Foundation
 import Testing
 @testable import Ophiuchus
 
-struct PulseStepBTests_A {
+struct PulseStepBTests {
     
     @MainActor func testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: [WiseLayoutNode],
                                                                                     sections: [SkeletonSection],
@@ -18,21 +18,15 @@ struct PulseStepBTests_A {
                                                                                     times: Int) -> Bool {
         
         let groupData = SkeletonLayoutGrouper.getAll(book: book)
-        
         SmartLayoutExpanderMain.prepare(groupData: groupData)
-        _ = SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
-        
+        SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
         let nodeGroups = GenerateAdvanced.generateUniqueNodeGroups(nodeGroups: groupData.nodeGroups)
-        
         if nodeGroups.count != groupData.nodeGroups.count {
             fatalError("Hmm, something went wrong...")
         }
         
         var expectedResult = false
-        
         let bags = GenerateAdvanced.generateBags(nodeGroups: groupData.nodeGroups)
-        
-        
         var row_map = [Int: WrappedRow]()
         var section_map = [Int: WrappedSection]()
         var node_map = [Int: WrappedNode]()
@@ -56,18 +50,13 @@ struct PulseStepBTests_A {
         }
         
         var loop = 0
-        
         while loop < times {
-            
-            print("LOOP \(loop + 1) / \(times)")
-            
             for bag in bags {
                 let nodeGroup = bag.nodeGroup
                 var highest = Int.max
                 var lowest = Int.max
                 for sectionItem in bag.sectionItems {
                     let section = sectionItem.section
-                    
                     
                     for node in sectionItem.nodes {
                         let gap = node.currentSize - node.childrenSize
@@ -92,56 +81,9 @@ struct PulseStepBTests_A {
                     fatalError("We need a node, this makes no sense..")
                 }
                 
-                print("### IOIO The shelf of this bag is \(highest) and \(lowest), for node group")
-                
                 var chosen: Int?
                 var target = lowest
                 while target <= highest {
-                    
-                    // We want all the nodes to be "grow"
-                    /*
-                     for node in nodeGroup.linkedList {
-                     let section = node.section!
-                     guard let wrappedSection = section_map[section.id] else { fatalError("no wrapped section") }
-                     wrappedSection.temp = 0
-                     }
-                     
-                     var sectionMap = [Int: SkeletonSection]()
-                     for node in nodeGroup.linkedList {
-                     let section = node.section!
-                     
-                     guard let wrappedNod = section_map[section.id] else { fatalError("no wrapped section") }
-                     guard let wrappedSection = section_map[section.id] else { fatalError("no wrapped section") }
-                     
-                     
-                     let gap = node.currentSize - node.childrenSize
-                     if gap < 0 { fatalError("misconfiguration, gap \(gap)") }
-                     let target = (target - gap)
-                     
-                     var amount = (target - node.currentSize)
-                     if amount < 0 { amount = 0 }
-                     
-                     wrappedSection.temp += amount
-                     print("Added Temp, Which is \(wrappedSection.temp)")
-                     
-                     sectionMap[section.id] = section
-                     
-                     }
-                     
-                     var totalGrowth = 0
-                     for section in sectionMap.values {
-                     guard let wrappedSection = section_map[section.id] else { fatalError("no wrapped section") }
-                     totalGrowth += wrappedSection.temp
-                     }
-                     
-                     
-                     var per_row = [Int: Int]()
-                     for section in sectionMap.values {
-                     guard let wrappedSection = section_map[section.id] else { fatalError("no wrapped section") }
-                     let row = section.row!
-                     per_row[row.id, default: 0] += wrappedSection.temp
-                     }
-                     */
                     
                     for sectionItem in bag.sectionItems {
                         let section = sectionItem.section
@@ -157,9 +99,7 @@ struct PulseStepBTests_A {
                             let target = (target - gap)
                             var amount = (target - wrappedNode.expectedSize)
                             if amount < 0 { amount = 0 }
-                            
                             wrappedSection.temp += amount
-                            print("Added Temp, Which is \(wrappedSection.temp)")
                         }
                     }
                     
@@ -179,7 +119,6 @@ struct PulseStepBTests_A {
                         per_row[row.id, default: 0] += wrappedSection.temp
                     }
                     
-                    
                     var isEveryRowCapable = true
                     for row in rows {
                         
@@ -191,15 +130,11 @@ struct PulseStepBTests_A {
                         
                     }
                     
-                    print("At \(target), isEveryRowCapable: \(isEveryRowCapable)")
-                    
                     if isEveryRowCapable {
                         chosen = target
                     }
                     target += 1
                 }
-                
-                print("The real growing step: \(chosen ?? -9999)")
                 
                 if let chosen = chosen {
                     
@@ -207,8 +142,6 @@ struct PulseStepBTests_A {
                     for sectionItem in bag.sectionItems {
                         let section = sectionItem.section
                         guard let wrappedSection = section_map[section.id] else { fatalError("no wrapped section") }
-                        
-                        print("&&HERE&& Wrapped Section: \(ObjectIdentifier(wrappedSection))")
                         
                         for node in sectionItem.nodes {
                             
@@ -220,8 +153,6 @@ struct PulseStepBTests_A {
                             let target = (chosen - gap)
                             var amount = (target - wrappedNode.expectedSize)
                             if amount < 0 { amount = 0 }
-                            
-                            print("Wr added \(amount) to id: \(node.id)")
                             wrappedNode.expectedSize += amount
                             wrappedSection.expectedSize += amount
                             let wrappedRow = wrappedSection.row!
@@ -244,9 +175,6 @@ struct PulseStepBTests_A {
                 #expect(Bool(false))
                 return false
             }
-            
-            print("The actual pulse result: \(actualPulseResult)")
-            
             
             for node in nodes {
                 guard let wrappedNode = node_map[node.id] else {
@@ -287,9 +215,6 @@ struct PulseStepBTests_A {
         return true
     }
     
-    
-    
-    
     @MainActor @Test func grow_2_pieces_1_section_grow_by_1() {
         
         // We expect this to happen:
@@ -322,8 +247,7 @@ struct PulseStepBTests_A {
         let groupData = SkeletonLayoutGrouper.getAll(book: book)
         
         SmartLayoutExpanderMain.prepare(groupData: groupData)
-        let preparePassResult = SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
-        #expect(preparePassResult == true)
+        SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
         
         let stepResult1 = SmartLayoutExpanderPulse.step_b_apply_piece_group_rules()
         
@@ -402,9 +326,7 @@ struct PulseStepBTests_A {
         let groupData = SkeletonLayoutGrouper.getAll(book: book)
         
         SmartLayoutExpanderMain.prepare(groupData: groupData)
-        
-        let preparePassResult = SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
-        #expect(preparePassResult == true)
+        SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
         
         #expect(node_a.currentSize == 0)
         #expect(node_a.childrenSize == 0)
@@ -519,8 +441,7 @@ struct PulseStepBTests_A {
         SmartLayoutExpanderMain.prepare(groupData: groupData)
         
         SmartLayoutExpanderMain.prepare(groupData: groupData)
-        let preparePassResult = SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
-        #expect(preparePassResult == true)
+        SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
         
         #expect(node_a.currentSize == 0)
         #expect(node_a.childrenSize == 0)
@@ -626,8 +547,7 @@ struct PulseStepBTests_A {
         SmartLayoutExpanderMain.prepare(groupData: groupData)
         
         SmartLayoutExpanderMain.prepare(groupData: groupData)
-        let preparePassResult = SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
-        #expect(preparePassResult == true)
+        SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
         
         #expect(node_a.currentSize == 0)
         #expect(node_a.childrenSize == 0)
@@ -731,8 +651,7 @@ struct PulseStepBTests_A {
         SmartLayoutExpanderMain.prepare(groupData: groupData)
         
         SmartLayoutExpanderMain.prepare(groupData: groupData)
-        let preparePassResult = SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
-        #expect(preparePassResult == true)
+        SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
         
         #expect(node_a.currentSize == 0)
         #expect(node_a.childrenSize == 0)
@@ -829,9 +748,7 @@ struct PulseStepBTests_A {
         let groupData = SkeletonLayoutGrouper.getAll(book: book)
         
         SmartLayoutExpanderMain.prepare(groupData: groupData)
-        
-        let preparePassResult = SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
-        #expect(preparePassResult == true)
+        SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
         
         #expect(piece_a_1.currentSize == 2)
         #expect(piece_a_2.currentSize == 2)
@@ -939,9 +856,9 @@ struct PulseStepBTests_A {
     
     @MainActor @Test func grow_3_nodes_test_case_7_7_7_equal_target() {
         
-        let nr_a = GenerateNodes.generate(currentSize: 4, withPiecesToGrow: 3, byAmount: 1)
-        let nr_b = GenerateNodes.generate(currentSize: 2, withPiecesToGrow: 5, byAmount: 1)
-        let nr_c = GenerateNodes.generate(currentSize: 6, withPiecesToGrow: 1, byAmount: 1)
+        let nr_a = GenerateNodes.generate_growing_pieces(childrenSize: 4, currentSize: 4, growCount: 3, amount: 1)
+        let nr_b = GenerateNodes.generate_growing_pieces(childrenSize: 2, currentSize: 2, growCount: 5, amount: 1)
+        let nr_c = GenerateNodes.generate_growing_pieces(childrenSize: 6, currentSize: 6, growCount: 1, amount: 1)
         
         let node_a = nr_a.0
         node_a.childrenSize = node_a.currentSize
@@ -969,9 +886,7 @@ struct PulseStepBTests_A {
         let groupData = SkeletonLayoutGrouper.getAll(book: book)
         
         SmartLayoutExpanderMain.prepare(groupData: groupData)
-        let preparePassResult = SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
-        
-        #expect(preparePassResult == true)
+        SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
         
         let stepResult1 = SmartLayoutExpanderPulse.step_b_apply_piece_group_rules()
         #expect(stepResult1 == true)
@@ -1030,25 +945,20 @@ struct PulseStepBTests_A {
     
     @MainActor @Test func grow_5_nodes_mixed_ownership_a() {
         
-        let nr_a = GenerateNodes.generate(currentSize: 10, withPiecesToGrow: 10, byAmount: 1)
+        let nr_a = GenerateNodes.generate_growing_pieces(childrenSize: 10, currentSize: 10, growCount: 10, amount: 1)
         let node_a = nr_a.0
-        node_a.childrenSize = 10
         
-        let nr_b = GenerateNodes.generate(currentSize: 10, withPiecesToGrow: 10, byAmount: 1)
+        let nr_b = GenerateNodes.generate_growing_pieces(childrenSize: 10, currentSize: 10, growCount: 10, amount: 1)
         let node_b = nr_b.0
-        node_b.childrenSize = 10
         
-        let nr_c = GenerateNodes.generate(currentSize: 10, withPiecesToGrow: 10, byAmount: 1)
+        let nr_c = GenerateNodes.generate_growing_pieces(childrenSize: 5, currentSize: 10, growCount: 10, amount: 1)
         let node_c = nr_c.0
-        node_c.childrenSize = 5
         
-        let nr_d = GenerateNodes.generate(currentSize: 5, withPiecesToGrow: 15, byAmount: 1)
+        let nr_d = GenerateNodes.generate_growing_pieces(childrenSize: 5, currentSize: 5, growCount: 15, amount: 1)
         let node_d = nr_d.0
-        node_d.childrenSize = 5
         
-        let nr_e = GenerateNodes.generate(currentSize: 10, withPiecesToGrow: 10, byAmount: 1)
+        let nr_e = GenerateNodes.generate_growing_pieces(childrenSize: 5, currentSize: 10, growCount: 10, amount: 1)
         let node_e = nr_e.0
-        node_e.childrenSize = 5
         
         let section_a = GenerateSections.generate_currentSizeAccumulate(nodes: [node_a, node_b, node_c])
         let section_b = GenerateSections.generate_currentSizeAccumulate(nodes: [node_d, node_e])
@@ -1072,9 +982,8 @@ struct PulseStepBTests_A {
         let groupData = SkeletonLayoutGrouper.getAll(book: book)
         
         SmartLayoutExpanderMain.prepare(groupData: groupData)
-        let preparePassResult = SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
+        SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
         
-        #expect(preparePassResult == true)
         #expect(node_a.currentSize == 10) //
         #expect(node_a.childrenSize == 10) //
         #expect(node_b.currentSize == 10) //
@@ -1144,25 +1053,20 @@ struct PulseStepBTests_A {
     
     @MainActor @Test func grow_5_nodes_mixed_ownership_a_utility() {
         
-        let nr_a = GenerateNodes.generate(currentSize: 10, withPiecesToGrow: 10, byAmount: 1)
+        let nr_a = GenerateNodes.generate_growing_pieces(childrenSize: 10, currentSize: 10, growCount: 10, amount: 1)
         let node_a = nr_a.0
-        node_a.childrenSize = 10
         
-        let nr_b = GenerateNodes.generate(currentSize: 10, withPiecesToGrow: 10, byAmount: 1)
+        let nr_b = GenerateNodes.generate_growing_pieces(childrenSize: 10, currentSize: 10, growCount: 10, amount: 1)
         let node_b = nr_b.0
-        node_b.childrenSize = 10
         
-        let nr_c = GenerateNodes.generate(currentSize: 10, withPiecesToGrow: 10, byAmount: 1)
+        let nr_c = GenerateNodes.generate_growing_pieces(childrenSize: 5, currentSize: 10, growCount: 10, amount: 1)
         let node_c = nr_c.0
-        node_c.childrenSize = 5
         
-        let nr_d = GenerateNodes.generate(currentSize: 5, withPiecesToGrow: 15, byAmount: 1)
+        let nr_d = GenerateNodes.generate_growing_pieces(childrenSize: 5, currentSize: 5, growCount: 15, amount: 1)
         let node_d = nr_d.0
-        node_d.childrenSize = 5
         
-        let nr_e = GenerateNodes.generate(currentSize: 10, withPiecesToGrow: 10, byAmount: 1)
+        let nr_e = GenerateNodes.generate_growing_pieces(childrenSize: 5, currentSize: 10, growCount: 10, amount: 1)
         let node_e = nr_e.0
-        node_e.childrenSize = 5
         
         let nodes = [node_a, node_b, node_c, node_d, node_e]
         
@@ -1198,25 +1102,22 @@ struct PulseStepBTests_A {
     
     @MainActor @Test func grow_5_nodes_mixed_ownership_b() {
         
-        let nr_a = GenerateNodes.generate(currentSize: 15, withPiecesToGrow: 5, byAmount: 1)
+        
+        let nr_a = GenerateNodes.generate_growing_pieces(childrenSize: 10, currentSize: 15, growCount: 5, amount: 1)
         let node_a = nr_a.0
-        node_a.childrenSize = 10
         
-        let nr_b = GenerateNodes.generate(currentSize: 5, withPiecesToGrow: 15, byAmount: 1)
+        let nr_b = GenerateNodes.generate_growing_pieces(childrenSize: 0, currentSize: 5, growCount: 15, amount: 1)
         let node_b = nr_b.0
-        node_b.childrenSize = 0
         
-        let nr_c = GenerateNodes.generate(currentSize: 10, withPiecesToGrow: 15, byAmount: 1)
+        let nr_c = GenerateNodes.generate_growing_pieces(childrenSize: 0, currentSize: 10, growCount: 15, amount: 1)
         let node_c = nr_c.0
-        node_c.childrenSize = 0
         
-        let nr_d = GenerateNodes.generate(currentSize: 15, withPiecesToGrow: 30, byAmount: 1)
+        let nr_d = GenerateNodes.generate_growing_pieces(childrenSize: 10, currentSize: 15, growCount: 30, amount: 1)
         let node_d = nr_d.0
-        node_d.childrenSize = 10
         
-        let nr_e = GenerateNodes.generate(currentSize: 5, withPiecesToGrow: 20, byAmount: 1)
+        let nr_e = GenerateNodes.generate_growing_pieces(childrenSize: 0, currentSize: 5, growCount: 20, amount: 1)
         let node_e = nr_e.0
-        node_e.childrenSize = 0
+        
         
         let section_a = GenerateSections.generate_currentSizeAccumulate(nodes: [node_a, node_b])
         let section_b = GenerateSections.generate_currentSizeAccumulate(nodes: [node_c, node_d, node_e])
@@ -1240,9 +1141,8 @@ struct PulseStepBTests_A {
         let groupData = SkeletonLayoutGrouper.getAll(book: book)
         
         SmartLayoutExpanderMain.prepare(groupData: groupData)
-        let preparePassResult = SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
+        SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
         
-        #expect(preparePassResult == true)
         #expect(node_a.currentSize == 15)
         #expect(node_a.childrenSize == 10)
         #expect(node_b.currentSize == 5)
@@ -1258,7 +1158,6 @@ struct PulseStepBTests_A {
         #expect(row_a.growthBudget == 90)
         
         let stepResult1 = SmartLayoutExpanderPulse.step_b_apply_piece_group_rules()
-        
         #expect(stepResult1 == true)
         #expect(node_a.currentSize == 15)
         #expect(node_a.childrenSize == 15)
@@ -1275,7 +1174,7 @@ struct PulseStepBTests_A {
         #expect(row_a.growthBudget == 55)
         
         let stepResult2 = SmartLayoutExpanderPulse.step_b_apply_piece_group_rules()
-        #expect(stepResult1 == true)
+        #expect(stepResult2 == true)
         #expect(node_a.currentSize == 15)
         #expect(node_a.childrenSize == 15)
         #expect(node_b.currentSize == 15)
@@ -1311,25 +1210,20 @@ struct PulseStepBTests_A {
     
     @MainActor @Test func grow_5_nodes_mixed_ownership_b_utility() {
         
-        let nr_a = GenerateNodes.generate(currentSize: 15, withPiecesToGrow: 5, byAmount: 1)
+        let nr_a = GenerateNodes.generate_growing_pieces(childrenSize: 10, currentSize: 15, growCount: 5, amount: 1)
         let node_a = nr_a.0
-        node_a.childrenSize = 10
         
-        let nr_b = GenerateNodes.generate(currentSize: 5, withPiecesToGrow: 15, byAmount: 1)
+        let nr_b = GenerateNodes.generate_growing_pieces(childrenSize: 0, currentSize: 5, growCount: 15, amount: 1)
         let node_b = nr_b.0
-        node_b.childrenSize = 0
         
-        let nr_c = GenerateNodes.generate(currentSize: 10, withPiecesToGrow: 15, byAmount: 1)
+        let nr_c = GenerateNodes.generate_growing_pieces(childrenSize: 0, currentSize: 10, growCount: 15, amount: 1)
         let node_c = nr_c.0
-        node_c.childrenSize = 0
         
-        let nr_d = GenerateNodes.generate(currentSize: 15, withPiecesToGrow: 30, byAmount: 1)
+        let nr_d = GenerateNodes.generate_growing_pieces(childrenSize: 10, currentSize: 15, growCount: 30, amount: 1)
         let node_d = nr_d.0
-        node_d.childrenSize = 10
         
-        let nr_e = GenerateNodes.generate(currentSize: 5, withPiecesToGrow: 20, byAmount: 1)
+        let nr_e = GenerateNodes.generate_growing_pieces(childrenSize: 0, currentSize: 5, growCount: 20, amount: 1)
         let node_e = nr_e.0
-        node_e.childrenSize = 0
         
         let nodes = [node_a, node_b, node_c, node_d, node_e]
         
@@ -1359,6 +1253,513 @@ struct PulseStepBTests_A {
                                                                             times: 10) {
             #expect(Bool(false))
             return
+        }
+    }
+    
+    @Test @MainActor func testFailingRandomCase_A() {
+        
+        let nnod_a = GenerateNodes.generate_growing_pieces(childrenSize: 1, currentSize: 2, growCount: 2, amount: 1)
+        let nod_a = nnod_a.0
+        let nnod_b = GenerateNodes.generate_growing_pieces(childrenSize: 2, currentSize: 2, growCount: 0, amount: 1)
+        let nod_b = nnod_b.0
+        
+        let sec_a = GenerateSections.generate(nodes: [nod_a, nod_b])
+        sec_a.currentSize = 4
+        
+        
+        let row_a = GenerateRows.generate(sections:  [sec_a])
+        row_a.growthBudget = 1000
+        
+        
+        var pieceRules = [SkeletonLinkageRule_Pieces]()
+        pieceRules.append(nnod_a.1)
+        pieceRules.append(nnod_b.1)
+        
+        let rows = [row_a]
+        let nodeRules = [SkeletonLinkageRule_Nodes(nodes: [nod_a], layoutPriority: LayoutPriority.required),
+                         SkeletonLinkageRule_Nodes(nodes: [nod_b], layoutPriority: LayoutPriority.required)]
+        
+        let book = SkeletonBook(rows: rows,
+                                nodeRules: nodeRules,
+                                flexerRules: [],
+                                pieceRules: pieceRules)
+        
+        
+        let groupData = SkeletonLayoutGrouper.getAll(book: book)
+        
+        SmartLayoutExpanderMain.prepare(groupData: groupData)
+        SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
+        
+        #expect(nod_a.childrenSize == 1)
+        #expect(nod_a.currentSize == 2)
+        #expect(nod_b.childrenSize == 2)
+        #expect(nod_b.currentSize == 2)
+        #expect(sec_a.currentSize == 4)
+        #expect(row_a.growthBudget == 1000)
+        
+        let pulseResultA = SmartLayoutExpanderPulse.step_b_apply_piece_group_rules()
+        #expect(pulseResultA == true)
+        #expect(nod_a.childrenSize == 3)
+        #expect(nod_a.currentSize == 3)
+        #expect(nod_b.childrenSize == 2)
+        #expect(nod_b.currentSize == 2)
+        #expect(sec_a.currentSize == 5)
+        #expect(row_a.growthBudget == 999)
+        
+        for _ in 0..<4 {
+            let extraCheck = SmartLayoutExpanderPulse.step_b_apply_piece_group_rules()
+            #expect(extraCheck == false)
+            #expect(nod_a.childrenSize == 3)
+            #expect(nod_a.currentSize == 3)
+            #expect(nod_b.childrenSize == 2)
+            #expect(nod_b.currentSize == 2)
+            #expect(sec_a.currentSize == 5)
+            #expect(row_a.growthBudget == 999)
+        }
+    }
+    
+    @Test @MainActor func testFailingRandomCase_A_utility() {
+        
+        let nnod_a = GenerateNodes.generate_growing_pieces(childrenSize: 1, currentSize: 2, growCount: 2, amount: 1)
+        let nod_a = nnod_a.0
+        let nnod_b = GenerateNodes.generate_growing_pieces(childrenSize: 2, currentSize: 2, growCount: 0, amount: 1)
+        let nod_b = nnod_b.0
+        
+        let sec_a = GenerateSections.generate(nodes: [nod_a, nod_b])
+        sec_a.currentSize = 4
+        
+        
+        let row_a = GenerateRows.generate(sections:  [sec_a])
+        row_a.growthBudget = 1000
+        
+        
+        var pieceRules = [SkeletonLinkageRule_Pieces]()
+        pieceRules.append(nnod_a.1)
+        pieceRules.append(nnod_b.1)
+        
+        let rows = [row_a]
+        let sections = [sec_a]
+        let nodes = [nod_a, nod_b]
+        let nodeRules = [SkeletonLinkageRule_Nodes(nodes: [nod_a], layoutPriority: LayoutPriority.required),
+                         SkeletonLinkageRule_Nodes(nodes: [nod_b], layoutPriority: LayoutPriority.required)]
+        
+        let book = SkeletonBook(rows: rows,
+                                nodeRules: nodeRules,
+                                flexerRules: [],
+                                pieceRules: pieceRules)
+        
+        
+        if !testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: nodes,
+                                                                            sections: sections,
+                                                                            rows: rows,
+                                                                            book: book,
+                                                                            times: 3) {
+            #expect(Bool(false))
+            return
+        }
+    }
+    
+    @MainActor @Test func grow_up_tp_4_nodes_multi_pulse_check_a() {
+        
+        for _ in 0..<1000 {
+            struct Item {
+                let childrenSize: Int
+                let currentSize: Int
+                let wtg: Int
+            }
+            
+            let nodeCount = Int.random(in: 0...4)
+            
+            var items = [Item]()
+            for _ in 0..<nodeCount {
+                let childrenSize = Int.random(in: 0...2)
+                let currentSize = Int.random(in: childrenSize...2)
+                let wtg = Int.random(in: 0...2)
+                let item = Item(childrenSize: childrenSize,
+                                currentSize: currentSize,
+                                wtg: wtg)
+                items.append(item)
+            }
+            
+            var partitions = getAllPartitions(items)
+            partitions.shuffle()
+            
+            for partition in partitions {
+                
+                
+                var piece_rules = [SkeletonLinkageRule_Pieces]()
+                var node_rules = [SkeletonLinkageRule_Nodes]()
+                var nodes = [WiseLayoutNode]()
+                for items in partition {
+                    
+                    var subnodes = [WiseLayoutNode]()
+                    for item in items {
+                        let node = GenerateNodes.generate_growing_pieces(childrenSize: item.childrenSize,
+                                                                         currentSize: item.currentSize,
+                                                                         growCount: item.wtg,
+                                                                         amount: 1)
+                        subnodes.append(node.0)
+                        piece_rules.append(node.1)
+                    }
+                    nodes.append(contentsOf: subnodes)
+                    
+                    let rule = SkeletonLinkageRule_Nodes(nodes: subnodes, layoutPriority: .required)
+                    node_rules.append(rule)
+                }
+                
+                var sections = [SkeletonSection]()
+                let sectionCount = Int.random(in: 1...2)
+                
+                var node_buckets = [[WiseLayoutNode]](repeating: [WiseLayoutNode](), count: sectionCount)
+                for node in nodes {
+                    let index = Int.random(in: 0..<sectionCount)
+                    node_buckets[index].append(node)
+                }
+                
+                for index in 0..<sectionCount {
+                    let section = GenerateSections.generate(nodes: node_buckets[index])
+                    sections.append(section)
+                }
+                
+                var rows = [SkeletonRow]()
+                let rowCount = Int.random(in: 1...2)
+                
+                var row_buckets = [[SkeletonSection]](repeating: [SkeletonSection](), count: rowCount)
+                
+                for section_index in 0..<sectionCount {
+                    let row_index = Int.random(in: 0..<rowCount)
+                    row_buckets[row_index].append(sections[section_index])
+                }
+                
+                for index in 0..<rowCount {
+                    let row = GenerateRows.generate(sections: row_buckets[index])
+                    rows.append(row)
+                }
+                
+                let book = SkeletonBook(rows: rows,
+                                        nodeRules: node_rules,
+                                        flexerRules: [],
+                                        pieceRules: piece_rules)
+                
+                for row in rows {
+                    row.growthBudget = Int.random(in: 0...100)
+                }
+                
+                
+                //book.codegen_grow_node_with_piece_group()
+                
+                if !testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: nodes,
+                                                                                    sections: sections,
+                                                                                    rows: rows,
+                                                                                    book: book,
+                                                                                    times: 1) {
+                    
+                    
+                    
+                    #expect(Bool(false))
+                    return
+                }
+            }
+        }
+    }
+    
+    @MainActor @Test func grow_up_tp_4_nodes_multi_pulse_check_b() {
+        
+        for _ in 0..<1000 {
+            struct Item {
+                let childrenSize: Int
+                let currentSize: Int
+                let wtg: Int
+            }
+            
+            let nodeCount = Int.random(in: 0...4)
+            
+            var items = [Item]()
+            for _ in 0..<nodeCount {
+                let childrenSize = Int.random(in: 0...6)
+                let currentSize = Int.random(in: childrenSize...6)
+                let wtg = Int.random(in: 0...12)
+                let item = Item(childrenSize: childrenSize,
+                                currentSize: currentSize,
+                                wtg: wtg)
+                items.append(item)
+            }
+            
+            var partitions = getAllPartitions(items)
+            partitions.shuffle()
+            
+            for partition in partitions {
+                
+                
+                var piece_rules = [SkeletonLinkageRule_Pieces]()
+                var node_rules = [SkeletonLinkageRule_Nodes]()
+                var nodes = [WiseLayoutNode]()
+                for items in partition {
+                    
+                    var subnodes = [WiseLayoutNode]()
+                    for item in items {
+                        let node = GenerateNodes.generate_growing_pieces(childrenSize: item.childrenSize,
+                                                                         currentSize: item.currentSize,
+                                                                         growCount: item.wtg,
+                                                                         amount: 1)
+                        subnodes.append(node.0)
+                        piece_rules.append(node.1)
+                    }
+                    nodes.append(contentsOf: subnodes)
+                    
+                    let rule = SkeletonLinkageRule_Nodes(nodes: subnodes, layoutPriority: .required)
+                    node_rules.append(rule)
+                }
+                
+                var sections = [SkeletonSection]()
+                let sectionCount = Int.random(in: 1...4)
+                
+                var node_buckets = [[WiseLayoutNode]](repeating: [WiseLayoutNode](), count: sectionCount)
+                for node in nodes {
+                    let index = Int.random(in: 0..<sectionCount)
+                    node_buckets[index].append(node)
+                }
+                
+                for index in 0..<sectionCount {
+                    let section = GenerateSections.generate(nodes: node_buckets[index])
+                    sections.append(section)
+                }
+                
+                var rows = [SkeletonRow]()
+                let rowCount = Int.random(in: 1...4)
+                
+                var row_buckets = [[SkeletonSection]](repeating: [SkeletonSection](), count: rowCount)
+                
+                for section_index in 0..<sectionCount {
+                    let row_index = Int.random(in: 0..<rowCount)
+                    row_buckets[row_index].append(sections[section_index])
+                }
+                
+                for index in 0..<rowCount {
+                    let row = GenerateRows.generate(sections: row_buckets[index])
+                    rows.append(row)
+                }
+                
+                let book = SkeletonBook(rows: rows,
+                                        nodeRules: node_rules,
+                                        flexerRules: [],
+                                        pieceRules: piece_rules)
+                
+                for row in rows {
+                    row.growthBudget = Int.random(in: 0...200)
+                }
+                
+                if !testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: nodes,
+                                                                                    sections: sections,
+                                                                                    rows: rows,
+                                                                                    book: book,
+                                                                                    times: 6) {
+                    
+                    
+                    
+                    #expect(Bool(false))
+                    return
+                }
+            }
+        }
+    }
+    
+    @MainActor @Test func grow_up_tp_6_nodes_multi_pulse_check_a() {
+        
+        for _ in 0..<1000 {
+            struct Item {
+                let childrenSize: Int
+                let currentSize: Int
+                let wtg: Int
+            }
+            
+            let nodeCount = Int.random(in: 0...6)
+            
+            var items = [Item]()
+            for _ in 0..<nodeCount {
+                let childrenSize = Int.random(in: 0...12)
+                let currentSize = Int.random(in: childrenSize...12)
+                let wtg = Int.random(in: 0...24)
+                let item = Item(childrenSize: childrenSize,
+                                currentSize: currentSize,
+                                wtg: wtg)
+                items.append(item)
+            }
+            
+            var partitions = getAllPartitions(items)
+            partitions.shuffle()
+            
+            for partition in partitions {
+                
+                
+                var piece_rules = [SkeletonLinkageRule_Pieces]()
+                var node_rules = [SkeletonLinkageRule_Nodes]()
+                var nodes = [WiseLayoutNode]()
+                for items in partition {
+                    
+                    var subnodes = [WiseLayoutNode]()
+                    for item in items {
+                        let node = GenerateNodes.generate_growing_pieces(childrenSize: item.childrenSize,
+                                                                         currentSize: item.currentSize,
+                                                                         growCount: item.wtg,
+                                                                         amount: 1)
+                        subnodes.append(node.0)
+                        piece_rules.append(node.1)
+                    }
+                    nodes.append(contentsOf: subnodes)
+                    
+                    let rule = SkeletonLinkageRule_Nodes(nodes: subnodes, layoutPriority: .required)
+                    node_rules.append(rule)
+                }
+                
+                var sections = [SkeletonSection]()
+                let sectionCount = Int.random(in: 1...4)
+                
+                var node_buckets = [[WiseLayoutNode]](repeating: [WiseLayoutNode](), count: sectionCount)
+                for node in nodes {
+                    let index = Int.random(in: 0..<sectionCount)
+                    node_buckets[index].append(node)
+                }
+                
+                for index in 0..<sectionCount {
+                    let section = GenerateSections.generate(nodes: node_buckets[index])
+                    sections.append(section)
+                }
+                
+                var rows = [SkeletonRow]()
+                let rowCount = Int.random(in: 1...2)
+                
+                var row_buckets = [[SkeletonSection]](repeating: [SkeletonSection](), count: rowCount)
+                
+                for section_index in 0..<sectionCount {
+                    let row_index = Int.random(in: 0..<rowCount)
+                    row_buckets[row_index].append(sections[section_index])
+                }
+                
+                for index in 0..<rowCount {
+                    let row = GenerateRows.generate(sections: row_buckets[index])
+                    rows.append(row)
+                }
+                
+                let book = SkeletonBook(rows: rows,
+                                        nodeRules: node_rules,
+                                        flexerRules: [],
+                                        pieceRules: piece_rules)
+                
+                for row in rows {
+                    row.growthBudget = Int.random(in: 0...200)
+                }
+                
+                if !testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: nodes,
+                                                                                    sections: sections,
+                                                                                    rows: rows,
+                                                                                    book: book,
+                                                                                    times: 12) {
+                    
+                    
+                    
+                    #expect(Bool(false))
+                    return
+                }
+            }
+        }
+    }
+    
+    @MainActor @Test func grow_up_tp_6_nodes_multi_pulse_check_b() {
+        
+        for _ in 0..<1000 {
+            struct Item {
+                let childrenSize: Int
+                let currentSize: Int
+                let wtg: Int
+            }
+            
+            let nodeCount = Int.random(in: 0...6)
+            var items = [Item]()
+            for _ in 0..<nodeCount {
+                let childrenSize = Int.random(in: 0...2)
+                let currentSize = Int.random(in: childrenSize...24)
+                let wtg = Int.random(in: 0...64)
+                let item = Item(childrenSize: childrenSize,
+                                currentSize: currentSize,
+                                wtg: wtg)
+                items.append(item)
+            }
+            
+            var partitions = getAllPartitions(items)
+            partitions.shuffle()
+            
+            for partition in partitions {
+                
+                
+                var piece_rules = [SkeletonLinkageRule_Pieces]()
+                var node_rules = [SkeletonLinkageRule_Nodes]()
+                var nodes = [WiseLayoutNode]()
+                for items in partition {
+                    
+                    var subnodes = [WiseLayoutNode]()
+                    for item in items {
+                        let node = GenerateNodes.generate_growing_pieces(childrenSize: item.childrenSize,
+                                                                         currentSize: item.currentSize,
+                                                                         growCount: item.wtg,
+                                                                         amount: 1)
+                        subnodes.append(node.0)
+                        piece_rules.append(node.1)
+                    }
+                    nodes.append(contentsOf: subnodes)
+                    
+                    let rule = SkeletonLinkageRule_Nodes(nodes: subnodes, layoutPriority: .required)
+                    node_rules.append(rule)
+                }
+                
+                var sections = [SkeletonSection]()
+                let sectionCount = Int.random(in: 1...8)
+                
+                var node_buckets = [[WiseLayoutNode]](repeating: [WiseLayoutNode](), count: sectionCount)
+                for node in nodes {
+                    let index = Int.random(in: 0..<sectionCount)
+                    node_buckets[index].append(node)
+                }
+                
+                for index in 0..<sectionCount {
+                    let section = GenerateSections.generate(nodes: node_buckets[index])
+                    sections.append(section)
+                }
+                
+                var rows = [SkeletonRow]()
+                let rowCount = Int.random(in: 1...6)
+                
+                var row_buckets = [[SkeletonSection]](repeating: [SkeletonSection](), count: rowCount)
+                
+                for section_index in 0..<sectionCount {
+                    let row_index = Int.random(in: 0..<rowCount)
+                    row_buckets[row_index].append(sections[section_index])
+                }
+                
+                for index in 0..<rowCount {
+                    let row = GenerateRows.generate(sections: row_buckets[index])
+                    rows.append(row)
+                }
+                
+                let book = SkeletonBook(rows: rows,
+                                        nodeRules: node_rules,
+                                        flexerRules: [],
+                                        pieceRules: piece_rules)
+                
+                for row in rows {
+                    row.growthBudget = Int.random(in: 0...400)
+                }
+                
+                if !testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: nodes,
+                                                                                    sections: sections,
+                                                                                    rows: rows,
+                                                                                    book: book,
+                                                                                    times: 24) {
+                    
+                    #expect(Bool(false))
+                    return
+                }
+            }
         }
     }
     

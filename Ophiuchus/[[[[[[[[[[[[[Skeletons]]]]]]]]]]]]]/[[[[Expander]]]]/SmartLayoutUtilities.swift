@@ -22,7 +22,7 @@ struct SmartLayoutUtilities {
      let node = ListFactory_Growth.nodeList[nodeIndex]
      let nodeGroup = node.group!
      
-     if nodeGroup.isActiveAtCurrentPriority {
+     if nodeGroup.isActiveAtCurrentPriorityOrMono {
      ListFactory_GroupsUnique.intake(nodeGroup: nodeGroup, node: node)
      } else {
      
@@ -148,6 +148,198 @@ struct SmartLayoutUtilities {
         return false
     }
     
+    static func isAnyNodeLockedAtEveryPriority(flexers: [Flexer], flexerCount: Int) -> Bool {
+        for flexerIndex in 0..<flexerCount {
+            let flexer = flexers[flexerIndex]
+            let node = flexer.node!
+            if node.isLockedAtEveryPriority { return true }
+        }
+        return false
+    }
+        
+    static func isAnyNodeLockedAtCurrentPriority(flexers: [Flexer], flexerCount: Int) -> Bool {
+        for flexerIndex in 0..<flexerCount {
+            let flexer = flexers[flexerIndex]
+            let node = flexer.node!
+            if node.isLockedAtCurrentPriority { return true }
+        }
+        return false
+    }
+    
+    static func isAnyFlexerPossiblyAbleToGrowAtCurrentPriority(flexers: [Flexer], flexerCount: Int) -> Bool {
+        for flexerIndex in 0..<flexerCount {
+            let flexer = flexers[flexerIndex]
+            if flexer.currentSize < flexer.targetSizeCurrentPriority {
+                let node = flexer.node!
+                if ((node.isLockedAtCurrentPriority == true) || (node.isLockedAtEveryPriority == true)) {
+                    if node.childrenSize < node.currentSize {
+                        // We could grow into the node.
+                        return true
+                    }
+                } else {
+                    // The node is not locked, so it's possible we can grow,
+                    // even if it means the node has to grow as well...
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
+    static func isFlexerPossiblyAbleToGrowAtCurrentPriority(flexer: Flexer) -> Bool {
+        if flexer.currentSize < flexer.targetSizeCurrentPriority {
+            let node = flexer.node!
+            if ((node.isLockedAtCurrentPriority == true) || (node.isLockedAtEveryPriority == true)) {
+                if node.childrenSize < node.currentSize {
+                    // We could grow into the node.
+                    return true
+                } else {
+                    return false
+                }
+            } else {
+                // The node is not locked, so it's possible we can grow,
+                // even if it means the node has to grow as well...
+                return true
+            }
+        } else {
+            return false
+        }
+    }
+    
+    //
+    // @Precondition: All the flexers have the exact same currentSize
+    // @Precondition: All the flexers are in the same group.
+    // @Precondition: All the flexers are the smallest flexers in their group.
+    // @Precondition: The one flexer group is either active or mono at this priority.
+    //
+    static func isEveryFlexerPossiblyAbleToGrowAtCurrentPriority_AllSameSize_SmallestListOnly(flexers: [Flexer], flexerCount: Int) -> Bool {
+        
+        if flexerCount <= 0 {
+            fatalError("TODO: Remove Error. Should not have <= 0 flexerCount")
+        }
+        
+        if true {
+            let expectedSize = flexers[0].currentSize
+            let expectedGroup = flexers[0].group!
+            
+            //if (expectedGroup.isActiveAtCurrentPriorityOrMono == false) {
+            //    fatalError("TODO: Remove Error. Should be active or mono at given priority.")
+            //}
+            
+            for flexerIndex in 0..<flexerCount {
+                let flexer = flexers[flexerIndex]
+                if flexer.currentSize != expectedSize {
+                    fatalError("TODO: Remove Error. Flexer sizes should all be the same...")
+                }
+            }
+            
+            for flexerIndex in 0..<flexerCount {
+                let flexer = flexers[flexerIndex]
+                let flexerGroup = flexer.group!
+                
+                if flexerGroup !== expectedGroup {
+                    print("TODO: Remove Error. Flexers all should be same group...")
+                }
+                
+                for checkFlexer in flexerGroup.linkedList {
+                    if checkFlexer.currentSize < flexer.currentSize {
+                        fatalError("TODO: Remove Error. Flexers should *ALL* be the smallest in group here...")
+                    }
+                }
+            }
+        }
+        
+        for flexerIndex in 0..<flexerCount {
+            let flexer = flexers[flexerIndex]
+            let node = flexer.node!
+            if ((node.isLockedAtCurrentPriority == true) || (node.isLockedAtEveryPriority == true)) {
+                if node.childrenSize >= node.currentSize {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+    
+    static func isEveryFlexerBelowTargetSizeCurrentPriority(flexers: [Flexer], flexerCount: Int) -> Bool {
+        for flexerIndex in 0..<flexerCount {
+            let flexer = flexers[flexerIndex]
+            if flexer.currentSize >= flexer.targetSizeCurrentPriority {
+                return false
+            }
+        }
+        return true
+    }
+    
+    static func isEveryFlexerTheSameSize(flexers: [Flexer], flexerCount: Int) -> Bool {
+        if flexerCount > 0 {
+            let expectedSize = flexers[0].currentSize
+            for flexerIndex in 0..<flexerCount {
+                let flexer = flexers[flexerIndex]
+                if flexer.currentSize != expectedSize {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+    
+    //
+    // @Precondition: All the flexers have the exact same currentSize
+    // @Precondition: All the flexers are in the same group.
+    // @Precondition: The one flexer group is either active or mono at this priority.
+    //
+    static func isEveryFlexerPossiblyAbleToGrowAtCurrentPriority_AllSameSize(flexers: [Flexer], flexerCount: Int) -> Bool {
+        
+        if flexerCount <= 0 {
+            fatalError("TODO: Remove Error. Should not have <= 0 flexerCount")
+        }
+        
+        if true {
+            let expectedSize = flexers[0].currentSize
+            let expectedGroup = flexers[0].group!
+            
+            if (expectedGroup.isActiveAtCurrentPriorityOrMono == false) {
+                fatalError("TODO: Remove Error. Should be active or mono at given priority.")
+            }
+            
+            for flexerIndex in 0..<flexerCount {
+                let flexer = flexers[flexerIndex]
+                if flexer.currentSize != expectedSize {
+                    fatalError("TODO: Remove Error. Flexer sizes should all be the same...")
+                }
+            }
+            
+            for flexerIndex in 0..<flexerCount {
+                let flexer = flexers[flexerIndex]
+                let flexerGroup = flexer.group!
+                
+                if flexerGroup !== expectedGroup {
+                    print("TODO: Remove Error. Flexers all should be same group...")
+                }
+                
+                for checkFlexer in flexerGroup.linkedList {
+                    if checkFlexer.currentSize < flexer.currentSize {
+                        fatalError("TODO: Remove Error. Flexers should *ALL* be the smallest in group here...")
+                    }
+                }
+            }
+        }
+        
+        for flexerIndex in 0..<flexerCount {
+            let flexer = flexers[flexerIndex]
+            if flexer.currentSize < flexer.targetSizeCurrentPriority {
+                let node = flexer.node!
+                if ((node.isLockedAtCurrentPriority == true) || (node.isLockedAtEveryPriority == true)) {
+                    if node.childrenSize >= node.currentSize {
+                        return false
+                    }
+                }
+            }
+        }
+        return true
+    }
+    
     /*
      static func isAnySectionOrNodeLocked(nodes: [WiseLayoutNode], nodeCount: Int) -> Bool {
      for nodeIndex in 0..<nodeCount {
@@ -179,95 +371,41 @@ struct SmartLayoutUtilities {
             //return false
         }
         
-        /*
-         ListFactory_Growth.resetSectionList()
-         for nodeIndex in 0..<nodeCount {
-         let node = nodes[nodeIndex]
-         let section = node.section!
-         ListFactory_Growth.intake(section: section,
-         node: node,
-         growth: 1)
-         }
-         
-         ListFactory_Growth.resetRowList()
-         for sectionIndex in 0..<ListFactory_Growth.sectionListCount {
-         
-         let section = ListFactory_Growth.sectionList[sectionIndex]
-         section.proposedGrowthAmount = section.requestedGrowthFromChildren
-         let row = section.row!
-         ListFactory_Growth.intake(row: row,
-         section: section)
-         }
-         
-         var result = false
-         for rowIndex in 0..<ListFactory_Growth.rowListCount {
-         let row = ListFactory_Growth.rowList[rowIndex]
-         let sectionListCount = ListFactory_Growth.rowGroupedSectionsListCounts[rowIndex]
-         if row.canGrowAllSectionsByProposedGrowthAmount(sections: ListFactory_Growth.rowGroupedSectionsList[rowIndex],
-         sectionCount: sectionListCount) == false {
-         return false
-         }
-         }
-         */
-        return true
-    }
-    
-    
-    
-    
-    static func canAllPiecesGrowByOne_BROKEN_DO_NOT_USE(pieces: [SkeletonPiece], pieceCount: Int) -> Bool {
         
-        if pieceCount <= 0 {
-            fatalError("Why would we query \"canAllPiecesGrowByOne\" with no pieces?")
-            //return false
+        for nodeIndex in 0..<nodeCount {
+        let node = nodes[nodeIndex]
+            let section = node.section!
+            section.proposedGrowthAmount = 0
         }
         
-        // First check: Can they all grow by 1 *WITHOUT* growing nodes?
-        
-        
-        
-        
-        
-        
-        
-        if attemptToGrowSectionsByRequestedGrowthFromChildren(sections: ListFactory_Growth.sectionList,
-                                                              sectionCount: ListFactory_Growth.sectionListCount) {
-            
-            //
-            
-            
-        } else {
-            return false
+        for nodeIndex in 0..<nodeCount {
+        let node = nodes[nodeIndex]
+            let section = node.section!
+            section.proposedGrowthAmount += 1
         }
         
-        /*
-         ListFactory_Growth.resetRowList()
-         for nodeIndex in 0..<ListFactory_Growth.nodeListCount {
-         
-         let node = ListFactory_Growth.nodeList[nodeIndex]
-         node.proposedGrowthAmount = node.requestedGrowthFromChildren
-         let row = section.row!
-         ListFactory_Growth.intake(row: row,
-         section: section)
-         }
-         */
+        ListFactory_Growth.resetRowList()
+        for nodeIndex in 0..<nodeCount {
+        let node = nodes[nodeIndex]
+            let section = node.section!
+            let row = section.row!
+            ListFactory_Growth.intake(row: row, section: section)
+        }
         
-        var result = false
+        var result = true
         for rowIndex in 0..<ListFactory_Growth.rowListCount {
             let row = ListFactory_Growth.rowList[rowIndex]
-            let sectionListCount = ListFactory_Growth.rowGroupedSectionsListCounts[rowIndex]
-            if row.canGrowAllSectionsByProposedGrowthAmount(sections: ListFactory_Growth.rowGroupedSectionsList[rowIndex],
-                                                            sectionCount: sectionListCount) == false {
-                return false
+            let sections = ListFactory_Growth.rowGroupedSectionsList[rowIndex]
+            let sectionCount = ListFactory_Growth.rowGroupedSectionsListCounts[rowIndex]
+            
+            if !row.canGrowAllSectionsByProposedGrowthAmount(sections: sections, sectionCount: sectionCount) {
+                result = false
+                break
             }
         }
-        return true
+
+        return result
     }
-    
-    
-    
-    
-    
     
     static func canAllPiecesGrowByOne_WithoutGrowingNodes(pieces: [SkeletonPiece], pieceCount: Int) -> Bool {
         for pieceIndex in 0..<pieceCount { pieces[pieceIndex].node!.temp = 0 }
@@ -283,15 +421,86 @@ struct SmartLayoutUtilities {
         return true
     }
     
-    static func canAllFlexersGrowByOne_WithoutGrowingNodes(flexers: [Flexer], flexerCount: Int) -> Bool {
+    static func canAllFlexersGrowByOne_WithoutGrowingNodes_InactiveGroupOrMono(flexers: [Flexer], flexerCount: Int) -> Bool {
         for flexerIndex in 0..<flexerCount { flexers[flexerIndex].node!.temp = 0 }
         for flexerIndex in 0..<flexerCount {
             let flexer = flexers[flexerIndex]
-            let node = flexer.node!
-            node.temp += 1
-            if (node.currentSize - node.childrenSize) < node.temp {
-                return false
+            if flexer.currentSize < flexer.targetSizeCurrentPriority {
+                let node = flexer.node!
+                node.temp += 1
+                if (node.currentSize - node.childrenSize) < node.temp {
+                    return false
+                }
             }
+        }
+        return true
+    }
+    
+    static func canAllFlexersGrowByOne_WithoutGrowingNodes_ActiveSmallestList(flexers: [Flexer], flexerCount: Int) -> Bool {
+        for flexerIndex in 0..<flexerCount { flexers[flexerIndex].node!.temp = 0 }
+        for flexerIndex in 0..<flexerCount {
+            let flexer = flexers[flexerIndex]
+            
+                let node = flexer.node!
+                node.temp += 1
+                if (node.currentSize - node.childrenSize) < node.temp {
+                    return false
+                }
+            
+        }
+        return true
+    }
+    
+    //
+    // @Precondition: All the flexers have the exact same currentSize
+    // @Precondition: Every flexer is able to grow!
+    //
+    static func canAllFlexersGrowByOne_WithoutGrowingNodes_ActiveAllEqual(flexers: [Flexer], flexerCount: Int) -> Bool {
+        
+        if true {
+            let expectedSize = flexers[0].currentSize
+            let expectedGroup = flexers[0].group!
+            
+            //if (expectedGroup.isActiveAtCurrentPriorityOrMono == false) {
+            //    fatalError("TODO: Remove Error. Should be active or mono at given priority.")
+            //}
+            
+            for flexerIndex in 0..<flexerCount {
+                let flexer = flexers[flexerIndex]
+                if flexer.currentSize != expectedSize {
+                    fatalError("TODO: Remove Error. Flexer sizes should all be the same...")
+                }
+                
+                if flexer.currentSize >= flexer.targetSizeCurrentPriority {
+                    fatalError("TODO: Remove. @Precondition: Every flexer is able to grow!")
+                }
+            }
+            
+            for flexerIndex in 0..<flexerCount {
+                let flexer = flexers[flexerIndex]
+                let flexerGroup = flexer.group!
+                
+                if flexerGroup !== expectedGroup {
+                    print("TODO: Remove Error. Flexers all should be same group...")
+                }
+                
+                for checkFlexer in flexerGroup.linkedList {
+                    if checkFlexer.currentSize < flexer.currentSize {
+                        fatalError("TODO: Remove Error. Flexers should *ALL* be the smallest in group here...")
+                    }
+                }
+            }
+        }
+        
+        for flexerIndex in 0..<flexerCount { flexers[flexerIndex].node!.temp = 0 }
+        for flexerIndex in 0..<flexerCount {
+            let flexer = flexers[flexerIndex]
+                let node = flexer.node!
+                node.temp += 1
+                if (node.currentSize - node.childrenSize) < node.temp {
+                    return false
+                }
+            
         }
         return true
     }
@@ -315,7 +524,16 @@ struct SmartLayoutUtilities {
     }
     
     
-    static func growAllFlexersByOne_Unsafe(flexers: [Flexer], flexerCount: Int) {
+    static func growAllFlexersByOne_Unsafe_InactiveGroupOrMono(flexers: [Flexer], flexerCount: Int) {
+        for flexerIndex in 0..<flexerCount {
+            let flexer = flexers[flexerIndex]
+            if flexer.currentSize < flexer.targetSizeCurrentPriority {
+                growFlexerByOne_Unsafe(flexer: flexer)
+            }
+        }
+    }
+    
+    static func growAllFlexersByOne_Unsafe_ActiveSmallestList(flexers: [Flexer], flexerCount: Int) {
         for flexerIndex in 0..<flexerCount {
             let flexer = flexers[flexerIndex]
             growFlexerByOne_Unsafe(flexer: flexer)

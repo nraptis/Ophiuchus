@@ -9,6 +9,8 @@ import Foundation
 
 public struct ListFactory_Growth {
     
+    
+    /*
     private static var nodeTable = [Int: Int]()
     private(set) static var nodeList = [WiseLayoutNode]()
     private(set) static var nodeGroupedFlexersList = [[Flexer]]()
@@ -30,6 +32,7 @@ public struct ListFactory_Growth {
         nodeListCount = 0
         nodeTable.removeAll(keepingCapacity: true)
     }
+    
     
     private static func intakeNodePiece(index: Int, piece: SkeletonPiece) {
         if nodeGroupedPiecesListCounts[index] >= nodeGroupedPiecesListSizes[index] {
@@ -186,6 +189,7 @@ public struct ListFactory_Growth {
         nodeGroupedPiecesListCounts[nodeListCount] = 0
         nodeListCount += 1
     }
+    */
 
     
     
@@ -201,6 +205,7 @@ public struct ListFactory_Growth {
 
 
 
+    /*
     private static var sectionTable = [Int: Int]()
     private(set) static var sectionList = [SkeletonSection]()
     private(set) static var sectionGroupedNodesList = [[WiseLayoutNode]]()
@@ -226,9 +231,7 @@ public struct ListFactory_Growth {
         sectionGroupedNodesList[index][sectionGroupedNodesListCounts[index]] = node
         sectionGroupedNodesListCounts[index] += 1
     }
-
     
-
     static func intake(section: SkeletonSection, growth: Int) {
         
         let id = section.id
@@ -267,8 +270,7 @@ public struct ListFactory_Growth {
         sectionList[sectionListCount] = section
         sectionListCount += 1
     }
-
-
+    */
 
     
     
@@ -293,7 +295,6 @@ public struct ListFactory_Growth {
         
         let id = section.id
         if rowGroupedSectionsMap[index].contains(id) {
-            print("Double Section...")
             return
         }
         rowGroupedSectionsMap[index].insert(id)

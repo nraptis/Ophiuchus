@@ -15,7 +15,11 @@ public class ExploderGroup<Element: ExploderConforming> {
     let layoutPriority: LayoutPriority
     var smallestList = [Element]()
     
+    var isActiveAtCurrentPriorityOrMono = false
     var isActiveAtCurrentPriority = false
+    var isInactiveAtCurrentPriorityOrMono = false
+    
+    
     var isLockedAtEveryPriority = false
     var isLockedAtCurrentPriority = false
     
@@ -102,7 +106,7 @@ public class ExploderGroup<Element: ExploderConforming> {
         return true
     }
     
-    /*
+    
     func matchesPriority(layoutPriority: LayoutPriority) -> Bool {
         if self.layoutPriority.gte(layoutPriority: layoutPriority) {
             return true
@@ -110,9 +114,8 @@ public class ExploderGroup<Element: ExploderConforming> {
             return false
         }
     }
-    */
     
-    func matchesPriorityOrContainsOneElement(layoutPriority: LayoutPriority) -> Bool {
+    func matchesPriorityOrMono(layoutPriority: LayoutPriority) -> Bool {
         if linkedList.count <= 1 {
             return true
         } else if self.layoutPriority.gte(layoutPriority: layoutPriority) {

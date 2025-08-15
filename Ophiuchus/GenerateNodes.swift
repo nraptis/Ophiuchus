@@ -63,10 +63,13 @@ struct GenerateNodes {
         return result
     }
     
-    static func generate(currentSize: Int, withPiecesToGrow piecesToGrow: Int, byAmount amount: Int) -> (WiseLayoutNode, SkeletonLinkageRule_Pieces) {
+    static func generate_growing_pieces(childrenSize: Int,
+                               currentSize: Int,
+                               growCount: Int,
+                               amount: Int) -> (WiseLayoutNode, SkeletonLinkageRule_Pieces) {
         var pieces = [SkeletonPiece]()
-        let numberOfPieces = (piecesToGrow + 1)
-        for pieceIndex in 0..<numberOfPieces {
+        let numberOfPieces = (growCount + 1)
+        for _ in 0..<numberOfPieces {
             let piece = GeneratePieces.generate(size: 1)
             pieces.append(piece)
         }
@@ -75,13 +78,74 @@ struct GenerateNodes {
         }
         let node = generate_currentSizeAccumulate(pieces: pieces)
         node.currentSize = currentSize
-        
+        node.childrenSize = childrenSize
         let rule = SkeletonLinkageRule_Pieces(pieces: pieces,
                                               layoutPriority: .required)
-        
         return (node, rule)
     }
     
+    static func generate_growing_flexers_group_rules(childrenSize: Int,
+                                   currentSize: Int,
+                                   growCount: Int,
+                                   amount: Int) -> (WiseLayoutNode, SkeletonLinkageRule_Flexers) {
+            var flexers = [Flexer]()
+            let numberOfFlexers = (growCount + 1)
+            for _ in 0..<numberOfFlexers {
+                let flexer = GenerateFlexers.generate(currentSize: currentSize,
+                                                      targetSizeCurrentPriority: currentSize)
+                flexers.append(flexer)
+            }
+            if numberOfFlexers > 0 {
+                flexers[numberOfFlexers - 1].currentSize += amount
+            }
+            let node = generate_currentSizeAccumulate(flexers: flexers)
+            node.currentSize = currentSize
+            node.childrenSize = childrenSize
+            let rule = SkeletonLinkageRule_Flexers(flexers: flexers,
+                                                  layoutPriority: .required)
+            return (node, rule)
+        }
+    
+    static func generate_growing_flexers_mono_ubiquitous(childrenSize: Int,
+                                              currentSize: Int,
+                                              growCount: Int,
+                                              amount: Int) -> WiseLayoutNode {
+        var flexers = [Flexer]()
+        let numberOfFlexers = growCount
+        for _ in 0..<numberOfFlexers {
+            let flexer = GenerateFlexers.generate(currentSize: currentSize,
+                                                  targetSizeCurrentPriority: currentSize + amount)
+            flexers.append(flexer)
+        }
+        let node = generate_currentSizeAccumulate(flexers: flexers)
+        node.currentSize = currentSize
+        node.childrenSize = childrenSize
+        return node
+    }
+    
+    static func generate_growing_flexers_mono_mixed(childrenSize: Int,
+                                              currentSize: Int,
+                                              growCount: Int,
+                                              amount: Int) -> WiseLayoutNode {
+        var flexers = [Flexer]()
+        let numberOfFlexers = growCount
+        let numberOfExtraFlexers = Int.random(in: 0...10)
+        for _ in 0..<numberOfFlexers {
+            let flexer = GenerateFlexers.generate(currentSize: currentSize,
+                                                  targetSizeCurrentPriority: currentSize + amount)
+            flexers.append(flexer)
+        }
+        for _ in 0..<numberOfExtraFlexers {
+            let flexer = GenerateFlexers.generate(currentSize: currentSize,
+                                                  targetSizeCurrentPriority: currentSize)
+            flexers.append(flexer)
+        }
+        flexers.shuffle()
+        let node = generate_currentSizeAccumulate(flexers: flexers)
+        node.currentSize = currentSize
+        node.childrenSize = childrenSize
+        return node
+    }
     
     static func generate_currentSizeAccumulate(pieces: [SkeletonPiece]) -> WiseLayoutNode {
         let result = generate(pieces: pieces)
@@ -150,6 +214,11 @@ struct GenerateNodes {
         let result = GenerateNodes.generate(size: base + gap)
         result.childrenSize = base
         result.currentSize = base + gap
+        return result
+    }
+    
+    static func generate(pieces: [SkeletonPiece], flexers: [Flexer]) -> WiseLayoutNode {
+        let result = WiseLayoutNode.generate(pieces: pieces, flexers: flexers)
         return result
     }
     

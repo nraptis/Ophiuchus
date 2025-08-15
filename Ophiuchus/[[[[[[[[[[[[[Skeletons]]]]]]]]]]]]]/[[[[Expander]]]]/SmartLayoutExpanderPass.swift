@@ -9,8 +9,25 @@ import Foundation
 
 struct SmartLayoutExpanderPass {
     
-    public static func prepare_naive(groupData: SkeletonLayoutGroupDataExploded, layoutPriority: LayoutPriority) -> Bool {
-        var result = true
+    public static func pass(groupData: SkeletonLayoutGroupDataExploded,
+                            layoutPriority: LayoutPriority) {
+        SmartLayoutExpanderPass.prepare_intelligent(groupData: groupData, layoutPriority: layoutPriority)
+        var max_loops = 1000
+        var fudge = 0
+        while fudge < max_loops {
+            if SmartLayoutExpanderPulse.pulse() {
+                fudge += 1
+            } else {
+                break
+            }
+        }
+        if fudge == max_loops {
+            fatalError("TODO: Remove. We got stuck on a loop...")
+        }
+    }
+    
+    public static func prepare_naive(groupData: SkeletonLayoutGroupDataExploded,
+                                     layoutPriority: LayoutPriority) {
         
         groupData.calculateFlexerTargetSizeCurrentPriority(layoutPriority: layoutPriority)
         
@@ -27,67 +44,37 @@ struct SmartLayoutExpanderPass {
         for pieceGroup in pieceGroups {
             ListFactory_Groups.pieceGroupListAdd(pieceGroup: pieceGroup)
             pieceGroup.isLockedAtCurrentPriority = false
-            pieceGroup.isActiveAtCurrentPriority = pieceGroup.matchesPriorityOrContainsOneElement(layoutPriority: layoutPriority)
+            pieceGroup.isActiveAtCurrentPriorityOrMono = pieceGroup.matchesPriorityOrMono(layoutPriority: layoutPriority)
         }
         
         for flexerGroup in flexerGroups {
             ListFactory_Groups.flexerGroupListAdd(flexerGroup: flexerGroup)
             flexerGroup.isLockedAtCurrentPriority = false
-            flexerGroup.isActiveAtCurrentPriority = flexerGroup.matchesPriorityOrContainsOneElement(layoutPriority: layoutPriority)
+            
+            if flexerGroup.linkedList.count <= 1 {
+                flexerGroup.isInactiveAtCurrentPriorityOrMono = true
+            } else {
+                if flexerGroup.matchesPriority(layoutPriority: layoutPriority) {
+                    flexerGroup.isInactiveAtCurrentPriorityOrMono = false
+                } else {
+                    flexerGroup.isInactiveAtCurrentPriorityOrMono = true
+                }
+            }
         }
         
         for nodeGroup in groupData.nodeGroups {
             ListFactory_Groups.nodeGroupListAdd(nodeGroup: nodeGroup)
             nodeGroup.isLockedAtCurrentPriority = false
-            nodeGroup.isActiveAtCurrentPriority = nodeGroup.matchesPriorityOrContainsOneElement(layoutPriority: layoutPriority)
+            nodeGroup.isActiveAtCurrentPriorityOrMono = nodeGroup.matchesPriorityOrMono(layoutPriority: layoutPriority)
         }
         
         for section in groupData.sections {
             ListFactory_Groups.sectionListAdd(section: section)
             section.isLockedAtCurrentPriority = false
         }
-        
-        for flexerGroup in flexerGroups {
-            
-            /*
-            flexerGroup.isLockedAtCurrentPriority = false
-            if flexerGroup.isLockedAtEveryPriority { continue }
-            if flexerGroup.matchesPriority(layoutPriority: layoutPriority) {
-                // We do match this priority, let's consider the group as a whole...
-                
-                if flexerGroup.areAnyAbleToGrowAtCurrentPriority() {
-                    // We can try to grow this group.
-                    ListFactory_Groups.flexerListAdd(flexerGroup: flexerGroup)
-                } else {
-                    if flexerGroup.areAllEqualSize() {
-                        // We can't do anything with this group.
-                        flexerGroup.isLockedAtCurrentPriority = true
-                    } else {
-                        // We can try to grow this group.
-                        ListFactory_Groups.flexerListAdd(flexerGroup: flexerGroup)
-                    }
-                }
-            } else {
-                // We do *not* match this priority.
-                // We only consider individual flexer growth.
-                if flexerGroup.areAnyAbleToGrowAtCurrentPriority() {
-                    // We can try to grow this group.
-                    ListFactory_Groups.flexerListAdd(flexerGroup: flexerGroup)
-                } else {
-                    flexerGroup.isLockedAtCurrentPriority = true
-                }
-            }
-            */
-        }
-        
-        
-        
-        
-        
-        return result
     }
     
-    public static func prepare_intelligent(groupData: SkeletonLayoutGroupDataExploded, layoutPriority: LayoutPriority) -> Bool {
+    public static func prepare_intelligent(groupData: SkeletonLayoutGroupDataExploded, layoutPriority: LayoutPriority) {
         prepare_naive(groupData: groupData,
                       layoutPriority: layoutPriority)
     }

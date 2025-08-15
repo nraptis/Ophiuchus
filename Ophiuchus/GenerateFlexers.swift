@@ -24,6 +24,17 @@ struct GenerateFlexers {
         return result
     }
     
+    static func generate_n(_ n: Int, size: Int) -> [Flexer] {
+        var result = [Flexer]()
+        var index = 0
+        while index < n {
+            let flexer = generate(size: size)
+            result.append(flexer)
+            index += 1
+        }
+        return result
+    }
+    
     static func generate(
         _ desiredSizeRequired: Int,
         _ desiredSizeHigh: Int? = nil,
@@ -40,13 +51,27 @@ struct GenerateFlexers {
             return result
         }
     
+    static func generate(size: Int) -> Flexer {
+        
+        let result = Flexer.generate(desiredSizeRequired: size,
+                                     desiredSizeHigh: size,
+                                     desiredSizeMedium: size,
+                                     desiredSizeLow: size,
+                                     desiredSizeFinally: size)
+        result.currentSize = size
+        result.targetSizeCurrentPriority = size
+        
+        return result
+    }
+    
+    
     static func generate(currentSize: Int, targetSizeCurrentPriority: Int) -> Flexer {
         let _currentSize = currentSize
-        let result = GenerateFlexers.generate(_currentSize,
-                                              _currentSize,
-                                              _currentSize,
-                                              _currentSize,
-                                              _currentSize)
+        let result = GenerateFlexers.generate(targetSizeCurrentPriority,
+                                              targetSizeCurrentPriority,
+                                              targetSizeCurrentPriority,
+                                              targetSizeCurrentPriority,
+                                              targetSizeCurrentPriority)
         result.currentSize = currentSize
         result.targetSizeCurrentPriority = targetSizeCurrentPriority
         return result
@@ -54,11 +79,11 @@ struct GenerateFlexers {
     
     static func generate(currentSize: Int, targetSizeCurrentPriority: Int, name: String) -> Flexer {
         let _currentSize = currentSize
-        let result = GenerateFlexers.generate(_currentSize,
-                                              _currentSize,
-                                              _currentSize,
-                                              _currentSize,
-                                              _currentSize)
+        let result = GenerateFlexers.generate(targetSizeCurrentPriority,
+                                              targetSizeCurrentPriority,
+                                              targetSizeCurrentPriority,
+                                              targetSizeCurrentPriority,
+                                              targetSizeCurrentPriority)
         result.currentSize = currentSize
         result.targetSizeCurrentPriority = targetSizeCurrentPriority
         result.name = name

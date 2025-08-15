@@ -9,21 +9,22 @@ import Foundation
 
 public struct ListFactory_GroupsUnique {
     
-    private static var nodeGroupTable = [Int: Int]()
+    private static var nodeGroupSet = Set<Int>()
     private(set) static var nodeGroupList = [ExploderGroup<WiseLayoutNode>]()
-    private(set) static var nodeGroupPairedNodeList = [[WiseLayoutNode]]()
-    private(set) static var nodeGroupPairedNodeListCounts = [Int]()
-    private(set) static var nodeGroupPairedNodeListSizes = [Int]()
-    private(set) static var nodeGroupPairedTable = [Set<Int>]()
+    //private(set) static var nodeGroupPairedNodeList = [[WiseLayoutNode]]()
+    //private(set) static var nodeGroupPairedNodeListCounts = [Int]()
+    //private(set) static var nodeGroupPairedNodeListSizes = [Int]()
+    //private(set) static var nodeGroupPairedTable = [Set<Int>]()
     
     private(set) static var nodeGroupListCount = 0
     private(set) static var nodeGroupListSize = 0
 
     static func resetNodeGroupList() {
         nodeGroupListCount = 0
-        nodeGroupTable.removeAll(keepingCapacity: true)
+        nodeGroupSet.removeAll(keepingCapacity: true)
     }
     
+    /*
     private static func intakeNodeGroupPairedNode(index: Int, node: WiseLayoutNode) {
         
         if nodeGroupPairedTable[index].contains(node.id) {
@@ -43,6 +44,7 @@ public struct ListFactory_GroupsUnique {
         nodeGroupPairedNodeList[index][nodeGroupPairedNodeListCounts[index]] = node
         nodeGroupPairedNodeListCounts[index] += 1
     }
+    
     
     static func intake(nodeGroup: ExploderGroup<WiseLayoutNode>,
                        node: WiseLayoutNode) {
@@ -76,31 +78,35 @@ public struct ListFactory_GroupsUnique {
         
         intakeNodeGroupPairedNode(index: nodeGroupIndex, node: node)
     }
+    */
     
     static func intake(nodeGroup: ExploderGroup<WiseLayoutNode>) {
         
         let id = nodeGroup.id
-        if let nodeGroupIndex = nodeGroupTable[nodeGroup.id] {
+        if nodeGroupSet.contains(id) {
             return
         }
         
-        let nodeGroupIndex = nodeGroupListCount
-        nodeGroupTable[id] = nodeGroupListCount
+        //let nodeGroupIndex = nodeGroupListCount
+        
+        nodeGroupSet.insert(id)
+        //nodeGroupTable[id] = nodeGroupListCount
+        
         
         if nodeGroupListCount >= nodeGroupListSize {
             nodeGroupListSize = (nodeGroupListCount + (nodeGroupListCount / 2) + 1)
             while nodeGroupList.count < nodeGroupListSize {
                 nodeGroupList.append(nodeGroup)
-                nodeGroupPairedNodeList.append([WiseLayoutNode]())
-                nodeGroupPairedNodeListCounts.append(0)
-                nodeGroupPairedNodeListSizes.append(0)
-                nodeGroupPairedTable.append(Set<Int>())
+                //nodeGroupPairedNodeList.append([WiseLayoutNode]())
+                //nodeGroupPairedNodeListCounts.append(0)
+                //nodeGroupPairedNodeListSizes.append(0)
+                //nodeGroupPairedTable.append(Set<Int>())
             }
         }
         
         nodeGroupList[nodeGroupListCount] = nodeGroup
-        nodeGroupPairedNodeListCounts[nodeGroupListCount] = 0
-        nodeGroupPairedTable[nodeGroupListCount].removeAll(keepingCapacity: true)
+        //nodeGroupPairedNodeListCounts[nodeGroupListCount] = 0
+        //nodeGroupPairedTable[nodeGroupListCount].removeAll(keepingCapacity: true)
         nodeGroupListCount += 1
     }
     

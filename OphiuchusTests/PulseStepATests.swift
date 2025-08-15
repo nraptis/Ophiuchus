@@ -9,7 +9,7 @@ import Foundation
 import Testing
 @testable import Ophiuchus
 
-struct PulseStepATests_A {
+struct PulseStepATests {
     
     @MainActor @Test func cannot_grow_2_nodes_1_section() {
         
@@ -39,8 +39,7 @@ struct PulseStepATests_A {
         let groupData = SkeletonLayoutGrouper.getAll(book: book)
         
         SmartLayoutExpanderMain.prepare(groupData: groupData)
-        let preparePassResult = SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
-        #expect(preparePassResult == true)
+        SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
         
         // We expect this to happen:
         // 1.) node a grows by 1, section a grows by 1, row a grows by 1 (growthBudget reduced by 1)
@@ -82,8 +81,7 @@ struct PulseStepATests_A {
         let groupData = SkeletonLayoutGrouper.getAll(book: book)
         
         SmartLayoutExpanderMain.prepare(groupData: groupData)
-        let preparePassResult = SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
-        #expect(preparePassResult == true)
+        SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
         
         // We expect this to happen:
         // 1.) node a grows by 1, section a grows by 1, row a grows by 1 (growthBudget reduced by 1)
@@ -136,9 +134,7 @@ struct PulseStepATests_A {
         let groupData = SkeletonLayoutGrouper.getAll(book: book)
         
         SmartLayoutExpanderMain.prepare(groupData: groupData)
-        let preparePassResult = SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
-        
-        #expect(preparePassResult == true)
+        SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
         
         // We expect this to happen:
         // 1.) node a grows by 1, section a grows by 1, row a grows by 1 (growthBudget reduced by 1)
@@ -208,9 +204,7 @@ struct PulseStepATests_A {
         let groupData = SkeletonLayoutGrouper.getAll(book: book)
         
         SmartLayoutExpanderMain.prepare(groupData: groupData)
-        let preparePassResult = SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
-        
-        #expect(preparePassResult == true)
+        SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
         
         let applyNodeRuleResult1 = SmartLayoutExpanderPulse.step_a_apply_node_group_rules()
         #expect(applyNodeRuleResult1 == true)
@@ -275,9 +269,7 @@ struct PulseStepATests_A {
         let groupData = SkeletonLayoutGrouper.getAll(book: book)
         
         SmartLayoutExpanderMain.prepare(groupData: groupData)
-        let preparePassResult = SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
-        
-        #expect(preparePassResult == true)
+        SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
         
         let applyNodeRuleResult1 = SmartLayoutExpanderPulse.step_a_apply_node_group_rules()
         #expect(applyNodeRuleResult1 == true)
@@ -331,7 +323,6 @@ struct PulseStepATests_A {
         var number_of_grows = 0
         var number_of_not_grows = 0
         
-        
         for _ in 0..<10000 {
             
             let count = Int.random(in: 1...4)
@@ -354,7 +345,7 @@ struct PulseStepATests_A {
                 let groupData = SkeletonLayoutGrouper.getAll(book: book)
                 
                 SmartLayoutExpanderMain.prepare(groupData: groupData)
-                _ = SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
+                SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
                 
                 var expectedGrowthBudget = row.growthBudget
                 var stops = 0
@@ -476,7 +467,6 @@ struct PulseStepATests_A {
         var number_of_grows = 0
         var number_of_not_grows = 0
         
-        
         for _ in 0..<10000 {
             
             let count = Int.random(in: 2...6)
@@ -499,7 +489,7 @@ struct PulseStepATests_A {
                 let groupData = SkeletonLayoutGrouper.getAll(book: book)
                 
                 SmartLayoutExpanderMain.prepare(groupData: groupData)
-                _ = SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
+                SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
                 
                 var expectedGrowthBudget = row.growthBudget
                 var stops = 0
@@ -620,7 +610,6 @@ struct PulseStepATests_A {
         var number_of_grows = 0
         var number_of_not_grows = 0
         
-        
         for _ in 0..<10000 {
             
             let count = Int.random(in: 2...6)
@@ -649,7 +638,7 @@ struct PulseStepATests_A {
                 let groupData = SkeletonLayoutGrouper.getAll(book: book)
                 
                 SmartLayoutExpanderMain.prepare(groupData: groupData)
-                _ = SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
+                SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
                 
                 var expectedGrowthBudget = row.growthBudget
                 var stops = 0

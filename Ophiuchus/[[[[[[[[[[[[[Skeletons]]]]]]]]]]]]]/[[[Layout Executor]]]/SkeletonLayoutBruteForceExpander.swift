@@ -47,13 +47,13 @@ public struct SkeletonLayoutBruteForceExpander {
                                                    layoutPriority: LayoutPriority) {
         /*
         for pieceGroup in pieceGroups {
-            pieceGroup.isActiveAtCurrentPriority = pieceGroup.matchesPriority(layoutPriority: layoutPriority)
+            pieceGroup.isActiveAtCurrentPriorityOrMono = pieceGroup.matchesPriority(layoutPriority: layoutPriority)
         }
         for flexerGroup in flexerGroups {
-            flexerGroup.isActiveAtCurrentPriority = flexerGroup.matchesPriority(layoutPriority: layoutPriority)
+            flexerGroup.isActiveAtCurrentPriorityOrMono = flexerGroup.matchesPriority(layoutPriority: layoutPriority)
         }
         for nodeGroup in nodeGroups {
-            nodeGroup.isActiveAtCurrentPriority = nodeGroup.matchesPriority(layoutPriority: layoutPriority)
+            nodeGroup.isActiveAtCurrentPriorityOrMono = nodeGroup.matchesPriority(layoutPriority: layoutPriority)
         }
         */
     }
@@ -83,13 +83,13 @@ public struct SkeletonLayoutBruteForceExpander {
         
         /*
         for pieceGroup in pieceGroups {
-            pieceGroup.isActiveAtCurrentPriority = pieceGroup.matchesPriority(layoutPriority: layoutPriority)
+            pieceGroup.isActiveAtCurrentPriorityOrMono = pieceGroup.matchesPriority(layoutPriority: layoutPriority)
             pieceGroup.isAllEqualAtCurrentPriority = false
             pieceGroup.isLockedAtCurrentPriority = false
         }
         
         for flexerGroup in flexerGroups {
-            flexerGroup.isActiveAtCurrentPriority = flexerGroup.matchesPriority(layoutPriority: layoutPriority)
+            flexerGroup.isActiveAtCurrentPriorityOrMono = flexerGroup.matchesPriority(layoutPriority: layoutPriority)
             flexerGroup.isAllEqualAtCurrentPriority = false
             flexerGroup.isLockedAtCurrentPriority = false
             for flexer in flexerGroup.linkedList {
@@ -99,7 +99,7 @@ public struct SkeletonLayoutBruteForceExpander {
         
         for nodeGroup in nodeGroups {
             nodeGroup.isAllEqualAtCurrentPriority = false
-            nodeGroup.isActiveAtCurrentPriority = nodeGroup.matchesPriority(layoutPriority: layoutPriority)
+            nodeGroup.isActiveAtCurrentPriorityOrMono = nodeGroup.matchesPriority(layoutPriority: layoutPriority)
             nodeGroup.isLockedAtCurrentPriority = false
         }
     }
@@ -118,7 +118,7 @@ public struct SkeletonLayoutBruteForceExpander {
                 node.proposedGrowthAmount = 0
             }
             
-            if (nodeGroup.isActiveAtCurrentPriority == false) { continue }
+            if (nodeGroup.isActiveAtCurrentPriorityOrMono == false) { continue }
             if (nodeGroup.isLockedAtEveryPriority == true) { continue }
             if (nodeGroup.isAllEqualAtCurrentPriority == true) { continue }
             if nodeGroup.computeSmallestIfNotAllEqual() {
@@ -202,7 +202,7 @@ public struct SkeletonLayoutBruteForceExpander {
                 flexer.proposedGrowthAmount = 0
             }
             
-            if (flexerGroup.isActiveAtCurrentPriority == false) { continue }
+            if (flexerGroup.isActiveAtCurrentPriorityOrMono == false) { continue }
             if (flexerGroup.isLockedAtEveryPriority == true) { continue }
             if (flexerGroup.isAllEqualAtCurrentPriority == true) { continue }
             

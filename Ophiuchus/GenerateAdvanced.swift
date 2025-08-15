@@ -56,36 +56,13 @@ struct GenerateAdvanced {
     }
     
     static func generateBags(nodeGroups inputNodeGroups: [ExploderGroup<WiseLayoutNode>]) -> [NodeGroupBag] {
-        
-        
         var result = [NodeGroupBag]()
         for nodeGroup in inputNodeGroups {
-            
             let bag = NodeGroupBag(nodeGroup: nodeGroup)
             bag.sectionItems = generateSectionsWithNodes(nodes: nodeGroup.linkedList,
                                                          nodeCount: nodeGroup.linkedList.count)
             result.append(bag)
-            
-            /*
-            if nodeGroup.computeSmallestIfNotAllEqual() {
-                let bag = NodeGroupBag(nodeGroup: nodeGroup)
-                bag.sectionItems = generateSectionsWithNodes(nodes: nodeGroup.smallestList,
-                                                             nodeCount: nodeGroup.smallestList.count)
-                result.append(bag)
-            } else {
-                let bag = NodeGroupBag(nodeGroup: nodeGroup)
-                bag.sectionItems = generateSectionsWithNodes(nodes: nodeGroup.linkedList,
-                                                             nodeCount: nodeGroup.linkedList.count)
-                result.append(bag)
-            }
-            */
-            
-            for node in nodeGroup.linkedList {
-                print("\t---Node (\(node.id)) ==> \(node.childrenSize) / \(node.currentSize) wgro: \(node.section.row.growthBudget)")
-            }
-            print("---EOL")
         }
-        
         return result
     }
     
