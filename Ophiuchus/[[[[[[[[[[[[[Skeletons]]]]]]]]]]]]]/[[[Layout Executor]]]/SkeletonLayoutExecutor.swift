@@ -21,51 +21,43 @@ public struct SkeletonLayoutExecutor {
                          safeAreaRight: safeAreaRight)
         }
         
-        for page in pages {
-            for row in page.rows {
-                for section in row.sections {
-                    for node in section.skeletonNodes {
-                        for chunk in node.chunks {
-                            for piece in chunk.pieces {
-                                piece.currentSize = piece.originalSize
-                            }
-                            for flexer in chunk.flexers {
-                                flexer.currentSize = 0
-                            }
+        for _page in pages {
+            for _row in _page.rows {
+                for _section in _row.sections {
+                    for _node in _section.nodes {
+                        for _piece in _node.pieces {
+                            _piece.currentSize = _piece.originalSize
+                        }
+                        for _flexer in _node.flexers {
+                            _flexer.currentSize = 0
                         }
                     }
                 }
             }
         }
-        for page in pages {
-            for row in page.rows {
-                for section in row.sections {
-                    var section_sum = 0
-                    for node in section.skeletonNodes {
-                        var node_sum = 0
-                        for chunk in node.chunks {
-                            var chunk_sum = 0
-                            for piece in chunk.pieces {
-                                chunk_sum += piece.currentSize
-                            }
-                            chunk.currentSize = chunk_sum
-                            chunk.childrenSize = chunk_sum
-                            node_sum += chunk_sum
+        for _page in pages {
+            for _row in _page.rows {
+                for _section in _row.sections {
+                    var sectionSum = 0
+                    for _node in _section.nodes {
+                        var nodeSum = 0
+                        for piece in _node.pieces {
+                            nodeSum += piece.currentSize
                         }
-                        node.currentSize = node_sum
-                        node.childrenSize = node_sum
-                        section_sum += node_sum
+                        _node.currentSize = nodeSum
+                        _node.childrenSize = nodeSum
+                        sectionSum += nodeSum
                     }
-                    section.currentSize = section_sum
-                    section.childrenSize = section_sum
+                    _section.currentSize = sectionSum
                 }
             }
         }
-        for page in pages {
-            for row in page.rows {
-                row.snap_minimum_after_children_ready(menuWidthWithSafeArea: menuWidthWithSafeArea,
-                                                      safeAreaLeft: safeAreaLeft,
-                                                      safeAreaRight: safeAreaRight)
+        
+        for _page in pages {
+            for _row in _page.rows {
+                _row.snap_minimum_after_children_ready(menuWidthWithSafeArea: menuWidthWithSafeArea,
+                                                       safeAreaLeft: safeAreaLeft,
+                                                       safeAreaRight: safeAreaRight)
             }
         }
     }
@@ -77,9 +69,7 @@ public struct SkeletonLayoutExecutor {
         layout(pages: pages,
                pieceRules: [],
                flexerRules: [],
-               chunkRules: [],
                nodeRules: [],
-               sectionRules: [],
                menuWidthWithSafeArea: menuWidthWithSafeArea,
                safeAreaLeft: safeAreaLeft,
                safeAreaRight: safeAreaRight)
@@ -89,35 +79,28 @@ public struct SkeletonLayoutExecutor {
     public static func layout(pages: [SkeletonPage],
                               pieceRules: [SkeletonLinkageRule_Pieces],
                               flexerRules: [SkeletonLinkageRule_Flexers],
-                              chunkRules: [SkeletonLinkageRule_Chunks],
                               nodeRules: [SkeletonLinkageRule_Nodes],
-                              sectionRules: [SkeletonLinkageRule_Sections],
                               menuWidthWithSafeArea: Int,
                               safeAreaLeft: Int,
                               safeAreaRight: Int) {
+        
+        let book = SkeletonBook(pages: pages,
+                                      nodeRules: nodeRules,
+                                      flexerRules: flexerRules,
+                                      pieceRules: pieceRules)
+        
+        let groupData = SkeletonLayoutGrouper.getAll(book: book)
         
         prepare_and_snap_minimum(pages: pages,
                                  menuWidthWithSafeArea: menuWidthWithSafeArea,
                                  safeAreaLeft: safeAreaLeft,
                                  safeAreaRight: safeAreaRight)
         
-        // Now what we need is the concept of a layout pass.
-        
-        let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: pieceRules)
-        let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: flexerRules)
-        let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: chunkRules)
-        let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: nodeRules)
-        let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: sectionRules)
-        
         let layoutPriorities = [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally]
         
         for layoutPriority in layoutPriorities {
             SkeletonLayoutBruteForceExpander.expand_where_possible(pages: pages,
-                                                                   pieces: pieces,
-                                                                   flexers: flexers,
-                                                                   chunks: chunks,
-                                                                   nodes: nodes,
-                                                                   sections: sections,
+                                                                   groupData: groupData,
                                                                    layoutPriority: layoutPriority)
         }
         
@@ -129,73 +112,64 @@ public struct SkeletonLayoutExecutor {
         
         // When pieces are not in the same sec
         
-        SkeletonLayoutBruteForceExpander.place(pages: pages,
-                                               menuWidthWithSafeArea: menuWidthWithSafeArea,
-                                               safeAreaLeft: safeAreaLeft,
-                                               safeAreaRight: safeAreaRight)
+        SkeletonLayoutBruteForceExpander.positionContent(pages: pages,
+                                                         menuWidthWithSafeArea: menuWidthWithSafeArea,
+                                                         safeAreaLeft: safeAreaLeft,
+                                                         safeAreaRight: safeAreaRight)
         
         /*
-        for page in pages {
-            for row in page.rows {
-                for section in row.sections {
-                    section.width = section.currentSize
-                    for node in section.skeletonNodes {
-                        node.width = node.currentSize
-                        for chunk in node.chunks {
-                            chunk.width = chunk.currentSize
-                        }
-                    }
-                }
-            }
-        }
-        
-        for page in pages {
-            for row in page.rows {
-                row.position_content_after_size_computation(menuWidthWithSafeArea: menuWidthWithSafeArea,
-                                                            safeAreaLeft: safeAreaLeft,
-                                                            safeAreaRight: safeAreaRight)
-            }
-        }
-        */
+         for page in pages {
+         for row in page.rows {
+         for section in row.sections {
+         section.width = section.currentSize
+         for node in section.skeletonNodes {
+         node.width = node.currentSize
+         for chunk in node.chunks {
+         chunk.width = chunk.currentSize
+         }
+         }
+         }
+         }
+         }
+         
+         for page in pages {
+         for row in page.rows {
+         row.positionContentAfterSizeComputation(menuWidthWithSafeArea: menuWidthWithSafeArea,
+         safeAreaLeft: safeAreaLeft,
+         safeAreaRight: safeAreaRight)
+         }
+         }
+         */
     }
     
     // For the font scaling...
     public static func check(pages: [SkeletonPage],
                              pieceRules: [SkeletonLinkageRule_Pieces],
                              flexerRules: [SkeletonLinkageRule_Flexers],
-                             chunkRules: [SkeletonLinkageRule_Chunks],
                              nodeRules: [SkeletonLinkageRule_Nodes],
-                             sectionRules: [SkeletonLinkageRule_Sections],
                              layoutPriority: LayoutPriority,
-                             strict_centering: Bool,
+                             isStrictCenteringRequired: Bool,
                              menuWidthWithSafeArea: Int,
                              safeAreaLeft: Int,
                              safeAreaRight: Int) -> Bool {
         
+        let book = SkeletonBook(pages: pages,
+                                      nodeRules: nodeRules,
+                                      flexerRules: flexerRules,
+                                      pieceRules: pieceRules)
         prepare_and_snap_minimum(pages: pages,
                                  menuWidthWithSafeArea: menuWidthWithSafeArea,
                                  safeAreaLeft: safeAreaLeft,
                                  safeAreaRight: safeAreaRight)
         
-        // Now what we need is the concept of a layout pass.
-        
-        let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: pieceRules)
-        let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: flexerRules)
-        let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: chunkRules)
-        let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: nodeRules)
-        let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: sectionRules)
+        let groupData = SkeletonLayoutGrouper.getAll(book: book)
         let result = SkeletonLayoutBruteForceExpander.check(pages: pages,
-                                                            pieces: pieces,
-                                                            flexers: flexers,
-                                                            chunks: chunks,
-                                                            nodes: nodes,
-                                                            sections: sections,
+                                                            groupData: groupData,
                                                             layoutPriority: layoutPriority,
-                                                            strict_centering: strict_centering,
+                                                            isStrictCenteringRequired: isStrictCenteringRequired,
                                                             menuWidthWithSafeArea: menuWidthWithSafeArea,
                                                             safeAreaLeft: safeAreaLeft,
                                                             safeAreaRight: safeAreaRight)
         return result
     }
-    
 }

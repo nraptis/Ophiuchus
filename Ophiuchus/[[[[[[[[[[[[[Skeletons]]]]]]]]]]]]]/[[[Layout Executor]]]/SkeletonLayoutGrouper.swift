@@ -9,41 +9,46 @@ import Foundation
 
 public struct SkeletonLayoutGrouper {
     
+    static func getAll(book: SkeletonBook) -> SkeletonLayoutGroupDataExploded {
+        
+        let pieces = SkeletonLayoutGrouper.getPieceGroups(baseId: 1000,
+                                                          pages: book.pages,
+                                                          rules: book.pieceRules)
+        
+        
+        let flexers = SkeletonLayoutGrouper.getFlexerGroups(baseId: 2000,
+                                                            pages: book.pages,
+                                                            rules: book.flexerRules)
+        let nodes = SkeletonLayoutGrouper.getNodeGroups(baseId: 3000, pages:
+                                                            book.pages,
+                                                        rules: book.nodeRules)
+        let sections = SkeletonLayoutGrouper.getAllSections(pages: book.pages)
+        let result = SkeletonLayoutGroupDataExploded(pieceGroups: pieces,
+                                                     flexerGroups: flexers,
+                                                     nodeGroups: nodes,
+                                                     sections: sections)
+        return result
+    }
+    
     static func getAllSections(pages: [SkeletonPage]) -> [SkeletonSection] {
         var result = [SkeletonSection]()
-        for page in pages {
-            for row in page.rows {
-                for section in row.sections {
-                    result.append(section)
+        for _page in pages {
+            for _row in _page.rows {
+                for _section in _row.sections {
+                    result.append(_section)
                 }
             }
         }
         return result
     }
     
-    static func getAllNodes(pages: [SkeletonPage]) -> [SkeletonNode] {
-        var result = [SkeletonNode]()
-        for page in pages {
-            for row in page.rows {
-                for section in row.sections {
-                    for node in section.skeletonNodes {
-                        result.append(node)
-                    }
-                }
-            }
-        }
-        return result
-    }
-    
-    static func getAllChunks(pages: [SkeletonPage]) -> [SkeletonChunk] {
-        var result = [SkeletonChunk]()
-        for page in pages {
-            for row in page.rows {
-                for section in row.sections {
-                    for node in section.skeletonNodes {
-                        for chunk in node.chunks {
-                            result.append(chunk)
-                        }
+    static func getAllNodes(pages: [SkeletonPage]) -> [WiseLayoutNode] {
+        var result = [WiseLayoutNode]()
+        for _page in pages {
+            for _row in _page.rows {
+                for _section in _row.sections {
+                    for _node in _section.nodes {
+                        result.append(_node)
                     }
                 }
             }
@@ -53,14 +58,12 @@ public struct SkeletonLayoutGrouper {
     
     static func getAllPieces(pages: [SkeletonPage]) -> [SkeletonPiece] {
         var result = [SkeletonPiece]()
-        for page in pages {
-            for row in page.rows {
-                for section in row.sections {
-                    for node in section.skeletonNodes {
-                        for chunk in node.chunks {
-                            for piece in chunk.pieces {
-                                result.append(piece)
-                            }
+        for _page in pages {
+            for _row in _page.rows {
+                for _section in _row.sections {
+                    for _node in _section.nodes {
+                        for _piece in _node.pieces {
+                            result.append(_piece)
                         }
                     }
                 }
@@ -71,14 +74,12 @@ public struct SkeletonLayoutGrouper {
     
     static func getAllFlexers(pages: [SkeletonPage]) -> [Flexer] {
         var result = [Flexer]()
-        for page in pages {
-            for row in page.rows {
-                for section in row.sections {
-                    for node in section.skeletonNodes {
-                        for chunk in node.chunks {
-                            for flexer in chunk.flexers {
-                                result.append(flexer)
-                            }
+        for _page in pages {
+            for _row in _page.rows {
+                for _section in _row.sections {
+                    for _node in _section.nodes {
+                        for _flexer in _node.flexers {
+                            result.append(_flexer)
                         }
                     }
                 }
@@ -87,15 +88,18 @@ public struct SkeletonLayoutGrouper {
         return result
     }
     
-    public static func getPieceGroups(pages: [SkeletonPage],
-                                      rules: [SkeletonLinkageRule_Pieces]) -> [ExploderGroup<SkeletonPiece>] {
+    static func getPieceGroups(baseId: Int,
+                               pages: [SkeletonPage],
+                               rules: [SkeletonLinkageRule_Pieces]) -> [ExploderGroup<SkeletonPiece>] {
         let pieces = SkeletonLayoutGrouper.getAllPieces(pages: pages)
         var links = [ExploderLink]()
         for rule in rules {
             let rule_links = rule.getLinks()
             links.append(contentsOf: rule_links)
         }
-        let result = Exploder.explode(nodes: pieces, links: links)
+        let result = Exploder.explode(baseId: baseId,
+                                      nodes: pieces,
+                                      links: links)
         
         for group in result {
             for piece in group.linkedList {
@@ -106,16 +110,19 @@ public struct SkeletonLayoutGrouper {
         return result
     }
     
-    public static func getFlexerGroups(pages: [SkeletonPage],
-                                       rules: [SkeletonLinkageRule_Flexers]) -> [ExploderGroup<Flexer>] {
+    static func getFlexerGroups(baseId: Int,
+                                pages: [SkeletonPage],
+                                rules: [SkeletonLinkageRule_Flexers]) -> [ExploderGroup<Flexer>] {
         let flexers = SkeletonLayoutGrouper.getAllFlexers(pages: pages)
+        
         var links = [ExploderLink]()
         for rule in rules {
             let rule_links = rule.getLinks()
             links.append(contentsOf: rule_links)
         }
-        let result = Exploder.explode(nodes: flexers, links: links)
-        
+        let result = Exploder.explode(baseId: baseId,
+                                      nodes: flexers,
+                                      links: links)
         for group in result {
             for flexer in group.linkedList {
                 flexer.group = group
@@ -125,56 +132,22 @@ public struct SkeletonLayoutGrouper {
         return result
     }
     
-    public static func getChunkGroups(pages: [SkeletonPage],
-                                      rules: [SkeletonLinkageRule_Chunks]) -> [ExploderGroup<SkeletonChunk>] {
-        let chunks = SkeletonLayoutGrouper.getAllChunks(pages: pages)
-        var links = [ExploderLink]()
-        for rule in rules {
-            let rule_links = rule.getLinks()
-            links.append(contentsOf: rule_links)
-        }
-        let result = Exploder.explode(nodes: chunks, links: links)
-        for group in result {
-            for node in group.linkedList {
-                node.group = group
-            }
-        }
-        
-        return result
-    }
-    
-    public static func getNodeGroups(pages: [SkeletonPage],
-                                     rules: [SkeletonLinkageRule_Nodes]) -> [ExploderGroup<SkeletonNode>] {
+    static func getNodeGroups(baseId: Int,
+                              pages: [SkeletonPage],
+                              rules: [SkeletonLinkageRule_Nodes]) -> [ExploderGroup<WiseLayoutNode>] {
         let nodes = SkeletonLayoutGrouper.getAllNodes(pages: pages)
         var links = [ExploderLink]()
         for rule in rules {
             let rule_links = rule.getLinks()
             links.append(contentsOf: rule_links)
         }
-        let result = Exploder.explode(nodes: nodes, links: links)
+        let result = Exploder.explode(baseId: baseId,
+                                      nodes: nodes,
+                                      links: links)
         
         for group in result {
             for node in group.linkedList {
                 node.group = group
-            }
-        }
-        
-        return result
-    }
-    
-    public static func getSectionGroups(pages: [SkeletonPage],
-                                        rules: [SkeletonLinkageRule_Sections]) -> [ExploderGroup<SkeletonSection>] {
-        let sections = SkeletonLayoutGrouper.getAllSections(pages: pages)
-        var links = [ExploderLink]()
-        for rule in rules {
-            let rule_links = rule.getLinks()
-            links.append(contentsOf: rule_links)
-        }
-        let result = Exploder.explode(nodes: sections, links: links)
-        
-        for group in result {
-            for section in group.linkedList {
-                section.group = group
             }
         }
         

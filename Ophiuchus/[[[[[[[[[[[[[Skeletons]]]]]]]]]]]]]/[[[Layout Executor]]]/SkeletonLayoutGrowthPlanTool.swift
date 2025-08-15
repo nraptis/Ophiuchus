@@ -9,6 +9,7 @@ import Foundation
 
 struct SkeletonLayoutGrowthPlanTool {
     
+    /*
     static let amountListDefault = [Int](repeating: 1, count: 256)
     static let amountListDefaultWRONG = [Int](repeating: 2, count: 256)
     
@@ -89,7 +90,7 @@ struct SkeletonLayoutGrowthPlanTool {
     static var rowListCount = 0
     static var rowList = [SkeletonRow](repeating: SkeletonRow(id: -1,
                                                               sections: [],
-                                                              attemptedCenteredSection: nil)
+                                                              centeredSection: nil)
                                        ,
                                        count: 32)
     
@@ -257,8 +258,12 @@ struct SkeletonLayoutGrowthPlanTool {
     }
     
     static func getRowGrowthPlansForFlexers(flexerGroup: ExploderGroup<Flexer>) -> [RowGrowthPlans] {
+        return getRowGrowthPlansForFlexers(flexers: flexerGroup.linkedList)
+    }
+    
+    static func getRowGrowthPlansForFlexers(flexers: [Flexer]) -> [RowGrowthPlans] {
         SkeletonLayoutGrowthPlanTool.chunkListCount = 0
-        for flexer in flexerGroup.linkedList {
+        for flexer in flexers {
             let chunk = flexer.chunk!
             var chunkIndex = -1
             for checkChunkIndex in 0..<SkeletonLayoutGrowthPlanTool.chunkListCount {
@@ -293,8 +298,12 @@ struct SkeletonLayoutGrowthPlanTool {
     }
     
     static func getRowGrowthPlansForPieces(pieceGroup: ExploderGroup<SkeletonPiece>) -> [RowGrowthPlans] {
+        return getRowGrowthPlansForPieces(pieces: pieceGroup.linkedList)
+    }
+    
+    static func getRowGrowthPlansForPieces(pieces: [SkeletonPiece]) -> [RowGrowthPlans] {
         SkeletonLayoutGrowthPlanTool.chunkListCount = 0
-        for piece in pieceGroup.linkedList {
+        for piece in pieces {
             let chunk = piece.chunk!
             var chunkIndex = -1
             for checkChunkIndex in 0..<SkeletonLayoutGrowthPlanTool.chunkListCount {
@@ -327,7 +336,9 @@ struct SkeletonLayoutGrowthPlanTool {
                                                 elementAmountList: chunkAmountList)
         return result
     }
+    */
     
+    /*
     static func allGrowthPlansCanSimultaneouslyExecute(growthPlansForRows: [RowGrowthPlans],
                                                        menuWidthWithSafeArea: Int,
                                                        safeAreaLeft: Int,
@@ -358,5 +369,6 @@ struct SkeletonLayoutGrowthPlanTool {
         }
         return true
     }
+    */
     
 }

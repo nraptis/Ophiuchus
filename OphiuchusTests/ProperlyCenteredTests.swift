@@ -95,7 +95,6 @@ struct ProperlyCenteredTests {
                 #expect(Bool(false))
                 return
             }
-            
         }
     }
     
@@ -216,7 +215,6 @@ struct ProperlyCenteredTests {
                 #expect(Bool(false))
                 return
             }
-            
         }
     }
 }

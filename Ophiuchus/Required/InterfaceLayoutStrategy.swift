@@ -67,7 +67,10 @@ public class InterfaceLayoutStrategy {
     }
     
     public func getLayoutSchemeFlavor(toolInterfaceElementType: ToolInterfaceElementType) -> LayoutSchemeFlavor {
-        LayoutSchemeFlavor.stackedLarge
+        let category = LayoutStackingCategory.none
+        let format = getStackingFormat(stackingCategory: category)
+        return LayoutSchemeFlavor(stackingFormat: format,
+                                  fontScale: fontScale)
     }
     
     public func getStacked(stackingCategory: LayoutStackingCategory) -> Bool {

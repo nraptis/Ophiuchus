@@ -10,390 +10,389 @@ import Foundation
 public struct SkeletonLayoutBruteForceExpander {
     
     private static let maxExpandIterations = 4096
+
+    static func positionContent(pages: [SkeletonPage],
+                                menuWidthWithSafeArea: Int,
+                                safeAreaLeft: Int,
+                                safeAreaRight: Int) {
+        for _page in pages {
+            for _row in _page.rows {
+                for _section in _row.sections {
+                    _section.width = _section.currentSize
+                    for _node in _section.nodes {
+                        _node.width = _node.currentSize
+                    }
+                }
+                
+                _row.positionContentAfterSizeComputation(menuWidthWithSafeArea: menuWidthWithSafeArea,
+                                                         safeAreaLeft: safeAreaLeft,
+                                                         safeAreaRight: safeAreaRight)
+            }
+        }
+    }
     
-    private static func mark_did_grow_false(pages: [SkeletonPage]) {
-        for page in pages {
-            for row in page.rows {
-                for section in row.sections {
-                    for node in section.skeletonNodes {
-                        for chunk in node.chunks {
-                            for flexer in chunk.flexers {
-                                flexer.didGrowOnCurrentPass = false
+    
+    
+    static func expand_where_possible_calculate_matching_priorities(groupData: SkeletonLayoutGroupDataExploded,
+                                                                    layoutPriority: LayoutPriority) {
+        expand_where_possible_calculate_matching_priorities(pieceGroups: groupData.pieceGroups,
+                              flexerGroups: groupData.flexerGroups,
+                              nodeGroups: groupData.nodeGroups,
+                              layoutPriority: layoutPriority)
+    }
+    
+    static func expand_where_possible_calculate_matching_priorities(pieceGroups: [ExploderGroup<SkeletonPiece>],
+                                                   flexerGroups: [ExploderGroup<Flexer>],
+                                                   nodeGroups: [ExploderGroup<WiseLayoutNode>],
+                                                   layoutPriority: LayoutPriority) {
+        /*
+        for pieceGroup in pieceGroups {
+            pieceGroup.isActiveAtCurrentPriority = pieceGroup.matchesPriority(layoutPriority: layoutPriority)
+        }
+        for flexerGroup in flexerGroups {
+            flexerGroup.isActiveAtCurrentPriority = flexerGroup.matchesPriority(layoutPriority: layoutPriority)
+        }
+        for nodeGroup in nodeGroups {
+            nodeGroup.isActiveAtCurrentPriority = nodeGroup.matchesPriority(layoutPriority: layoutPriority)
+        }
+        */
+    }
+    
+    static func expand_where_possible(pages: [SkeletonPage],
+                                      groupData: SkeletonLayoutGroupDataExploded,
+                                      layoutPriority: LayoutPriority) {
+        expand_where_possible(pages: pages,
+                              pieceGroups: groupData.pieceGroups,
+                              flexerGroups: groupData.flexerGroups,
+                              nodeGroups: groupData.nodeGroups,
+                              layoutPriority: layoutPriority)
+    }
+    
+    static func expand_where_possible_prepare_pass(groupData: SkeletonLayoutGroupDataExploded,
+                                            layoutPriority: LayoutPriority) {
+        expand_where_possible_prepare_pass(pieceGroups: groupData.pieceGroups,
+                                                 flexerGroups: groupData.flexerGroups,
+                                                 nodeGroups: groupData.nodeGroups,
+                                                        layoutPriority: layoutPriority)
+    }
+    
+    static func expand_where_possible_prepare_pass(pieceGroups: [ExploderGroup<SkeletonPiece>],
+                                                   flexerGroups: [ExploderGroup<Flexer>],
+                                                   nodeGroups: [ExploderGroup<WiseLayoutNode>],
+                                                   layoutPriority: LayoutPriority) {
+        
+        /*
+        for pieceGroup in pieceGroups {
+            pieceGroup.isActiveAtCurrentPriority = pieceGroup.matchesPriority(layoutPriority: layoutPriority)
+            pieceGroup.isAllEqualAtCurrentPriority = false
+            pieceGroup.isLockedAtCurrentPriority = false
+        }
+        
+        for flexerGroup in flexerGroups {
+            flexerGroup.isActiveAtCurrentPriority = flexerGroup.matchesPriority(layoutPriority: layoutPriority)
+            flexerGroup.isAllEqualAtCurrentPriority = false
+            flexerGroup.isLockedAtCurrentPriority = false
+            for flexer in flexerGroup.linkedList {
+                flexer.targetSizeCurrentPriority = flexer.getTargetSize(layoutPriority: layoutPriority)
+            }
+        }
+        
+        for nodeGroup in nodeGroups {
+            nodeGroup.isAllEqualAtCurrentPriority = false
+            nodeGroup.isActiveAtCurrentPriority = nodeGroup.matchesPriority(layoutPriority: layoutPriority)
+            nodeGroup.isLockedAtCurrentPriority = false
+        }
+    }
+    
+    // This can expand any node by 1,
+    // This can expand any section by (number of nodes)
+    static func expand_where_possible_pulse_step_a(nodeGroups: [ExploderGroup<WiseLayoutNode>]) -> Bool {
+        
+        */
+        
+        /*
+        ListFactory_Growth.resetSectionList()
+        for nodeGroup in nodeGroups {
+            
+            for node in nodeGroup.linkedList {
+                node.proposedGrowthAmount = 0
+            }
+            
+            if (nodeGroup.isActiveAtCurrentPriority == false) { continue }
+            if (nodeGroup.isLockedAtEveryPriority == true) { continue }
+            if (nodeGroup.isAllEqualAtCurrentPriority == true) { continue }
+            if nodeGroup.computeSmallestIfNotAllEqual() {
+                
+                for node in nodeGroup.smallestList {
+                    let section = node.section!
+                    let proposedGrowthAmount = (nodeGroup.secondSmallestValue - node.currentSize)
+                    ListFactory_Growth.intake(section: section,
+                                                     node: node,
+                                                     growth: proposedGrowthAmount)
+                    node.proposedGrowthAmount = proposedGrowthAmount
+                    
+                }
+            } else {
+                nodeGroup.isAllEqualAtCurrentPriority = true
+            }
+        }
+        
+        if ListFactory_Growth.sectionListCount > 0 {
+            
+            print("We will grow some nodes just to match group sizes...")
+            
+            ListFactory_Growth.resetRowList()
+            for sectionIndex in 0..<ListFactory_Growth.sectionListCount {
+                
+                let section = ListFactory_Growth.sectionList[sectionIndex]
+                section.proposedGrowthAmount = section.requestedGrowthFromChildren
+                let row = section.row!
+                ListFactory_Growth.intake(row: row,
+                                                 section: section)
+            }
+            
+            var result = false
+            for rowIndex in 0..<ListFactory_Growth.rowListCount {
+                let row = ListFactory_Growth.rowList[rowIndex]
+                let sectionListCount = ListFactory_Growth.rowGroupedSectionsListCounts[rowIndex]
+                if row.canGrowAllSectionsByProposedGrowthAmount(sections: ListFactory_Growth.rowGroupedSectionsList[rowIndex],
+                                                                sectionCount: sectionListCount) {
+                    row.growAllSectionsByProposedGrowthAmount_Unsafe(sections: ListFactory_Growth.rowGroupedSectionsList[rowIndex],
+                                                                     sectionCount: sectionListCount)
+                    for sectionIndex in 0..<sectionListCount {
+                        let section = ListFactory_Growth.rowGroupedSectionsList[rowIndex][sectionIndex]
+                        section.growAllNodesByProposedGrowthAmount_Unsafe()
+                    }
+                    
+                    result = true
+                } else {
+                    for sectionIndex in 0..<sectionListCount {
+                        let section = ListFactory_Growth.rowGroupedSectionsList[rowIndex][sectionIndex]
+                        if row.canGrowOneSectionByOne(section: section) {
+                            row.growOneSectionByOne_Unsafe(section: section)
+                            section.growOneNodeByOne_Unsafe()
+                            result = true
+                        } else {
+                            // No more of this
+                            for node in section.nodes {
+                                node.group.isLockedAtEveryPriority = true
                             }
-                            chunk.didGrowOnCurrentPass = false
-                        }
-                        node.didGrowOnCurrentPass = false
-                    }
-                    section.didGrowOnCurrentPass = false
-                }
-            }
-        }
-    }
-    
-    static func place(pages: [SkeletonPage],
-                      menuWidthWithSafeArea: Int,
-                      safeAreaLeft: Int,
-                      safeAreaRight: Int) {
-        for page in pages {
-            for row in page.rows {
-                for section in row.sections {
-                    section.width = section.currentSize
-                    for node in section.skeletonNodes {
-                        node.width = node.currentSize
-                        for chunk in node.chunks {
-                            chunk.width = chunk.currentSize
                         }
                     }
                 }
             }
+            return result
+            
+        } else {
+            return false
         }
+        */
         
-        for page in pages {
-            for row in page.rows {
-                row.position_content_after_size_computation(menuWidthWithSafeArea: menuWidthWithSafeArea,
-                                                            safeAreaLeft: safeAreaLeft,
-                                                            safeAreaRight: safeAreaRight)
-            }
-        }
     }
     
-    static func expand_where_possible(pages: [SkeletonPage],
-                                      layoutPriority: LayoutPriority) {
-        let pieces = SkeletonLayoutGrouper.getPieceGroups(pages: pages, rules: [])
-        let flexers = SkeletonLayoutGrouper.getFlexerGroups(pages: pages, rules: [])
-        let chunks = SkeletonLayoutGrouper.getChunkGroups(pages: pages, rules: [])
-        let nodes = SkeletonLayoutGrouper.getNodeGroups(pages: pages, rules: [])
-        let sections = SkeletonLayoutGrouper.getSectionGroups(pages: pages, rules: [])
-        SkeletonLayoutBruteForceExpander.expand_where_possible(pages: pages,
-                                                               pieces: pieces,
-                                                               flexers: flexers,
-                                                               chunks: chunks,
-                                                               nodes: nodes,
-                                                               sections: sections,
-                                                               layoutPriority: layoutPriority)
-    }
-    
-    /*
-     static func expand_where_possible(pages: [SkeletonPage],
-     pieces: [ExploderGroup<SkeletonPiece>],
-     flexers: [ExploderGroup<Flexer>],
-     chunks: [ExploderGroup<SkeletonChunk>],
-     nodes: [ExploderGroup<SkeletonNode>],
-     sections: [ExploderGroup<SkeletonSection>],
-     layoutPriority: LayoutPriority) {
-     
-     var all_flexers = [Flexer]()
-     for page in pages {
-     for row in page.rows {
-     for section in row.sections {
-     for node in section.skeletonNodes {
-     for chunk in node.chunks {
-     for flexer in chunk.flexers {
-     all_flexers.append(flexer)
-     }
-     }
-     }
-     }
-     }
-     }
-     
-     expand_where_possible(pages: pages,
-     all_flexers: all_flexers,
-     pieces: pieces,
-     chunks: chunks,
-     nodes: nodes,
-     sections: sections,
-     layoutPriority: layoutPriority)
-     }
-     */
-    
-    static func expand_where_possible(pages: [SkeletonPage],
-                                      pieces: [ExploderGroup<SkeletonPiece>],
-                                      flexers: [ExploderGroup<Flexer>],
-                                      chunks: [ExploderGroup<SkeletonChunk>],
-                                      nodes: [ExploderGroup<SkeletonNode>],
-                                      sections: [ExploderGroup<SkeletonSection>],
-                                      layoutPriority: LayoutPriority) {
+    static func expand_where_possible_pulse_step_b(flexerGroups: [ExploderGroup<Flexer>],
+                                                   nodeGroups: [ExploderGroup<WiseLayoutNode>]) -> Bool {
         
-        for flexer_group in flexers {
-            for flexer in flexer_group.linkedList {
-                let desiredSize = flexer.getDesiredSize(layoutPriority: layoutPriority)
-                flexer.target_size = desiredSize
+        /*
+        ListFactory_Growth.resetNodeList()
+        
+        for flexerGroup in flexerGroups {
+            
+            for flexer in flexerGroup.linkedList {
+                flexer.proposedGrowthAmount = 0
+            }
+            
+            if (flexerGroup.isActiveAtCurrentPriority == false) { continue }
+            if (flexerGroup.isLockedAtEveryPriority == true) { continue }
+            if (flexerGroup.isAllEqualAtCurrentPriority == true) { continue }
+            
+            if flexerGroup.computeSmallestIfNotAllEqual() {
+                
+                for flexer in flexerGroup.smallestList {
+                    let node = flexer.node!
+                    let proposedGrowthAmount = (flexerGroup.secondSmallestValue - node.currentSize)
+                    ListFactory_Growth.intake(node: node,
+                                                     flexer: flexer,
+                                                     growth: proposedGrowthAmount)
+                    node.proposedGrowthAmount = proposedGrowthAmount
+                }
+            } else {
+                if flexerGroup.areAllAbleToGrowAtCurrentPriority() {
+                    
+                } else {
+                    flexerGroup.isLockedAtCurrentPriority = true
+                }
             }
         }
+        
+        if ListFactory_Growth.sectionListCount > 0 {
+            
+            print("We will grow some nodes just to match group sizes...")
+            
+            ListFactory_Growth.resetRowList()
+            for sectionIndex in 0..<ListFactory_Growth.sectionListCount {
+                
+                let section = ListFactory_Growth.sectionList[sectionIndex]
+                section.proposedGrowthAmount = section.requestedGrowthFromChildren
+                let row = section.row!
+                ListFactory_Growth.intake(row: row,
+                                                 section: section)
+            }
+            
+            var result = false
+            for rowIndex in 0..<ListFactory_Growth.rowListCount {
+                let row = ListFactory_Growth.rowList[rowIndex]
+                let sectionListCount = ListFactory_Growth.rowGroupedSectionsListCounts[rowIndex]
+                if row.canGrowAllSectionsByProposedGrowthAmount(sections: ListFactory_Growth.rowGroupedSectionsList[rowIndex],
+                                                                sectionCount: sectionListCount) {
+                    row.growAllSectionsByProposedGrowthAmount_Unsafe(sections: ListFactory_Growth.rowGroupedSectionsList[rowIndex],
+                                                                     sectionCount: sectionListCount)
+                    for sectionIndex in 0..<sectionListCount {
+                        let section = ListFactory_Growth.rowGroupedSectionsList[rowIndex][sectionIndex]
+                        section.growAllNodesByProposedGrowthAmount_Unsafe()
+                    }
+                    
+                    result = true
+                } else {
+                    for sectionIndex in 0..<sectionListCount {
+                        let section = ListFactory_Growth.rowGroupedSectionsList[rowIndex][sectionIndex]
+                        if row.canGrowOneSectionByOne(section: section) {
+                            row.growOneSectionByOne_Unsafe(section: section)
+                            section.growOneNodeByOne_Unsafe()
+                            result = true
+                        } else {
+                            // No more of this
+                            for node in section.nodes {
+                                node.group.isLockedAtEveryPriority = true
+                            }
+                        }
+                    }
+                }
+            }
+            return result
+            
+        } else {
+            return false
+        }
+        */
+        
+        return false
+    }
+
+    
+    static func expand_where_possible_pulse(groupData: SkeletonLayoutGroupDataExploded) -> Bool {
+        let result = expand_where_possible_pulse(pieceGroups: groupData.pieceGroups,
+                                                 flexerGroups: groupData.flexerGroups,
+                                                 nodeGroups: groupData.nodeGroups)
+        return result
+    }
+    
+    static func expand_where_possible_pulse(pieceGroups: [ExploderGroup<SkeletonPiece>],
+                                            flexerGroups: [ExploderGroup<Flexer>],
+                                            nodeGroups: [ExploderGroup<WiseLayoutNode>]) -> Bool {
+        
+        var result = true
+        
+        /*
+        if expand_where_possible_pulse_step_a(nodeGroups: nodeGroups) {
+            result = true
+        }
+        */
+        
+        return result
+    }
+    
+    
+    static func expand_where_possible(pages: [SkeletonPage],
+                                      pieceGroups: [ExploderGroup<SkeletonPiece>],
+                                      flexerGroups: [ExploderGroup<Flexer>],
+                                      nodeGroups: [ExploderGroup<WiseLayoutNode>],
+                                      layoutPriority: LayoutPriority) {
+        
+        for flexerGroup in flexerGroups {
+            for flexer in flexerGroup.linkedList {
+                flexer.targetSizeCurrentPriority = flexer.getTargetSize(layoutPriority: layoutPriority)
+            }
+        }
+
+        
+        /*
+         for flexerGroup in flexerGroups {
+         var largestSize = 0
+         for flexer in flexerGroup.linkedList {
+         flexer.targetSize = flexer.getTargetSize(layoutPriority: layoutPriority)
+         if flexer.currentSize > largestSize {
+         largestSize = flexer.currentSize
+         }
+         }
+         if flexerGroup.matchesPriority(layoutPriority: layoutPriority) {
+         for flexer in flexerGroup.linkedList {
+         if flexer.targetSize < largestSize {
+         flexer.targetSize = largestSize
+         }
+         }
+         }
+         }
+         */
         
         var reloop = true
         while reloop == true {
+            
+            
             reloop = false
-            
-            mark_did_grow_false(pages: pages)
-            
-            // Priority grow, smaller than desired size.
-            
-            for flexer_group in flexers {
-                
-                if flexer_group.linkedList.isEmpty {
-                    fatalError("we should not have an empty flexer group.")
-                }
-                
-                if flexer_group.linkedList.count == 1 {
-                    // This is by far the most common and simple case.
-                    let flexer = flexer_group.linkedList[0]
-                    if flexer.canGrowByOne() {
-                        flexer.growByOne_Unsafe_Bubble()
-                    }
-                } else {
-                    
-                    // If we are greater than group priority,
-                    // let's naively expand each flexer.
-                    if layoutPriority.gte(layoutPriority: flexer_group.layoutPriority) {
-                        // This is higher priority than the
-                        // "all equal size" rule. So, we will
-                        // prioritize this action step plan.
-                        for flexer in flexer_group.linkedList {
-                            if flexer.canGrowByOne() {
-                                flexer.growByOne_Unsafe_Bubble()
-                            }
-                        }
-                    } else {
-                        // Now we have a situation where
-                        // With the given priority, we want
-                        // all the flexers to be an equal size...
-                        //
-                        // So... Let's grow the smallest ones if possible.
-                        flexer_group.compute_smallest()
-                        if flexer_group.smallestList.count > 0 {
-                            
-                        } else {
-                            // Here, they are ALL EQUAL size.
-                            guard flexer_group.is_all_same_currentSize() else {
-                                fatalError("The basic laws of logic broke down. They surely must all be the same size.")
-                            }
-                            
-                            // NOW!
-                            // We break it down by row. The rows each needs to be
-                            // able to simultaneously grow all the elements....
-                            //
-                            // This is extremely hard to imagine
-                            
-                            
-                        }
-                        
-                    }
-                }
-                
-                
-                // If
-                //   1.) All the flexers did not grow yet.
-                //   2.) All the flexers
-                
-                for flexer in flexer_group.linkedList {
-                    if flexer.currentSize < flexer.target_size {
-                        
-                        if !flexer.didGrowOnCurrentPass {
-                            
-                            if flexer_group.is_largest(flexer) {
-                                // We are the largest element,
-                                // We will not grow until the rest of
-                                // the group catches up...
-                                
-                            } else {
-                                // We are *not* the largest element, we can grow
-                                // by ourselves, no issues yet.
-                                if flexer.canGrowByOne() {
-                                    flexer.growByOne_Unsafe_Bubble()
-                                    reloop = true
-                                }
-                            }
-                            
-                        }
-                        
-                        /*
-                        // Can the flexer's whole group grow?
-                        var allFlexersAreValid = true
-                        for _flexer in flexer.group_unsafe.linkedList {
-                            if _flexer.didGrowOnCurrentPass {
-                                allFlexersAreValid = false
-                                break
-                            }
-                            if !_flexer.canGrowByOne() {
-                                allFlexersAreValid = false
-                                break
-                            }
-                        }
-                        
-                        if flexer.canGrowByOne() {
-                            flexer.growByOne_Unsafe_Bubble()
-                            reloop = true
-                        }
-                        */
-                    }
-                }
-            }
+
             
             
-            for flexer_group in flexers {
-                if flexer_group.layoutPriority.gte(layoutPriority: layoutPriority) {
-                    flexer_group.compute_smallest()
-                    if flexer_group.smallestList.count == 0 {
-                        // In this case, we are all the same size.
-                        if !flexer_group.is_all_same_currentSize() {
-                            fatalError("A world without logic?!")
-                            
-                        }
-                        
-                        // Can they all grow?
-                        var growAllFlexers = true
-                        for _flexer in flexer_group.linkedList {
-                            if _flexer.currentSize >= _flexer.target_size {
-                                growAllFlexers = false
-                                break
-                            }
-                            if _flexer.didGrowOnCurrentPass {
-                                growAllFlexers = false
-                                break
-                            }
-                            if !_flexer.canGrowByOne() {
-                                growAllFlexers = false
-                                break
-                            }
-                        }
-                        // This is tricky...
-                        // We can only grow them all
-                        // if, for example, growing this
-                        // one grows the section by x...
-                        // you see my point...
-                        if growAllFlexers {
-                            
-                            let flexer = flexer_group.linkedList.randomElement()!
-                            if flexer.canGrowByOne() {
-                                flexer.growByOne_Unsafe_Bubble()
-                                reloop = true
-                            }
-                            
-                        }
-                        
-                        
-                    } else {
-                        for flexer in flexer_group.smallestList {
-                            if !flexer.didGrowOnCurrentPass {
-                                if flexer.canGrowByOne() {
-                                    flexer.growByOne_Unsafe_Bubble()
-                                    reloop = true
-                                }
-                            }
-                        }
-                    }
-                }
-            }
             
-            for piece_group in pieces {
-                if piece_group.layoutPriority.gte(layoutPriority: layoutPriority) {
-                    piece_group.compute_smallest()
-                    for piece in piece_group.smallestList {
-                        if piece.canGrowByOne() {
-                            piece.growByOne_Unsafe_Bubble()
-                            reloop = true
-                        }
-                    }
-                }
-            }
-            /*
-            for flexer_group in flexers {
-                if flexer_group.layoutPriority.gte(layoutPriority: layoutPriority) {
-                    flexer_group.compute_smallest()
-                    for flexer in flexer_group.smallestList {
-                        if flexer.row.canGrowByOne(section: flexer.section) {
-                            flexer.growByOne_Unsafe_Bubble()
-                            reloop = true
-                        }
-                    }
-                }
-            }
-            */
-            
-            for chunk_group in chunks {
-                if chunk_group.layoutPriority.gte(layoutPriority: layoutPriority) {
-                    chunk_group.compute_smallest()
-                    for chunk in chunk_group.smallestList {
-                        if !chunk.didGrowOnCurrentPass {
-                            if chunk.row.canGrowByOne(section: chunk.section) {
-                                chunk.growByOne_Unsafe_Bubble()
-                                reloop = true
-                            }
-                        }
-                    }
-                }
-            }
-            
-            for node_group in nodes {
-                if node_group.layoutPriority.gte(layoutPriority: layoutPriority) {
-                    node_group.compute_smallest()
-                    for node in node_group.smallestList {
-                        if !node.didGrowOnCurrentPass {
-                            if node.row.canGrowByOne(section: node.section) {
-                                node.growChildrenByOne_Unsafe_Bubble()
-                                reloop = true
-                            }
-                        }
-                    }
-                }
-            }
-            
-            for section_group in sections {
-                if section_group.layoutPriority.gte(layoutPriority: layoutPriority) {
-                    section_group.compute_smallest()
-                    for section in section_group.smallestList {
-                        if !section.didGrowOnCurrentPass {
-                            if section.row.canGrowByOne(section: section) {
-                                section.growByOne_Unsafe_Bubble()
-                                reloop = true
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
     
     static func check(pages: [SkeletonPage],
-                      pieces: [ExploderGroup<SkeletonPiece>],
-                      flexers: [ExploderGroup<Flexer>],
-                      chunks: [ExploderGroup<SkeletonChunk>],
-                      nodes: [ExploderGroup<SkeletonNode>],
-                      sections: [ExploderGroup<SkeletonSection>],
+                      groupData: SkeletonLayoutGroupDataExploded,
                       layoutPriority: LayoutPriority,
-                      strict_centering: Bool,
+                      isStrictCenteringRequired: Bool,
+                      menuWidthWithSafeArea: Int,
+                      safeAreaLeft: Int,
+                      safeAreaRight: Int) -> Bool {
+        let result = check(pages: pages,
+                           pieceGroups: groupData.pieceGroups,
+                           flexerGroups: groupData.flexerGroups,
+                           nodeGroups: groupData.nodeGroups,
+                           layoutPriority: layoutPriority,
+                           isStrictCenteringRequired: isStrictCenteringRequired,
+                           menuWidthWithSafeArea: menuWidthWithSafeArea,
+                           safeAreaLeft: safeAreaLeft,
+                           safeAreaRight: safeAreaRight)
+        return result
+    }
+    
+    static func check(pages: [SkeletonPage],
+                      pieceGroups: [ExploderGroup<SkeletonPiece>],
+                      flexerGroups: [ExploderGroup<Flexer>],
+                      nodeGroups: [ExploderGroup<WiseLayoutNode>],
+                      layoutPriority: LayoutPriority,
+                      isStrictCenteringRequired: Bool,
                       menuWidthWithSafeArea: Int,
                       safeAreaLeft: Int,
                       safeAreaRight: Int) -> Bool {
         
         expand_where_possible(pages: pages,
-                              pieces: pieces,
-                              flexers: flexers,
-                              chunks: chunks,
-                              nodes: nodes,
-                              sections: sections,
+                              pieceGroups: pieceGroups,
+                              flexerGroups: flexerGroups,
+                              nodeGroups: nodeGroups,
                               layoutPriority: layoutPriority)
         
-        place(pages: pages,
-              menuWidthWithSafeArea: menuWidthWithSafeArea,
-              safeAreaLeft: safeAreaLeft,
-              safeAreaRight: safeAreaRight)
+        positionContent(pages: pages,
+                        menuWidthWithSafeArea: menuWidthWithSafeArea,
+                        safeAreaLeft: safeAreaLeft,
+                        safeAreaRight: safeAreaRight)
         
-        for flexer_group in flexers {
-            for flexer in flexer_group.linkedList {
-                let desiredSize = flexer.getDesiredSize(layoutPriority: layoutPriority)
-                flexer.target_size = desiredSize
-            }
-        }
-        
-        for page in pages {
-            for row in page.rows {
-                if !row.validate(strict_centering: strict_centering,
-                                 menuWidthWithSafeArea: menuWidthWithSafeArea,
-                                 safeAreaLeft: safeAreaLeft,
-                                 safeAreaRight: safeAreaRight) {
+        for _page in pages {
+            for _row in _page.rows {
+                if !_row.validate(isStrictCenteringRequired: isStrictCenteringRequired,
+                                  menuWidthWithSafeArea: menuWidthWithSafeArea,
+                                  safeAreaLeft: safeAreaLeft,
+                                  safeAreaRight: safeAreaRight) {
                     return false
                 }
             }

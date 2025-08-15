@@ -7,18 +7,30 @@
 
 import Foundation
 
-@frozen public enum LayoutStackingFormat: UInt8 {
+@frozen public enum LayoutStackingFormat: UInt8, CaseIterable {
     case invalid
-    case long
     case stacked
-    var isStacked: Bool {
+    case long
+    
+    public static let allCases: [LayoutStackingFormat] = [.invalid, .stacked, .long]
+    public static let allLongFormats: [LayoutStackingFormat] = [.long, .invalid]
+    public static let allStackedFormats: [LayoutStackingFormat] = [.long, .invalid]
+    
+    public var isStacked: Bool {
         switch self {
-        case .invalid:
-            return false
         case .long:
             return false
-        case .stacked:
+        default:
             return true
+        }
+    }
+    
+    public var isLong: Bool {
+        switch self {
+        case .long:
+            return true
+        default:
+            return false
         }
     }
 }

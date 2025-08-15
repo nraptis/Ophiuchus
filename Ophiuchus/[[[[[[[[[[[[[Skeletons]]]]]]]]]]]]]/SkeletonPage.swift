@@ -22,6 +22,7 @@ public class SkeletonPage {
                  safeAreaLeft: Int,
                  safeAreaRight: Int) {
         
+        /*
         for row in rows {
             for section in row.sections {
                 section.row = row
@@ -58,20 +59,11 @@ public class SkeletonPage {
                 }
             }
         }
+        */
         
         for row in rows {
             row.prepare()
         }
     }
-    
-    public func log_me(name: String) {
-        print("<<<<< Started Logging Page: \(name) >>>>>>")
-        print("Row Count: \(rows.count)")
-        for rowIndex in rows.indices {
-            rows[rowIndex].log_me(name: name, row_index: rowIndex)
-        }
-        print("<<<<< Finished Logging Page: \(name) >>>>>>")
-    }
-    
     
 }

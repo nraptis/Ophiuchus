@@ -9,6 +9,9 @@ import Foundation
 
 public enum FlexerIdentifier: UInt8 {
     case unknown
+    
+    case spacer
+    
     case heroPaddingLeft
     case heroPaddingRight
     case heroSpacingLong
@@ -26,6 +29,49 @@ public enum FlexerIdentifier: UInt8 {
 
 public class Flexer: ExploderConforming {
     
+    var name = ""
+    
+    static func generate(id: Int,
+        desiredSizeRequired: Int,
+        desiredSizeHigh: Int?,
+        desiredSizeMedium: Int?,
+        desiredSizeLow: Int?,
+        desiredSizeFinally: Int?) -> Flexer {
+        let result = Flexer(id: id,
+                            flexerIdentifier: .unknown,
+                            desiredSizeRequired,
+                            desiredSizeHigh,
+                            desiredSizeMedium,
+                            desiredSizeLow,
+                            desiredSizeFinally)
+        return result
+    }
+    
+    static func generate(
+        desiredSizeRequired: Int,
+        desiredSizeHigh: Int?,
+        desiredSizeMedium: Int?,
+        desiredSizeLow: Int?,
+        desiredSizeFinally: Int?) -> Flexer {
+            let id = SkeletonIdentifierFactory.get_id()
+        let result = generate(id: id,
+                              desiredSizeRequired: desiredSizeRequired,
+                              desiredSizeHigh: desiredSizeHigh,
+                              desiredSizeMedium: desiredSizeMedium,
+                              desiredSizeLow: desiredSizeLow,
+                              desiredSizeFinally: desiredSizeFinally)
+        return result
+    }
+    
+    static func fetch(flexerIdentifier: FlexerIdentifier, flexers: [Flexer]) -> Flexer? {
+        for flexer in flexers {
+            if flexer.flexerIdentifier == flexerIdentifier {
+                return flexer
+            }
+        }
+        return nil
+    }
+    
     static func contains(list: [Flexer], flexer: Flexer) -> Bool {
         for _flexer in list {
             if _flexer === flexer {
@@ -35,22 +81,23 @@ public class Flexer: ExploderConforming {
         return false
     }
     
-    
     public var currentSize = 0
-    var target_size = 0
+    public var targetSizeCurrentPriority = 0
     
-    let desired_size_required: Int // For example, getting to "squeezed" padding.
-    let desired_size_high: Int // For example, getting to "standard" padding.
-    let desired_size_medium: Int // For example, getting segment buttons all to the same size.
-    let desired_size_low: Int // For example, getting to "relaxed" padding.
-    let desired_size_finally: Int // For example, the remaining space, which a spacer will fill.
+    //TODO: Back to unowned...
+    public var node: WiseLayoutNode!
+    public var section: SkeletonSection!
+    public var row: SkeletonRow!
+    public var group: ExploderGroup<Flexer>!
     
-    unowned var chunk: SkeletonChunk!
-    unowned var node: SkeletonNode!
-    unowned var section: SkeletonSection!
-    unowned var row: SkeletonRow!
-    unowned var group: ExploderGroup<Flexer>!
-    var didGrowOnCurrentPass = false
+    var proposedGrowthAmount = 0
+    
+    
+    let desiredSizeRequired: Int // For example, getting to "squeezed" padding.
+    let desiredSizeHigh: Int // For example, getting to "standard" padding.
+    let desiredSizeMedium: Int // For example, getting segment buttons all to the same size.
+    let desiredSizeLow: Int // For example, getting to "relaxed" padding.
+    let desiredSizeFinally: Int // For example, the remaining space, which a spacer will fill.
     
     public let id: Int
     let flexerIdentifier: FlexerIdentifier
@@ -81,47 +128,48 @@ public class Flexer: ExploderConforming {
     
     public init(id: Int,
                 flexerIdentifier: FlexerIdentifier,
-                _ desired_size_required: Int,
-                _ desired_size_high: Int? = nil,
-                _ desired_size_medium: Int? = nil,
-                _ desired_size_low: Int? = nil,
-                _ desired_size_finally: Int? = nil) {
+                _ desiredSizeRequired: Int,
+                _ desiredSizeHigh: Int? = nil,
+                _ desiredSizeMedium: Int? = nil,
+                _ desiredSizeLow: Int? = nil,
+                _ desiredSizeFinally: Int? = nil) {
         
-        let _desired_size_high: Int
-        if let desired_size_high = desired_size_high {
-            _desired_size_high = desired_size_high
+        let _desiredSizeHigh: Int
+        if let desiredSizeHigh = desiredSizeHigh {
+            _desiredSizeHigh = desiredSizeHigh
         } else {
-            _desired_size_high = desired_size_required
+            _desiredSizeHigh = desiredSizeRequired
         }
         
-        let _desired_size_medium: Int
-        if let desired_size_medium = desired_size_medium {
-            _desired_size_medium = desired_size_medium
+        let _desiredSizeMedium: Int
+        if let desiredSizeMedium = desiredSizeMedium {
+            _desiredSizeMedium = desiredSizeMedium
         } else {
-            _desired_size_medium = _desired_size_high
+            _desiredSizeMedium = _desiredSizeHigh
         }
         
-        let _desired_size_low: Int
-        if let desired_size_low = desired_size_low {
-            _desired_size_low = desired_size_low
+        let _desiredSizeLow: Int
+        if let desiredSizeLow = desiredSizeLow {
+            _desiredSizeLow = desiredSizeLow
         } else {
-            _desired_size_low = _desired_size_medium
+            _desiredSizeLow = _desiredSizeMedium
         }
         
-        let _desired_size_finally: Int
-        if let desired_size_finally = desired_size_finally {
-            _desired_size_finally = desired_size_finally
+        let _desiredSizeFinally: Int
+        if let desiredSizeFinally = desiredSizeFinally {
+            _desiredSizeFinally = desiredSizeFinally
         } else {
-            _desired_size_finally = _desired_size_low
+            _desiredSizeFinally = _desiredSizeLow
         }
         
         self.id = id
         self.flexerIdentifier = flexerIdentifier
-        self.desired_size_required = desired_size_required
-        self.desired_size_high = _desired_size_high
-        self.desired_size_medium = _desired_size_medium
-        self.desired_size_low = _desired_size_low
-        self.desired_size_finally = _desired_size_finally
+        self.desiredSizeRequired = desiredSizeRequired
+        self.desiredSizeHigh = _desiredSizeHigh
+        self.desiredSizeMedium = _desiredSizeMedium
+        self.desiredSizeLow = _desiredSizeLow
+        self.desiredSizeFinally = _desiredSizeFinally
+        
     }
     
     // @Param available_space: this is exactly how much space the outside world has to allocate.
@@ -133,7 +181,7 @@ public class Flexer: ExploderConforming {
             fatalError("available_space cannot be < 0")
         }
         if available_space > 0 {
-            let desired_size = getDesiredSize(layoutPriority: layoutPriority)
+            let desired_size = getTargetSize(layoutPriority: layoutPriority)
             let amount_to_ingest = desired_size - currentSize
             if amount_to_ingest > 0 {
                 if amount_to_ingest < available_space {
@@ -157,61 +205,39 @@ public class Flexer: ExploderConforming {
     }
     
     func validate_desired_sizes() -> Bool {
-        guard desired_size_high >= desired_size_required else {
-            print("valid - this is not valid, case desired_size_high")
+        guard desiredSizeHigh >= desiredSizeRequired else {
+            print("valid - this is not valid, case desiredSizeHigh")
             return false
         }
-        guard desired_size_medium >= desired_size_high else {
-            print("valid - this is not valid, case desired_size_medium")
+        guard desiredSizeMedium >= desiredSizeHigh else {
+            print("valid - this is not valid, case desiredSizeMedium")
             return false
         }
-        guard desired_size_low >= desired_size_medium else {
-            print("valid - this is not valid, case desired_size_low")
+        guard desiredSizeLow >= desiredSizeMedium else {
+            print("valid - this is not valid, case desiredSizeLow")
             return false
         }
-        guard desired_size_finally >= desired_size_low else {
-            print("valid - this is not valid, case desired_size_finally")
+        guard desiredSizeFinally >= desiredSizeLow else {
+            print("valid - this is not valid, case desiredSizeFinally")
             return false
         }
         
         return true
     }
     
-    func getDesiredSize(layoutPriority: LayoutPriority) -> Int {
+    func getTargetSize(layoutPriority: LayoutPriority) -> Int {
         switch layoutPriority {
         case .required:
-            return desired_size_required
+            return desiredSizeRequired
         case .high:
-            return desired_size_high
+            return desiredSizeHigh
         case .medium:
-            return desired_size_medium
+            return desiredSizeMedium
         case .low:
-            return desired_size_low
+            return desiredSizeLow
         case .finally:
-            return desired_size_finally
+            return desiredSizeFinally
         }
-    }
-    
-    func canGrowByOne() -> Bool {
-        if chunk.childrenSize < chunk.currentSize {
-            return true
-        }
-        if node.childrenSize < node.currentSize {
-            return true
-        }
-        if section.childrenSize < section.currentSize {
-            return true
-        }
-        if row.canGrowByOne(section: section) {
-            return true
-        }
-        return false
-    }
-    
-    func growByOne_Unsafe_Bubble() {
-        currentSize += 1
-        //node.growChildrenByOne_Unsafe_Bubble()
-        chunk.growChildrenByOne_Unsafe_Bubble()
     }
     
 }

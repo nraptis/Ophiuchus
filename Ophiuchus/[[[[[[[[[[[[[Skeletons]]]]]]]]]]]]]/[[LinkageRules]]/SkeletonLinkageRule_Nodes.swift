@@ -8,9 +8,9 @@
 import Foundation
 
 public struct SkeletonLinkageRule_Nodes {
-    let nodes: [SkeletonNode]
+    let nodes: [WiseLayoutNode]
     let layoutPriority: LayoutPriority
-    init(nodes: [SkeletonNode], layoutPriority: LayoutPriority) {
+    init(nodes: [WiseLayoutNode], layoutPriority: LayoutPriority) {
         self.nodes = nodes
         self.layoutPriority = layoutPriority
     }

@@ -20,25 +20,53 @@ import Foundation
 
 public class SkeletonPiece: ExploderConforming {
     
-    static func contains(list: [SkeletonPiece], piece: SkeletonPiece) -> Bool {
-        for _piece in list {
-            if _piece === piece {
-                return true
+    static func fetch(pieceIdentifier: PieceIdentifier, pieces: [SkeletonPiece]) -> SkeletonPiece? {
+        for piece in pieces {
+            if piece.pieceIdentifier == pieceIdentifier {
+                return piece
             }
         }
-        return false
+        return nil
+    }
+    
+    static func generate(id: Int, size: Int) -> SkeletonPiece {
+        let result = SkeletonPiece(id: id,
+                                   pieceIdentifier: .unknown,
+                                   size: size)
+        return result
+    }
+    
+    
+    static func generate(size: Int) -> SkeletonPiece {
+        let id = SkeletonIdentifierFactory.get_id()
+        let result = generate(id: id,
+                                    size: size)
+        return result
+    }
+    
+    static func generate(id: Int) -> SkeletonPiece {
+        let size = Int.random(in: 10...80)
+        let result = generate(id: id, size: size)
+        return result
     }
     
     public var currentSize = 0
+    
+    var didGrowOnCurrentPass = false
+    
     let originalSize: Int
     public let id: Int
     public let pieceIdentifier: PieceIdentifier
     
-    unowned var chunk: SkeletonChunk!
-    unowned var node: SkeletonNode!
-    unowned var section: SkeletonSection!
-    unowned var row: SkeletonRow!
-    unowned var group: ExploderGroup<SkeletonPiece>!
+    //TODO: Back to unowned..
+    var node: WiseLayoutNode!
+    //TODO: Back to unowned..
+    var section: SkeletonSection!
+    //TODO: Back to unowned..
+    
+    var row: SkeletonRow!
+    
+    public unowned var group: ExploderGroup<SkeletonPiece>!
     
     init(id: Int,
          pieceIdentifier: PieceIdentifier,
@@ -49,37 +77,14 @@ public class SkeletonPiece: ExploderConforming {
         self.originalSize = size
     }
     
-    func canGrowByOne() -> Bool {
-        if chunk.childrenSize < chunk.currentSize {
-            return true
-        }
-        if node.childrenSize < node.currentSize {
-            return true
-        }
-        if section.childrenSize < section.currentSize {
-            return true
-        }
-        if row.canGrowByOne(section: section) {
-            return true
+    static func contains(list: [SkeletonPiece], piece: SkeletonPiece) -> Bool {
+        for _piece in list {
+            if _piece === piece {
+                return true
+            }
         }
         return false
     }
     
-    /*
-     func canGrowByOne() -> Bool {
-        if row.remaining_size > 0 {
-            return true
-        } else {
-            return false
-        }
-    }
-    */
-    
-    func growByOne_Unsafe_Bubble() {
-        currentSize += 1
-        //node.growChildrenByOne_Unsafe_Bubble()
-        chunk.growChildrenByOne_Unsafe_Bubble()
-        
-    }
     
 }

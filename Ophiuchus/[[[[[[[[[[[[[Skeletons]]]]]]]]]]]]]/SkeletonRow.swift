@@ -16,6 +16,96 @@ enum SkeletonRowInitialLayoutType {
 
 public class SkeletonRow: CustomStringConvertible {
     
+    
+    static func generate(id: Int, sections: [SkeletonSection], centeredSection: SkeletonSection?) -> SkeletonRow {
+        let result = SkeletonRow(id: id,
+                                 sections: sections,
+                                 centeredSection: centeredSection)
+        return result
+    }
+    
+    static func generate(sections: [SkeletonSection], centeredSection: SkeletonSection?) -> SkeletonRow {
+        let id = SkeletonIdentifierFactory.get_id()
+        let result = generate(id: id,
+                              sections: sections,
+                              centeredSection: centeredSection)
+        return result
+    }
+    
+    static func generate(sections: [SkeletonSection]) -> SkeletonRow {
+        let id = SkeletonIdentifierFactory.get_id()
+        let result = generate(id: id,
+                              sections: sections,
+                              centeredSection: nil)
+        return result
+    }
+    
+    var temp_size_required = 0
+    var temp_size_high = 0
+    var temp_size_medium = 0
+    var temp_size_low = 0
+    var temp_size_finally = 0
+    
+    var childrenSize = 0
+    var growthBudget = 0
+    
+    var max_size = 0
+    var max_size_2 = 0
+    var leftSizeWithCenteredSection = 0
+    var rightSizeWithCenteredSection = 0
+    var centerSizeWithCenteredSection = 0
+    
+    let sections: [SkeletonSection]
+    let centeredSection: SkeletonSection?
+    var centeredSectionIndex = 0
+    
+    public let id: Int
+    
+    public init(id: Int) {
+        self.id = id
+        self.sections = []
+        self.centeredSection = nil
+    }
+    
+    public init(id: Int,
+                sections: [SkeletonSection],
+                centeredSection: SkeletonSection?) {
+        self.id = id
+        self.sections = sections
+        self.centeredSection = centeredSection
+        for _section in sections {
+            _section.row = self
+            for _node in _section.nodes {
+                _node.row = self
+                for _piece in _node.pieces {
+                    _piece.row = self
+                }
+                for _flexer in _node.flexers {
+                    _flexer.row = self
+                }
+            }
+        }
+    }
+    
+    public init(id: Int,
+                sections: [SkeletonSection]) {
+        self.id = id
+        self.sections = sections
+        self.centeredSection = nil
+        for _section in sections {
+            _section.row = self
+            for _node in _section.nodes {
+                _node.row = self
+                for _piece in _node.pieces {
+                    _piece.row = self
+                }
+                for _flexer in _node.flexers {
+                    _flexer.row = self
+                }
+            }
+        }
+    }
+    
     static func contains(list: [SkeletonRow], row: SkeletonRow) -> Bool {
         for _row in list {
             if _row === row {
@@ -34,9 +124,9 @@ public class SkeletonRow: CustomStringConvertible {
         return false
     }
     
-    func contains(node: SkeletonNode) -> Bool {
+    func contains(node: WiseLayoutNode) -> Bool {
         for _section in sections {
-            for _node in _section.skeletonNodes {
+            for _node in _section.nodes {
                 if _node === node {
                     return true
                 }
@@ -45,29 +135,16 @@ public class SkeletonRow: CustomStringConvertible {
         return false
     }
     
-    func contains(chunk: SkeletonChunk) -> Bool {
-        for _section in sections {
-            for _node in _section.skeletonNodes {
-                for _chunk in _node.chunks {
-                    if _chunk === chunk {
-                        return true
-                    }
-                }
-            }
-        }
-        return false
-    }
-    
     func contains(piece: SkeletonPiece) -> Bool {
         for _section in sections {
-            for _node in _section.skeletonNodes {
-                for _chunk in _node.chunks {
-                    for _piece in _chunk.pieces {
+            for _node in _section.nodes {
+                
+                    for _piece in _node.pieces {
                         if _piece === piece {
                             return true
                         }
                     }
-                }
+                
             }
         }
         return false
@@ -75,14 +152,14 @@ public class SkeletonRow: CustomStringConvertible {
     
     func contains(flexer: Flexer) -> Bool {
         for _section in sections {
-            for _node in _section.skeletonNodes {
-                for _chunk in _node.chunks {
-                    for _flexer in _chunk.flexers {
+            for _node in _section.nodes {
+                
+                    for _flexer in _node.flexers {
                         if _flexer === flexer {
                             return true
                         }
                     }
-                }
+                
             }
         }
         return false
@@ -91,8 +168,8 @@ public class SkeletonRow: CustomStringConvertible {
     
     func countSectionsWithNodes() -> Int {
         var result = 0
-        for section in sections {
-            if section.skeletonNodes.count > 0 {
+        for _section in sections {
+            if _section.nodes.count > 0 {
                 result += 1
             }
         }
@@ -101,8 +178,8 @@ public class SkeletonRow: CustomStringConvertible {
     
     func countSectionsWithoutNodes() -> Int {
         var result = 0
-        for section in sections {
-            if section.skeletonNodes.count == 0 {
+        for _section in sections {
+            if _section.nodes.count == 0 {
                 result += 1
             }
         }
@@ -111,18 +188,8 @@ public class SkeletonRow: CustomStringConvertible {
     
     func countNodes() -> Int {
         var result = 0
-        for section in sections {
-            result += section.skeletonNodes.count
-        }
-        return result
-    }
-    
-    func countChunks() -> Int {
-        var result = 0
-        for section in sections {
-            for node in section.skeletonNodes {
-                result += node.chunks.count
-            }
+        for _section in sections {
+            result += _section.nodes.count
         }
         return result
     }
@@ -130,10 +197,10 @@ public class SkeletonRow: CustomStringConvertible {
     func countPieces() -> Int {
         var result = 0
         for section in sections {
-            for node in section.skeletonNodes {
-                for chunk in node.chunks {
-                    result += chunk.pieces.count
-                }
+            for _node in section.nodes {
+                
+                    result += _node.pieces.count
+                
             }
         }
         return result
@@ -142,10 +209,8 @@ public class SkeletonRow: CustomStringConvertible {
     func countFlexers() -> Int {
         var result = 0
         for section in sections {
-            for node in section.skeletonNodes {
-                for chunk in node.chunks {
-                    result += chunk.flexers.count
-                }
+            for _node in section.nodes {
+                result += _node.flexers.count
             }
         }
         return result
@@ -153,11 +218,11 @@ public class SkeletonRow: CustomStringConvertible {
     
     public var description: String {
         
-        let isCenter = (attemptedCenteredSection !== nil)
+        let isCenter = (centeredSection !== nil)
         let id = ObjectIdentifier(self)
-        var result = "SkeletonRow[\(id)] cs: \(childrenSize), rs: \(remaining_size), sec: \(sections.count), ctr: \(isCenter)"
+        var result = "SkeletonRow[\(id)] cs: \(childrenSize), rs: \(growthBudget), sec: \(sections.count), ctr: \(isCenter)"
         if isCenter {
-            result += " cl: \(left_size), cc: \(center_size) cr: \(right_size)"
+            result += " cl: \(leftSizeWithCenteredSection), cc: \(centerSizeWithCenteredSection) cr: \(rightSizeWithCenteredSection)"
         } else {
             result += " tsr: \(temp_size_required)"
         }
@@ -191,50 +256,6 @@ public class SkeletonRow: CustomStringConvertible {
         return true
     }
     
-    var temp_size_required = 0
-    var temp_size_high = 0
-    var temp_size_medium = 0
-    var temp_size_low = 0
-    var temp_size_finally = 0
-    
-    var childrenSize = 0
-    var remaining_size = 0
-    
-    var max_size = 0
-    var max_size_2 = 0
-    var left_size = 0
-    var right_size = 0
-    var center_size = 0
-    
-    let sections: [SkeletonSection]
-    let attemptedCenteredSection: SkeletonSection?
-    var attemptedCenteredSectionIndex = 0
-    var initialLayoutType = SkeletonRowInitialLayoutType.invalid
-    
-    public let id: Int
-    
-    public init(id: Int) {
-        self.id = id
-        self.sections = []
-        self.attemptedCenteredSection = nil
-    }
-    
-    public init(id: Int,
-                sections: [SkeletonSection],
-         attemptedCenteredSection: SkeletonSection?) {
-        self.id = id
-        self.sections = sections
-        self.attemptedCenteredSection = attemptedCenteredSection
-    }
-    
-    public init(id: Int,
-                sections: [SkeletonSection]) {
-        self.id = id
-        self.sections = sections
-        self.attemptedCenteredSection = nil
-    }
-    
-    
     func getSectionIndex(section: SkeletonSection) -> Int? {
         for sectionIndex in 0..<sections.count {
             if sections[sectionIndex] === section {
@@ -244,7 +265,7 @@ public class SkeletonRow: CustomStringConvertible {
         return nil
     }
     
-    func validate(strict_centering: Bool,
+    func validate(isStrictCenteringRequired: Bool,
                   menuWidthWithSafeArea: Int,
                   safeAreaLeft: Int,
                   safeAreaRight: Int) -> Bool {
@@ -259,32 +280,32 @@ public class SkeletonRow: CustomStringConvertible {
             if end_x > max_x { return false }
         }
         
-        if let attemptedCenteredSection = attemptedCenteredSection {
-            if strict_centering {
+        if let centeredSection = centeredSection {
+            if isStrictCenteringRequired {
                 
-                let _center_size = attemptedCenteredSection.width
+                let _center_size = centeredSection.width
                 let _center_size_2 = (_center_size / 2)
                 
                 let _max_size = menuWidthWithSafeArea - safeAreaLeft - safeAreaRight
                 let _max_size_2 = (_max_size / 2)
                 
                 let valid_x = safeAreaLeft + _max_size_2 - _center_size_2
-                if attemptedCenteredSection.x != valid_x { return false }
+                if centeredSection.x != valid_x { return false }
             }
         }
         return true
     }
     
     func prepare() {
-        attemptedCenteredSectionIndex = -1
-        if let attemptedCenteredSection = attemptedCenteredSection {
+        centeredSectionIndex = -1
+        if let centeredSection = centeredSection {
             var didFindCenterSection = false
             for sectionIndex in 0..<sections.count {
                 let section = sections[sectionIndex]
                 section.indexInRow = sectionIndex
-                if section === attemptedCenteredSection {
+                if section === centeredSection {
                     didFindCenterSection = true
-                    attemptedCenteredSectionIndex = sectionIndex
+                    centeredSectionIndex = sectionIndex
                 }
                 if didFindCenterSection {
                     section.isLeftOfCenter = false
@@ -315,23 +336,23 @@ public class SkeletonRow: CustomStringConvertible {
         max_size = menuWidthWithSafeArea - safeAreaLeft - safeAreaRight
         max_size_2 = (max_size / 2)
         
-        if let attemptedCenteredSection = attemptedCenteredSection {
-            left_size = 0
-            right_size = 0
-            center_size = 0
+        if let centeredSection = centeredSection {
+            leftSizeWithCenteredSection = 0
+            rightSizeWithCenteredSection = 0
+            centerSizeWithCenteredSection = 0
             for section in sections {
-                if section === attemptedCenteredSection {
-                    center_size = section.currentSize
+                if section === centeredSection {
+                    centerSizeWithCenteredSection = section.currentSize
                 } else {
                     if section.isLeftOfCenter == true {
-                        left_size += section.currentSize
+                        leftSizeWithCenteredSection += section.currentSize
                     } else {
-                        right_size += section.currentSize
+                        rightSizeWithCenteredSection += section.currentSize
                     }
                 }
             }
-            childrenSize = (left_size + center_size + right_size)
-            remaining_size = max_size - childrenSize
+            childrenSize = (leftSizeWithCenteredSection + centerSizeWithCenteredSection + rightSizeWithCenteredSection)
+            growthBudget = max_size - childrenSize
             
             // initialLayoutType
             
@@ -340,68 +361,15 @@ public class SkeletonRow: CustomStringConvertible {
             for section in sections {
                 childrenSize += section.currentSize
             }
-            remaining_size = max_size - childrenSize
-            initialLayoutType = .doesNotIncludeCenterSection
+            growthBudget = max_size - childrenSize
         }
     }
     
     
-    func growChildrenByOne_Unsafe(section: SkeletonSection) {
-        if let attemptedCenteredSection = attemptedCenteredSection {
-            if section === attemptedCenteredSection {
-                center_size += 1
-            } else {
-                if section.isLeftOfCenter == true {
-                    left_size += 1
-                } else {
-                    right_size += 1
-                }
-            }
-        }
-        remaining_size -= 1
-        childrenSize += 1
-    }
     
-    func canGrowByOne(section: SkeletonSection) -> Bool {
-        if remaining_size > 0 {
-            if let attemptedCenteredSection = attemptedCenteredSection {
-                let new_center_size = center_size + 1
-                let new_center_left_x = max_size_2 - (new_center_size / 2)
-                if section === attemptedCenteredSection {
-                    let new_center_right_x = new_center_left_x + new_center_size
-                    if left_size >= new_center_left_x {
-                        return false
-                    }
-                    let area_right_of_center_size = (max_size - new_center_right_x)
-                    if right_size >= area_right_of_center_size {
-                        return false
-                    }
-                    return true
-                } else {
-                    if section.isLeftOfCenter == true {
-                        let new_center_size = center_size + 1
-                        let new_center_left_x = max_size_2 - (new_center_size / 2)
-                        if left_size >= new_center_left_x {
-                            return false
-                        }
-                        return true
-                    } else {
-                        let new_center_right_x = new_center_left_x + new_center_size
-                        let area_right_of_center_size = (max_size - new_center_right_x)
-                        if right_size >= area_right_of_center_size {
-                            return false
-                        }
-                        return true
-                    }
-                }
-            } else {
-                return true
-            }
-        } else {
-            return false
-        }
-    }
     
+    
+    /*
     func getGrowPlan_Flexer(flexers: [Flexer]) -> [SectionAndAmount] {
         
         //TODO: Sanity check:
@@ -414,11 +382,10 @@ public class SkeletonRow: CustomStringConvertible {
         return [SectionAndAmount(section: sections[0], amount: 1)]
         
     }
+    */
     
-    func canAcceptAllGrowthPlansSimultaneously(growthPlans: [GrowthPlan],
-                                               menuWidthWithSafeArea: Int,
-                                               safeAreaLeft: Int,
-                                               safeAreaRight: Int) -> Bool {
+    /*
+    func canAcceptAllGrowthPlansSimultaneously(growthPlans: [GrowthPlan]) -> Bool {
         for growthPlan in growthPlans {
             guard growthPlan.row === self else {
                 fatalError("This growth plan is not for this row...")
@@ -429,100 +396,388 @@ public class SkeletonRow: CustomStringConvertible {
             if growthPlan.section.indexInRow >= sections.count {
                 fatalError("Expect indexInRow to be in range, it's \(growthPlan.section.indexInRow) of \(sections.count).")
             }
-            if let attemptedCenteredSection = attemptedCenteredSection {
-                if attemptedCenteredSectionIndex < 0 {
-                    fatalError("Expecting attemptedCenteredSectionIndex (\(attemptedCenteredSectionIndex)) in range [0..<\(sections.count)]")
+            if let centeredSection = centeredSection {
+                if centeredSectionIndex < 0 {
+                    fatalError("Expecting centeredSectionIndex (\(centeredSectionIndex)) in range [0..<\(sections.count)]")
                 }
-                if attemptedCenteredSectionIndex >= sections.count {
-                    fatalError("Expecting attemptedCenteredSectionIndex (\(attemptedCenteredSectionIndex)) in range [0..<\(sections.count)]")
+                if centeredSectionIndex >= sections.count {
+                    fatalError("Expecting centeredSectionIndex (\(centeredSectionIndex)) in range [0..<\(sections.count)]")
                 }
                 for sectionIndex in 0..<sections.count {
                     if sections[sectionIndex].indexInRow != sectionIndex {
                         fatalError("Expecting the section index to be accurate, it's not.")
                     }
-                    if sections[sectionIndex] === attemptedCenteredSection {
-                        if sectionIndex != attemptedCenteredSectionIndex {
+                    if sections[sectionIndex] === centeredSection {
+                        if sectionIndex != centeredSectionIndex {
                             fatalError("Expecting the center section to be where I expected it to be...")
                         }
                     }
                 }
             }
-            
-            switch initialLayoutType {
-                
-            case .invalid:
-                fatalError("Cannot have an invalid initial layout type...")
-            case .doesNotIncludeCenterSection:
-                break
-            case .centerSectionProperlyCentered:
-                break
-            case .centerSectionSkewed:
-                break
-            }
-            
-            // End validation loop
         }
         
-        switch initialLayoutType {
-        case .centerSectionProperlyCentered:
-            
-            guard let attemptedCenteredSection = attemptedCenteredSection else {
-                fatalError("How can we be \"centerSectionProperlyCentered\" and not have a center section?")
-            }
-            
-            // This is very simplified because we are
-            // operating on *SECTION* instead of spread
-            // out content. So, each section is either
-            // on the left, the right, or is the center.
+        if centeredSection !== nil {
             
             var totalConsumedSizeLeft = 0
             var totalConsumedSizeCenter = 0
             var totalConsumedSizeRight = 0
             
-            for section in sections {
-                if section.indexInRow < attemptedCenteredSectionIndex {
-                    totalConsumedSizeLeft += 1
-                } else if section.indexInRow > attemptedCenteredSectionIndex {
-                    totalConsumedSizeRight += 1
-                } else {
-                    totalConsumedSizeCenter += 1
-                }
-            }
-            
             for growthPlan in growthPlans {
-                if growthPlan.section.indexInRow < attemptedCenteredSectionIndex {
+                let growthPlanSection = growthPlan.section
+                if growthPlanSection.indexInRow < centeredSectionIndex {
                     totalConsumedSizeLeft += growthPlan.amount
-                } else if growthPlan.section.indexInRow > attemptedCenteredSectionIndex {
+                } else if growthPlanSection.indexInRow > centeredSectionIndex {
                     totalConsumedSizeRight += growthPlan.amount
                 } else {
                     totalConsumedSizeCenter += growthPlan.amount
                 }
             }
             
-            let result = SkeletonRow.isCenterSectionProperlyCentered(leftSize: totalConsumedSizeLeft,
-                                                               centerSize: totalConsumedSizeCenter,
-                                                               rightSize: totalConsumedSizeCenter,
-                                                               menuWidthWithSafeArea: menuWidthWithSafeArea,
-                                                               safeAreaLeft: safeAreaLeft,
-                                                               safeAreaRight: safeAreaRight)
+            let result = SkeletonRow.isCenterSectionProperlyCentered(leftSize: left_size + totalConsumedSizeLeft,
+                                                                     centerSize: center_size + totalConsumedSizeCenter,
+                                                                     rightSize: right_size + totalConsumedSizeCenter,
+                                                                     menuWidthWithSafeArea: _menuWidthWithSafeArea,
+                                                                     safeAreaLeft: _safeAreaLeft,
+                                                                     safeAreaRight: _safeAreaRight)
             return result
-        default:
+            
+        } else {
+            
             var totalConsumedSize = 0
-            for section in sections {
-                totalConsumedSize += section.currentSize
-            }
             for growthPlan in growthPlans {
                 totalConsumedSize += growthPlan.amount
             }
-            if totalConsumedSize > (menuWidthWithSafeArea - safeAreaLeft - safeAreaRight) {
+            
+            if totalConsumedSize > growthBudget {
                 return false
             } else {
                 return true
             }
         }
     }
+    */
     
     
+    func canGrowAllSectionsByProposedGrowthAmount(sections: [SkeletonSection],
+                                    sectionCount: Int) -> Bool {
+        
+        
+        for sectionIndex in 0..<sectionCount {
+            let _section = sections[sectionIndex]
+            guard _section.row === self else {
+                fatalError("This growth plan is not for this row...")
+            }
+            if _section.indexInRow < 0 {
+                fatalError("Expect indexInRow to be calculated.")
+            }
+            if _section.indexInRow >= self.sections.count {
+                fatalError("Expect indexInRow to be in range, it's \(_section.indexInRow) of \(self.sections.count).")
+            }
+            if let centeredSection = centeredSection {
+                if centeredSectionIndex < 0 {
+                    fatalError("Expecting centeredSectionIndex (\(centeredSectionIndex)) in range [0..<\(self.sections.count)]")
+                }
+                if centeredSectionIndex >= sections.count {
+                    fatalError("Expecting centeredSectionIndex (\(centeredSectionIndex)) in range [0..<\(self.sections.count)]")
+                }
+                for sectionIndex in 0..<sections.count {
+                    if sections[sectionIndex].indexInRow != sectionIndex {
+                        fatalError("Expecting the section index to be accurate, it's not.")
+                    }
+                    if sections[sectionIndex] === centeredSection {
+                        if sectionIndex != centeredSectionIndex {
+                            fatalError("Expecting the center section to be where I expected it to be...")
+                        }
+                    }
+                }
+            }
+        }
+        
+        for sectionIndex in 0..<sectionCount {
+            let _section = sections[sectionIndex]
+            var exists = false
+            for section in self.sections {
+                if _section === section {
+                    exists = true
+                    break
+                }
+            }
+            if !exists {
+                fatalError("This section is not in the row we're querying...")
+            }
+            
+        }
+
+        
+        if centeredSection !== nil {
+            
+            var add_left = 0
+            var add_right = 0
+            var add_center = 0
+            for sectionIndex in 0..<sectionCount {
+                let section = sections[sectionIndex]
+                let amount = section.proposedGrowthAmount
+                if section.indexInRow < centeredSectionIndex {
+                    add_left += amount
+                } else if section.indexInRow > centeredSectionIndex {
+                    add_right += amount
+                } else {
+                    add_center += amount
+                }
+            }
+            print("and here we are...")
+            if SkeletonRow.isCenterSectionProperlyCentered(leftSize: leftSizeWithCenteredSection + add_left,
+                                                           centerSize: rightSizeWithCenteredSection + add_right,
+                                                           rightSize: rightSizeWithCenteredSection + add_right,
+                                                           menuWidthWithSafeArea: _menuWidthWithSafeArea,
+                                                           safeAreaLeft: _safeAreaLeft,
+                                                           safeAreaRight: _safeAreaRight) {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            
+            var amountSum = 0
+            for sectionIndex in 0..<sectionCount {
+                let section = sections[sectionIndex]
+                let amount = section.proposedGrowthAmount
+                amountSum += amount
+            }
+            
+            if amountSum <= growthBudget {
+                return true
+            } else {
+                return false
+            }
+        }
+        
+    }
+    
+    
+    func canGrowSection(section: SkeletonSection, amount: Int) -> Bool {
+        
+        
+        
+        guard section.row === self else {
+            fatalError("This growth plan is not for this row...")
+        }
+        if section.indexInRow < 0 {
+            fatalError("Expect indexInRow to be calculated.")
+        }
+        if section.indexInRow >= self.sections.count {
+            fatalError("Expect indexInRow to be in range, it's \(section.indexInRow) of \(self.sections.count).")
+        }
+        if let centeredSection = centeredSection {
+            if centeredSectionIndex < 0 {
+                fatalError("Expecting centeredSectionIndex (\(centeredSectionIndex)) in range [0..<\(self.sections.count)]")
+            }
+            if centeredSectionIndex >= sections.count {
+                fatalError("Expecting centeredSectionIndex (\(centeredSectionIndex)) in range [0..<\(self.sections.count)]")
+            }
+            for sectionIndex in 0..<sections.count {
+                if sections[sectionIndex].indexInRow != sectionIndex {
+                    fatalError("Expecting the section index to be accurate, it's not.")
+                }
+                if sections[sectionIndex] === centeredSection {
+                    if sectionIndex != centeredSectionIndex {
+                        fatalError("Expecting the center section to be where I expected it to be...")
+                    }
+                }
+            }
+        }
+        
+        
+        var exists = false
+        for _section in self.sections {
+            if _section === section {
+                exists = true
+                break
+            }
+        }
+        if !exists {
+            fatalError("This section is not in the row we're querying...")
+        }
+        
+        
+        
+        if centeredSection !== nil {
+            
+            var add_left = 0
+            var add_right = 0
+            var add_center = 0
+            
+            let amount = section.proposedGrowthAmount
+            if section.indexInRow < centeredSectionIndex {
+                add_left += amount
+            } else if section.indexInRow > centeredSectionIndex {
+                add_right += amount
+            } else {
+                add_center += amount
+            }
+            
+            if SkeletonRow.isCenterSectionProperlyCentered(leftSize: leftSizeWithCenteredSection + add_left,
+                                                           centerSize: rightSizeWithCenteredSection + add_right,
+                                                           rightSize: rightSizeWithCenteredSection + add_right,
+                                                           menuWidthWithSafeArea: _menuWidthWithSafeArea,
+                                                           safeAreaLeft: _safeAreaLeft,
+                                                           safeAreaRight: _safeAreaRight) {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            if amount <= growthBudget {
+                return true
+            } else {
+                return false
+            }
+        }
+    }
+    
+    func growAllSectionsByProposedGrowthAmount_Unsafe(sections: [SkeletonSection],
+                                                      sectionCount: Int) {
+        
+        if centeredSection !== nil {
+            
+            for sectionIndex in 0..<sectionCount {
+                let section = sections[sectionIndex]
+                if section.indexInRow < centeredSectionIndex {
+                    leftSizeWithCenteredSection += section.proposedGrowthAmount
+                    growthBudget -= section.proposedGrowthAmount
+                } else if section.indexInRow > centeredSectionIndex {
+                    rightSizeWithCenteredSection += section.proposedGrowthAmount
+                    growthBudget -= section.proposedGrowthAmount
+                } else {
+                    centerSizeWithCenteredSection += section.proposedGrowthAmount
+                    growthBudget -= section.proposedGrowthAmount
+                }
+            }
+        } else {
+            for sectionIndex in 0..<sectionCount {
+                let section = sections[sectionIndex]
+                growthBudget -= section.proposedGrowthAmount
+            }
+        }
+        
+        for sectionIndex in 0..<sectionCount {
+            let section = sections[sectionIndex]
+            section.currentSize += section.proposedGrowthAmount
+        }
+        
+        
+        print("Row Remaining_size \(growthBudget), childrenSize \(childrenSize)")
+        if growthBudget < 0 {
+            print("what?!??!?!??!?!??!?!??!?!")
+        }
+        
+        if sectionsOverlap_test() {
+            fatalError("WHAT WE OVERLAP!?!??!?!?!")
+        }
+    }
+    
+    
+    func canGrowOneSectionByOne(section: SkeletonSection) -> Bool {
+        
+        
+        guard section.row === self else {
+            fatalError("This growth plan is not for this row...")
+        }
+        if section.indexInRow < 0 {
+            fatalError("Expect indexInRow to be calculated.")
+        }
+        if section.indexInRow >= sections.count {
+            fatalError("Expect indexInRow to be in range, it's \(section.indexInRow) of \(sections.count).")
+        }
+        if let centeredSection = centeredSection {
+            if centeredSectionIndex < 0 {
+                fatalError("Expecting centeredSectionIndex (\(centeredSectionIndex)) in range [0..<\(sections.count)]")
+            }
+            if centeredSectionIndex >= sections.count {
+                fatalError("Expecting centeredSectionIndex (\(centeredSectionIndex)) in range [0..<\(sections.count)]")
+            }
+            for sectionIndex in 0..<sections.count {
+                if sections[sectionIndex].indexInRow != sectionIndex {
+                    fatalError("Expecting the section index to be accurate, it's not.")
+                }
+                if sections[sectionIndex] === centeredSection {
+                    if sectionIndex != centeredSectionIndex {
+                        fatalError("Expecting the center section to be where I expected it to be...")
+                    }
+                }
+            }
+        }
+        
+            var exists = false
+            for _section in self.sections {
+                if _section === section {
+                    exists = true
+                    break
+                }
+            }
+            if !exists {
+                fatalError("This section is not in the row we're querying...")
+            }
+         
+        
+        
+        if centeredSection !== nil {
+            
+            
+            var add_left = 0
+            var add_right = 0
+            var add_center = 0
+            if section.indexInRow < centeredSectionIndex {
+                add_left += 1
+            } else if section.indexInRow > centeredSectionIndex {
+                add_right += 1
+            } else {
+                add_center += 1
+            }
+            
+            print("and here we are...")
+            if SkeletonRow.isCenterSectionProperlyCentered(leftSize: leftSizeWithCenteredSection + add_left,
+                                                           centerSize: rightSizeWithCenteredSection + add_right,
+                                                           rightSize: rightSizeWithCenteredSection + add_right,
+                                                           menuWidthWithSafeArea: _menuWidthWithSafeArea,
+                                                           safeAreaLeft: _safeAreaLeft,
+                                                           safeAreaRight: _safeAreaRight) {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            if growthBudget > 0 {
+                return true
+            } else {
+                return false
+            }
+        }
+        
+    }
+    
+    func growOneSectionByOne_Unsafe(section: SkeletonSection) {
+        if centeredSection !== nil {
+            if section.indexInRow > centeredSectionIndex {
+                rightSizeWithCenteredSection += 1
+            } else if section.indexInRow < centeredSectionIndex {
+                leftSizeWithCenteredSection += 1
+            } else {
+                centerSizeWithCenteredSection += 1
+            }
+        }
+        growthBudget -= 1
+        childrenSize += 1
+        
+        section.currentSize += 1
+        
+        print("Row Remaining_size \(growthBudget), childrenSize \(childrenSize)")
+        if growthBudget < 0 {
+            print("what?!??!?!??!?!??!?!??!?!")
+        }
+    }
+    
+    /*
     struct SectionAndAmount {
         let section: SkeletonSection
         let amount: Int
@@ -542,16 +797,16 @@ public class SkeletonRow: CustomStringConvertible {
             }
         }
         
-        if let attemptedCenteredSection = attemptedCenteredSection {
+        if let centeredSection = centeredSection {
             
             var left_pairs = [SectionAndAmount]()
             var right_pairs = [SectionAndAmount]()
-            var center_pair = SectionAndAmount(section: attemptedCenteredSection, amount: 0)
+            var center_pair = SectionAndAmount(section: centeredSection, amount: 0)
             for sectionAmountPair in sectionAmountPairs {
                 let section = sectionAmountPair.section
-                if section.indexInRow < attemptedCenteredSectionIndex {
+                if section.indexInRow < centeredSectionIndex {
                     left_pairs.append(sectionAmountPair)
-                } else if section.indexInRow > attemptedCenteredSectionIndex {
+                } else if section.indexInRow > centeredSectionIndex {
                     left_pairs.append(sectionAmountPair)
                 } else {
                     center_pair = sectionAmountPair
@@ -575,14 +830,15 @@ public class SkeletonRow: CustomStringConvertible {
             }
         }
     }
+    */
     
-    func position_content_after_size_computation(menuWidthWithSafeArea: Int,
+    func positionContentAfterSizeComputation(menuWidthWithSafeArea: Int,
                                                   safeAreaLeft: Int,
                                                   safeAreaRight: Int) {
-        if let attemptedCenteredSection = attemptedCenteredSection {
+        if let centeredSection = centeredSection {
             var section_x = safeAreaLeft
             for section in sections {
-                if section !== attemptedCenteredSection {
+                if section !== centeredSection {
                     if section.isLeftOfCenter == true {
                         section.x = section_x
                         section_x += section.width
@@ -591,14 +847,14 @@ public class SkeletonRow: CustomStringConvertible {
             }
             
             let center_x = safeAreaLeft + max_size_2
-            let expected_section_center_x = center_x - (center_size / 2)
-            let expected_section_right_x = safeAreaLeft + max_size - right_size
+            let expected_section_center_x = center_x - (centerSizeWithCenteredSection / 2)
+            let expected_section_right_x = safeAreaLeft + max_size - rightSizeWithCenteredSection
             if section_x > expected_section_center_x {
-                attemptedCenteredSection.x = section_x
-                section_x += center_size
+                centeredSection.x = section_x
+                section_x += centerSizeWithCenteredSection
                 if section_x < expected_section_right_x { section_x = expected_section_right_x }
                 for section in sections {
-                    if section !== attemptedCenteredSection {
+                    if section !== centeredSection {
                         if section.isLeftOfCenter == false {
                             section.x = section_x
                             section_x += section.width
@@ -606,13 +862,13 @@ public class SkeletonRow: CustomStringConvertible {
                     }
                 }
             } else {
-                if (expected_section_center_x + center_size) > expected_section_right_x {
-                    let expected_right_and_center_joined_x = expected_section_right_x - center_size
+                if (expected_section_center_x + centerSizeWithCenteredSection) > expected_section_right_x {
+                    let expected_right_and_center_joined_x = expected_section_right_x - centerSizeWithCenteredSection
                     if expected_right_and_center_joined_x < section_x {
-                        attemptedCenteredSection.x = section_x
-                        section_x += center_size
+                        centeredSection.x = section_x
+                        section_x += centerSizeWithCenteredSection
                         for section in sections {
-                            if section !== attemptedCenteredSection {
+                            if section !== centeredSection {
                                 if section.isLeftOfCenter == false {
                                     section.x = section_x
                                     section_x += section.width
@@ -621,10 +877,10 @@ public class SkeletonRow: CustomStringConvertible {
                         }
                     } else {
                         section_x = expected_right_and_center_joined_x
-                        attemptedCenteredSection.x = section_x
+                        centeredSection.x = section_x
                         section_x = expected_section_right_x
                         for section in sections {
-                            if section !== attemptedCenteredSection {
+                            if section !== centeredSection {
                                 if section.isLeftOfCenter == false {
                                     section.x = section_x
                                     section_x += section.width
@@ -634,10 +890,10 @@ public class SkeletonRow: CustomStringConvertible {
                     }
                 } else {
                     section_x = expected_section_center_x
-                    attemptedCenteredSection.x = section_x
+                    centeredSection.x = section_x
                     section_x = expected_section_right_x
                     for section in sections {
-                        if section !== attemptedCenteredSection {
+                        if section !== centeredSection {
                             if section.isLeftOfCenter == false {
                                 section.x = section_x
                                 section_x += section.width
@@ -669,25 +925,8 @@ public class SkeletonRow: CustomStringConvertible {
         */
         
         for section in sections {
-            section.position_content_after_size_computation()
+            section.positionContentAfterSizeComputation()
         }
-    }
-    
-    func computeSize_test(menuWidthWithSafeArea: Int,
-                          safeAreaLeft: Int,
-                          safeAreaRight: Int,
-                          layoutPriority: LayoutPriority) -> Int {
-        
-        let max_size_test = menuWidthWithSafeArea - safeAreaLeft - safeAreaRight
-        
-        var computed_size = 0
-        for section in sections {
-            computed_size += section.computeSize(layoutPriority: layoutPriority)
-        }
-        if computed_size > max_size_test {
-            computed_size = max_size_test
-        }
-        return computed_size
     }
     
     func sectionsOverlap_test() -> Bool {
@@ -745,12 +984,12 @@ public class SkeletonRow: CustomStringConvertible {
                                   safeAreaLeft: Int,
                                   safeAreaRight: Int) -> Bool {
         
-        if let attemptedCenteredSection = attemptedCenteredSection {
+        if let centeredSection = centeredSection {
             
             var leftSections = [SkeletonSection]()
             var leftSections_totalWidth = 0
             for section in sections {
-                if section !== attemptedCenteredSection {
+                if section !== centeredSection {
                     if section.isLeftOfCenter == true {
                         leftSections.append(section)
                         leftSections_totalWidth += section.currentSize
@@ -770,7 +1009,7 @@ public class SkeletonRow: CustomStringConvertible {
             var rightSections = [SkeletonSection]()
             var rightSections_totalWidth = 0
             for section in sections {
-                if section !== attemptedCenteredSection {
+                if section !== centeredSection {
                     if section.isLeftOfCenter == false {
                         rightSections.append(section)
                         rightSections_totalWidth += section.currentSize
@@ -779,26 +1018,26 @@ public class SkeletonRow: CustomStringConvertible {
             }
             
             let possible_center_x_case_1 = safeAreaLeft + leftSections_totalWidth
-            if attemptedCenteredSection.x == possible_center_x_case_1 {
+            if centeredSection.x == possible_center_x_case_1 {
                 
                 // This case is valid, it means that we are crammed to the left section...
-                section_x += attemptedCenteredSection.currentSize
+                section_x += centeredSection.currentSize
             } else {
                 
-                let possible_center_x_case_2 = safeAreaLeft + max_size_2 - (attemptedCenteredSection.currentSize / 2)
+                let possible_center_x_case_2 = safeAreaLeft + max_size_2 - (centeredSection.currentSize / 2)
                 if possible_center_x_case_2 < possible_center_x_case_1 {
                     // This shouldn't be possible
                     print("possible_center_x_case_2 < possible_center_x_case_1")
                     print("\(possible_center_x_case_2) < \(possible_center_x_case_1)")
                     return false
                 }
-                if attemptedCenteredSection.x == possible_center_x_case_2 {
+                if centeredSection.x == possible_center_x_case_2 {
                     // In this case, we are exactly centered.
                     // Generally where we want to be.
-                    section_x = possible_center_x_case_2 + attemptedCenteredSection.currentSize
+                    section_x = possible_center_x_case_2 + centeredSection.currentSize
                 } else {
                     
-                    let possible_center_x_case_3 = safeAreaLeft + max_size - rightSections_totalWidth - attemptedCenteredSection.currentSize
+                    let possible_center_x_case_3 = safeAreaLeft + max_size - rightSections_totalWidth - centeredSection.currentSize
                     if possible_center_x_case_3 > possible_center_x_case_2 {
                         // This shouldn't be possible
                         print("possible_center_x_case_3 > possible_center_x_case_2")
@@ -806,9 +1045,9 @@ public class SkeletonRow: CustomStringConvertible {
                         return false
                     }
                     
-                    if attemptedCenteredSection.x == possible_center_x_case_3 {
+                    if centeredSection.x == possible_center_x_case_3 {
                         // This is the crammed-right case...
-                        section_x = possible_center_x_case_3 + attemptedCenteredSection.currentSize
+                        section_x = possible_center_x_case_3 + centeredSection.currentSize
                     } else {
                         print("none of the center-x cases matched, this is a bad layout!")
                         return false
@@ -818,12 +1057,12 @@ public class SkeletonRow: CustomStringConvertible {
             
             if rightSections.count > 0 {
                 
-                if rightSections[0].x < (attemptedCenteredSection.x + attemptedCenteredSection.width) {
+                if rightSections[0].x < (centeredSection.x + centeredSection.width) {
                     print("right section overlap, this should not happen!")
                     return false
                 }
                 
-                let possible_right_x_case_1 = attemptedCenteredSection.x + attemptedCenteredSection.width
+                let possible_right_x_case_1 = centeredSection.x + centeredSection.width
                 if rightSections[0].x == possible_right_x_case_1 {
                     // In this case, we are crammed to the center piece.
                 } else {
@@ -861,33 +1100,7 @@ public class SkeletonRow: CustomStringConvertible {
                 section_x += section.currentSize
             }
         }
-        
         return true
-    }
-    
-    public func log_me(name: String, row_index: Int) {
-        print("\tRow \(row_index) with \(sections.count) sections, from \(name)...")
-        if let attemptedCenteredSection = attemptedCenteredSection {
-            var center_index = -1
-            for sectionIndex in sections.indices {
-                if sections[sectionIndex] === attemptedCenteredSection {
-                    center_index = sectionIndex
-                }
-            }
-            print("\tRow has the \(center_index) section marked as center section. (x = \(attemptedCenteredSection.x), width = \(attemptedCenteredSection.width))")
-            print("\tRow has \(left_size) left_size, \(center_size) center_size, \(right_size) right_size.")
-            
-        } else {
-            print("\tRow has no center section, this is a traditional layout.")
-            print("\tRow has \(childrenSize) childrenSize.")
-        }
-        
-        print("\tRow has \(max_size) max_size, \(remaining_size) remaining_size.")
-        
-        for sectionIndex in sections.indices {
-            sections[sectionIndex].log_me(name: name, row_index: row_index, section_index: sectionIndex)
-        }
-        
     }
     
 }

@@ -48,39 +48,15 @@ public struct FramedConvertibleIconPack: TextIconPackable {
                      isDarkModeEnabled: Bool,
                      isEnabled: Bool) -> (any TextIconable) {
         
-        switch layoutSchemeFlavor {
-        case .long:
-            if Device.isPad {
-                return planePad_0.getTextIcon(isDarkModeEnabled: isDarkModeEnabled, isEnabled: isEnabled)
+        if Device.isPad {
+            return planePad_0.getTextIcon(isDarkModeEnabled: isDarkModeEnabled, isEnabled: isEnabled)
+        } else {
+            if orientation.isLandscape {
+                return planePhoneLandscape_0.getTextIcon(isDarkModeEnabled: isDarkModeEnabled, isEnabled: isEnabled)
             } else {
-                if orientation.isLandscape {
-                    return planePhoneLandscape_0.getTextIcon(isDarkModeEnabled: isDarkModeEnabled, isEnabled: isEnabled)
-                } else {
-                    return planePhonePortrait_0.getTextIcon(isDarkModeEnabled: isDarkModeEnabled, isEnabled: isEnabled)
-                }
-            }
-        default:
-            if numberOfLines >= 2 {
-                if Device.isPad {
-                    return planePad_2.getTextIcon(isDarkModeEnabled: isDarkModeEnabled, isEnabled: isEnabled)
-                } else {
-                    if orientation.isLandscape {
-                        return planePhoneLandscape_2.getTextIcon(isDarkModeEnabled: isDarkModeEnabled, isEnabled: isEnabled)
-                    } else {
-                        return planePhonePortrait_2.getTextIcon(isDarkModeEnabled: isDarkModeEnabled, isEnabled: isEnabled)
-                    }
-                }
-            } else {
-                if Device.isPad {
-                    return planePad_1.getTextIcon(isDarkModeEnabled: isDarkModeEnabled, isEnabled: isEnabled)
-                } else {
-                    if orientation.isLandscape {
-                        return planePhoneLandscape_1.getTextIcon(isDarkModeEnabled: isDarkModeEnabled, isEnabled: isEnabled)
-                    } else {
-                        return planePhonePortrait_1.getTextIcon(isDarkModeEnabled: isDarkModeEnabled, isEnabled: isEnabled)
-                    }
-                }
+                return planePhonePortrait_0.getTextIcon(isDarkModeEnabled: isDarkModeEnabled, isEnabled: isEnabled)
             }
         }
+        
     }
 }

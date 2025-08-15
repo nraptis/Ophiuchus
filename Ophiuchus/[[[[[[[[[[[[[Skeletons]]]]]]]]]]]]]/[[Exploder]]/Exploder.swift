@@ -9,7 +9,8 @@ import Foundation
 
 struct Exploder<Element: ExploderConforming> {
     
-    static func explode(nodes: [Element],
+    static func explode(baseId: Int,
+                        nodes: [Element],
                         links: [ExploderLink]) -> [ExploderGroup<Element>] {
         
         // Store parent ids
@@ -74,6 +75,7 @@ struct Exploder<Element: ExploderConforming> {
             }
         }
         
+        var offsetId = 0
         var result = [ExploderGroup<Element>]()
         for groupNodes in grouped.values {
             var max_layoutPriority = LayoutPriority.finally
@@ -84,7 +86,10 @@ struct Exploder<Element: ExploderConforming> {
                     }
                 }
             }
-            result.append(ExploderGroup(linkedList: groupNodes, layoutPriority: max_layoutPriority))
+            result.append(ExploderGroup(id: baseId + offsetId,
+                                        linkedList: groupNodes,
+                                        layoutPriority: max_layoutPriority))
+            offsetId += 1
         }
         return result
     }

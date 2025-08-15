@@ -12,28 +12,28 @@ struct FlexerTests {
     
     @Test func test_unsafe() {
         let flexer = Flexer(id: 0, flexerIdentifier: .unknown, 50)
-        if !(flexer.getDesiredSize(layoutPriority: .required) == 50) {
-            print("getDesiredSize(layoutPriority: .required) was expected to be 50")
+        if !(flexer.getTargetSize(layoutPriority: .required) == 50) {
+            print("getTargetSize(layoutPriority: .required) was expected to be 50")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .high) == 50) {
-            print("getDesiredSize(layoutPriority: .high) was expected to be 50")
+        if !(flexer.getTargetSize(layoutPriority: .high) == 50) {
+            print("getTargetSize(layoutPriority: .high) was expected to be 50")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .medium) == 50) {
-            print("getDesiredSize(layoutPriority: .medium) was expected to be 50")
+        if !(flexer.getTargetSize(layoutPriority: .medium) == 50) {
+            print("getTargetSize(layoutPriority: .medium) was expected to be 50")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .low) == 50) {
-            print("getDesiredSize(layoutPriority: .low) was expected to be 50")
+        if !(flexer.getTargetSize(layoutPriority: .low) == 50) {
+            print("getTargetSize(layoutPriority: .low) was expected to be 50")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .finally) == 50) {
-            print("getDesiredSize(layoutPriority: .finally) was expected to be 50")
+        if !(flexer.getTargetSize(layoutPriority: .finally) == 50) {
+            print("getTargetSize(layoutPriority: .finally) was expected to be 50")
             #expect(Bool(false))
             return
         }
@@ -41,28 +41,28 @@ struct FlexerTests {
     
     @Test func test_size_flexer_initializer_1() {
         let flexer = Flexer(id: 0, flexerIdentifier: .unknown, 50)
-        if !(flexer.getDesiredSize(layoutPriority: .required) == 50) {
-            print("getDesiredSize(layoutPriority: .required) was expected to be 50")
+        if !(flexer.getTargetSize(layoutPriority: .required) == 50) {
+            print("getTargetSize(layoutPriority: .required) was expected to be 50")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .high) == 50) {
-            print("getDesiredSize(layoutPriority: .high) was expected to be 50")
+        if !(flexer.getTargetSize(layoutPriority: .high) == 50) {
+            print("getTargetSize(layoutPriority: .high) was expected to be 50")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .medium) == 50) {
-            print("getDesiredSize(layoutPriority: .medium) was expected to be 50")
+        if !(flexer.getTargetSize(layoutPriority: .medium) == 50) {
+            print("getTargetSize(layoutPriority: .medium) was expected to be 50")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .low) == 50) {
-            print("getDesiredSize(layoutPriority: .low) was expected to be 50")
+        if !(flexer.getTargetSize(layoutPriority: .low) == 50) {
+            print("getTargetSize(layoutPriority: .low) was expected to be 50")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .finally) == 50) {
-            print("getDesiredSize(layoutPriority: .finally) was expected to be 50")
+        if !(flexer.getTargetSize(layoutPriority: .finally) == 50) {
+            print("getTargetSize(layoutPriority: .finally) was expected to be 50")
             #expect(Bool(false))
             return
         }
@@ -70,28 +70,28 @@ struct FlexerTests {
     
     @Test func test_size_flexer_initializer_2_a() {
         let flexer = Flexer(id: 0, flexerIdentifier: .unknown, 200, 250)
-        if !(flexer.getDesiredSize(layoutPriority: .required) == 200) {
-            print("getDesiredSize(layoutPriority: .required) was expected to be 200")
+        if !(flexer.getTargetSize(layoutPriority: .required) == 200) {
+            print("getTargetSize(layoutPriority: .required) was expected to be 200")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .high) == 250) {
-            print("getDesiredSize(layoutPriority: .high) was expected to be 250")
+        if !(flexer.getTargetSize(layoutPriority: .high) == 250) {
+            print("getTargetSize(layoutPriority: .high) was expected to be 250")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .medium) == 250) {
-            print("getDesiredSize(layoutPriority: .medium) was expected to be 250")
+        if !(flexer.getTargetSize(layoutPriority: .medium) == 250) {
+            print("getTargetSize(layoutPriority: .medium) was expected to be 250")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .low) == 250) {
-            print("getDesiredSize(layoutPriority: .low) was expected to be 250")
+        if !(flexer.getTargetSize(layoutPriority: .low) == 250) {
+            print("getTargetSize(layoutPriority: .low) was expected to be 250")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .finally) == 250) {
-            print("getDesiredSize(layoutPriority: .finally) was expected to be 250")
+        if !(flexer.getTargetSize(layoutPriority: .finally) == 250) {
+            print("getTargetSize(layoutPriority: .finally) was expected to be 250")
             #expect(Bool(false))
             return
         }
@@ -99,28 +99,28 @@ struct FlexerTests {
     
     @Test func test_size_flexer_initializer_2_b() {
         let flexer = Flexer(id: 0, flexerIdentifier: .unknown, 200, nil, 250)
-        if !(flexer.getDesiredSize(layoutPriority: .required) == 200) {
-            print("getDesiredSize(layoutPriority: .required) was expected to be 200")
+        if !(flexer.getTargetSize(layoutPriority: .required) == 200) {
+            print("getTargetSize(layoutPriority: .required) was expected to be 200")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .high) == 200) {
-            print("getDesiredSize(layoutPriority: .high) was expected to be 200")
+        if !(flexer.getTargetSize(layoutPriority: .high) == 200) {
+            print("getTargetSize(layoutPriority: .high) was expected to be 200")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .medium) == 250) {
-            print("getDesiredSize(layoutPriority: .medium) was expected to be 250")
+        if !(flexer.getTargetSize(layoutPriority: .medium) == 250) {
+            print("getTargetSize(layoutPriority: .medium) was expected to be 250")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .low) == 250) {
-            print("getDesiredSize(layoutPriority: .low) was expected to be 250")
+        if !(flexer.getTargetSize(layoutPriority: .low) == 250) {
+            print("getTargetSize(layoutPriority: .low) was expected to be 250")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .finally) == 250) {
-            print("getDesiredSize(layoutPriority: .finally) was expected to be 250")
+        if !(flexer.getTargetSize(layoutPriority: .finally) == 250) {
+            print("getTargetSize(layoutPriority: .finally) was expected to be 250")
             #expect(Bool(false))
             return
         }
@@ -128,28 +128,28 @@ struct FlexerTests {
     
     @Test func test_size_flexer_initializer_2_c() {
         let flexer = Flexer(id: 0, flexerIdentifier: .unknown, 200, nil, nil, 250)
-        if !(flexer.getDesiredSize(layoutPriority: .required) == 200) {
-            print("getDesiredSize(layoutPriority: .required) was expected to be 200")
+        if !(flexer.getTargetSize(layoutPriority: .required) == 200) {
+            print("getTargetSize(layoutPriority: .required) was expected to be 200")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .high) == 200) {
-            print("getDesiredSize(layoutPriority: .high) was expected to be 200")
+        if !(flexer.getTargetSize(layoutPriority: .high) == 200) {
+            print("getTargetSize(layoutPriority: .high) was expected to be 200")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .medium) == 200) {
-            print("getDesiredSize(layoutPriority: .medium) was expected to be 200")
+        if !(flexer.getTargetSize(layoutPriority: .medium) == 200) {
+            print("getTargetSize(layoutPriority: .medium) was expected to be 200")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .low) == 250) {
-            print("getDesiredSize(layoutPriority: .low) was expected to be 250")
+        if !(flexer.getTargetSize(layoutPriority: .low) == 250) {
+            print("getTargetSize(layoutPriority: .low) was expected to be 250")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .finally) == 250) {
-            print("getDesiredSize(layoutPriority: .finally) was expected to be 250")
+        if !(flexer.getTargetSize(layoutPriority: .finally) == 250) {
+            print("getTargetSize(layoutPriority: .finally) was expected to be 250")
             #expect(Bool(false))
             return
         }
@@ -157,28 +157,28 @@ struct FlexerTests {
     
     @Test func test_size_flexer_initializer_2_d() {
         let flexer = Flexer(id: 0, flexerIdentifier: .unknown, 200, nil, nil, nil, 250)
-        if !(flexer.getDesiredSize(layoutPriority: .required) == 200) {
-            print("getDesiredSize(layoutPriority: .required) was expected to be 200")
+        if !(flexer.getTargetSize(layoutPriority: .required) == 200) {
+            print("getTargetSize(layoutPriority: .required) was expected to be 200")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .high) == 200) {
-            print("getDesiredSize(layoutPriority: .high) was expected to be 200")
+        if !(flexer.getTargetSize(layoutPriority: .high) == 200) {
+            print("getTargetSize(layoutPriority: .high) was expected to be 200")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .medium) == 200) {
-            print("getDesiredSize(layoutPriority: .medium) was expected to be 200")
+        if !(flexer.getTargetSize(layoutPriority: .medium) == 200) {
+            print("getTargetSize(layoutPriority: .medium) was expected to be 200")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .low) == 200) {
-            print("getDesiredSize(layoutPriority: .low) was expected to be 200")
+        if !(flexer.getTargetSize(layoutPriority: .low) == 200) {
+            print("getTargetSize(layoutPriority: .low) was expected to be 200")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .finally) == 250) {
-            print("getDesiredSize(layoutPriority: .finally) was expected to be 250")
+        if !(flexer.getTargetSize(layoutPriority: .finally) == 250) {
+            print("getTargetSize(layoutPriority: .finally) was expected to be 250")
             #expect(Bool(false))
             return
         }
@@ -186,28 +186,28 @@ struct FlexerTests {
     
     @Test func test_size_flexer_initializer_3_a() {
         let flexer = Flexer(id: 0, flexerIdentifier: .unknown, 500, 600, 700)
-        if !(flexer.getDesiredSize(layoutPriority: .required) == 500) {
-            print("getDesiredSize(layoutPriority: .required) was expected to be 500")
+        if !(flexer.getTargetSize(layoutPriority: .required) == 500) {
+            print("getTargetSize(layoutPriority: .required) was expected to be 500")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .high) == 600) {
-            print("getDesiredSize(layoutPriority: .high) was expected to be 600")
+        if !(flexer.getTargetSize(layoutPriority: .high) == 600) {
+            print("getTargetSize(layoutPriority: .high) was expected to be 600")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .medium) == 700) {
-            print("getDesiredSize(layoutPriority: .medium) was expected to be 700")
+        if !(flexer.getTargetSize(layoutPriority: .medium) == 700) {
+            print("getTargetSize(layoutPriority: .medium) was expected to be 700")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .low) == 700) {
-            print("getDesiredSize(layoutPriority: .low) was expected to be 700")
+        if !(flexer.getTargetSize(layoutPriority: .low) == 700) {
+            print("getTargetSize(layoutPriority: .low) was expected to be 700")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .finally) == 700) {
-            print("getDesiredSize(layoutPriority: .finally) was expected to be 700")
+        if !(flexer.getTargetSize(layoutPriority: .finally) == 700) {
+            print("getTargetSize(layoutPriority: .finally) was expected to be 700")
             #expect(Bool(false))
             return
         }
@@ -215,28 +215,28 @@ struct FlexerTests {
     
     @Test func test_size_flexer_initializer_3_b() {
         let flexer = Flexer(id: 0, flexerIdentifier: .unknown, 500, nil, 600, 700)
-        if !(flexer.getDesiredSize(layoutPriority: .required) == 500) {
-            print("getDesiredSize(layoutPriority: .required) was expected to be 500")
+        if !(flexer.getTargetSize(layoutPriority: .required) == 500) {
+            print("getTargetSize(layoutPriority: .required) was expected to be 500")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .high) == 500) {
-            print("getDesiredSize(layoutPriority: .high) was expected to be 500")
+        if !(flexer.getTargetSize(layoutPriority: .high) == 500) {
+            print("getTargetSize(layoutPriority: .high) was expected to be 500")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .medium) == 600) {
-            print("getDesiredSize(layoutPriority: .medium) was expected to be 600")
+        if !(flexer.getTargetSize(layoutPriority: .medium) == 600) {
+            print("getTargetSize(layoutPriority: .medium) was expected to be 600")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .low) == 700) {
-            print("getDesiredSize(layoutPriority: .low) was expected to be 700")
+        if !(flexer.getTargetSize(layoutPriority: .low) == 700) {
+            print("getTargetSize(layoutPriority: .low) was expected to be 700")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .finally) == 700) {
-            print("getDesiredSize(layoutPriority: .finally) was expected to be 700")
+        if !(flexer.getTargetSize(layoutPriority: .finally) == 700) {
+            print("getTargetSize(layoutPriority: .finally) was expected to be 700")
             #expect(Bool(false))
             return
         }
@@ -244,28 +244,28 @@ struct FlexerTests {
     
     @Test func test_size_flexer_initializer_3_c() {
         let flexer = Flexer(id: 0, flexerIdentifier: .unknown, 500, nil, nil, 600, 700)
-        if !(flexer.getDesiredSize(layoutPriority: .required) == 500) {
-            print("getDesiredSize(layoutPriority: .required) was expected to be 500")
+        if !(flexer.getTargetSize(layoutPriority: .required) == 500) {
+            print("getTargetSize(layoutPriority: .required) was expected to be 500")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .high) == 500) {
-            print("getDesiredSize(layoutPriority: .high) was expected to be 500")
+        if !(flexer.getTargetSize(layoutPriority: .high) == 500) {
+            print("getTargetSize(layoutPriority: .high) was expected to be 500")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .medium) == 500) {
-            print("getDesiredSize(layoutPriority: .medium) was expected to be 500")
+        if !(flexer.getTargetSize(layoutPriority: .medium) == 500) {
+            print("getTargetSize(layoutPriority: .medium) was expected to be 500")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .low) == 600) {
-            print("getDesiredSize(layoutPriority: .low) was expected to be 600")
+        if !(flexer.getTargetSize(layoutPriority: .low) == 600) {
+            print("getTargetSize(layoutPriority: .low) was expected to be 600")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .finally) == 700) {
-            print("getDesiredSize(layoutPriority: .finally) was expected to be 700")
+        if !(flexer.getTargetSize(layoutPriority: .finally) == 700) {
+            print("getTargetSize(layoutPriority: .finally) was expected to be 700")
             #expect(Bool(false))
             return
         }
@@ -273,28 +273,28 @@ struct FlexerTests {
     
     @Test func test_size_flexer_initializer_3_d() {
         let flexer = Flexer(id: 0, flexerIdentifier: .unknown, 500, 600, nil, 700)
-        if !(flexer.getDesiredSize(layoutPriority: .required) == 500) {
-            print("getDesiredSize(layoutPriority: .required) was expected to be 500")
+        if !(flexer.getTargetSize(layoutPriority: .required) == 500) {
+            print("getTargetSize(layoutPriority: .required) was expected to be 500")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .high) == 600) {
-            print("getDesiredSize(layoutPriority: .high) was expected to be 600")
+        if !(flexer.getTargetSize(layoutPriority: .high) == 600) {
+            print("getTargetSize(layoutPriority: .high) was expected to be 600")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .medium) == 600) {
-            print("getDesiredSize(layoutPriority: .medium) was expected to be 600")
+        if !(flexer.getTargetSize(layoutPriority: .medium) == 600) {
+            print("getTargetSize(layoutPriority: .medium) was expected to be 600")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .low) == 700) {
-            print("getDesiredSize(layoutPriority: .low) was expected to be 700")
+        if !(flexer.getTargetSize(layoutPriority: .low) == 700) {
+            print("getTargetSize(layoutPriority: .low) was expected to be 700")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .finally) == 700) {
-            print("getDesiredSize(layoutPriority: .finally) was expected to be 700")
+        if !(flexer.getTargetSize(layoutPriority: .finally) == 700) {
+            print("getTargetSize(layoutPriority: .finally) was expected to be 700")
             #expect(Bool(false))
             return
         }
@@ -302,28 +302,28 @@ struct FlexerTests {
     
     @Test func test_size_flexer_initializer_3_e() {
         let flexer = Flexer(id: 0, flexerIdentifier: .unknown, 500, 600, nil, nil, 700)
-        if !(flexer.getDesiredSize(layoutPriority: .required) == 500) {
-            print("getDesiredSize(layoutPriority: .required) was expected to be 500")
+        if !(flexer.getTargetSize(layoutPriority: .required) == 500) {
+            print("getTargetSize(layoutPriority: .required) was expected to be 500")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .high) == 600) {
-            print("getDesiredSize(layoutPriority: .high) was expected to be 600")
+        if !(flexer.getTargetSize(layoutPriority: .high) == 600) {
+            print("getTargetSize(layoutPriority: .high) was expected to be 600")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .medium) == 600) {
-            print("getDesiredSize(layoutPriority: .medium) was expected to be 600")
+        if !(flexer.getTargetSize(layoutPriority: .medium) == 600) {
+            print("getTargetSize(layoutPriority: .medium) was expected to be 600")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .low) == 600) {
-            print("getDesiredSize(layoutPriority: .low) was expected to be 600")
+        if !(flexer.getTargetSize(layoutPriority: .low) == 600) {
+            print("getTargetSize(layoutPriority: .low) was expected to be 600")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .finally) == 700) {
-            print("getDesiredSize(layoutPriority: .finally) was expected to be 700")
+        if !(flexer.getTargetSize(layoutPriority: .finally) == 700) {
+            print("getTargetSize(layoutPriority: .finally) was expected to be 700")
             #expect(Bool(false))
             return
         }
@@ -331,28 +331,28 @@ struct FlexerTests {
     
     @Test func test_size_flexer_initializer_3_f() {
         let flexer = Flexer(id: 0, flexerIdentifier: .unknown, 500, nil, 600, 700)
-        if !(flexer.getDesiredSize(layoutPriority: .required) == 500) {
-            print("getDesiredSize(layoutPriority: .required) was expected to be 500")
+        if !(flexer.getTargetSize(layoutPriority: .required) == 500) {
+            print("getTargetSize(layoutPriority: .required) was expected to be 500")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .high) == 500) {
-            print("getDesiredSize(layoutPriority: .high) was expected to be 600")
+        if !(flexer.getTargetSize(layoutPriority: .high) == 500) {
+            print("getTargetSize(layoutPriority: .high) was expected to be 600")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .medium) == 600) {
-            print("getDesiredSize(layoutPriority: .medium) was expected to be 600")
+        if !(flexer.getTargetSize(layoutPriority: .medium) == 600) {
+            print("getTargetSize(layoutPriority: .medium) was expected to be 600")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .low) == 700) {
-            print("getDesiredSize(layoutPriority: .low) was expected to be 700")
+        if !(flexer.getTargetSize(layoutPriority: .low) == 700) {
+            print("getTargetSize(layoutPriority: .low) was expected to be 700")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .finally) == 700) {
-            print("getDesiredSize(layoutPriority: .finally) was expected to be 700")
+        if !(flexer.getTargetSize(layoutPriority: .finally) == 700) {
+            print("getTargetSize(layoutPriority: .finally) was expected to be 700")
             #expect(Bool(false))
             return
         }
@@ -360,28 +360,28 @@ struct FlexerTests {
     
     @Test func test_size_flexer_initializer_3_g() {
         let flexer = Flexer(id: 0, flexerIdentifier: .unknown, 500, nil, 600, nil, 700)
-        if !(flexer.getDesiredSize(layoutPriority: .required) == 500) {
-            print("getDesiredSize(layoutPriority: .required) was expected to be 500")
+        if !(flexer.getTargetSize(layoutPriority: .required) == 500) {
+            print("getTargetSize(layoutPriority: .required) was expected to be 500")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .high) == 500) {
-            print("getDesiredSize(layoutPriority: .high) was expected to be 600")
+        if !(flexer.getTargetSize(layoutPriority: .high) == 500) {
+            print("getTargetSize(layoutPriority: .high) was expected to be 600")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .medium) == 600) {
-            print("getDesiredSize(layoutPriority: .medium) was expected to be 600")
+        if !(flexer.getTargetSize(layoutPriority: .medium) == 600) {
+            print("getTargetSize(layoutPriority: .medium) was expected to be 600")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .low) == 600) {
-            print("getDesiredSize(layoutPriority: .low) was expected to be 600")
+        if !(flexer.getTargetSize(layoutPriority: .low) == 600) {
+            print("getTargetSize(layoutPriority: .low) was expected to be 600")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .finally) == 700) {
-            print("getDesiredSize(layoutPriority: .finally) was expected to be 700")
+        if !(flexer.getTargetSize(layoutPriority: .finally) == 700) {
+            print("getTargetSize(layoutPriority: .finally) was expected to be 700")
             #expect(Bool(false))
             return
         }
@@ -389,28 +389,28 @@ struct FlexerTests {
     
     @Test func test_size_flexer_initializer_3_h() {
         let flexer = Flexer(id: 0, flexerIdentifier: .unknown, 500, nil, nil, 600, 700)
-        if !(flexer.getDesiredSize(layoutPriority: .required) == 500) {
-            print("getDesiredSize(layoutPriority: .required) was expected to be 500")
+        if !(flexer.getTargetSize(layoutPriority: .required) == 500) {
+            print("getTargetSize(layoutPriority: .required) was expected to be 500")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .high) == 500) {
-            print("getDesiredSize(layoutPriority: .high) was expected to be 600")
+        if !(flexer.getTargetSize(layoutPriority: .high) == 500) {
+            print("getTargetSize(layoutPriority: .high) was expected to be 600")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .medium) == 500) {
-            print("getDesiredSize(layoutPriority: .medium) was expected to be 500")
+        if !(flexer.getTargetSize(layoutPriority: .medium) == 500) {
+            print("getTargetSize(layoutPriority: .medium) was expected to be 500")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .low) == 600) {
-            print("getDesiredSize(layoutPriority: .low) was expected to be 600")
+        if !(flexer.getTargetSize(layoutPriority: .low) == 600) {
+            print("getTargetSize(layoutPriority: .low) was expected to be 600")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .finally) == 700) {
-            print("getDesiredSize(layoutPriority: .finally) was expected to be 700")
+        if !(flexer.getTargetSize(layoutPriority: .finally) == 700) {
+            print("getTargetSize(layoutPriority: .finally) was expected to be 700")
             #expect(Bool(false))
             return
         }
@@ -418,28 +418,28 @@ struct FlexerTests {
     
     @Test func test_size_flexer_initializer_4_a() {
         let flexer = Flexer(id: 0, flexerIdentifier: .unknown, 1000, 2000, 3000, 4000)
-        if !(flexer.getDesiredSize(layoutPriority: .required) == 1000) {
-            print("getDesiredSize(layoutPriority: .required) was expected to be 1000")
+        if !(flexer.getTargetSize(layoutPriority: .required) == 1000) {
+            print("getTargetSize(layoutPriority: .required) was expected to be 1000")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .high) == 2000) {
-            print("getDesiredSize(layoutPriority: .high) was expected to be 2000")
+        if !(flexer.getTargetSize(layoutPriority: .high) == 2000) {
+            print("getTargetSize(layoutPriority: .high) was expected to be 2000")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .medium) == 3000) {
-            print("getDesiredSize(layoutPriority: .medium) was expected to be 3000")
+        if !(flexer.getTargetSize(layoutPriority: .medium) == 3000) {
+            print("getTargetSize(layoutPriority: .medium) was expected to be 3000")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .low) == 4000) {
-            print("getDesiredSize(layoutPriority: .low) was expected to be 4000")
+        if !(flexer.getTargetSize(layoutPriority: .low) == 4000) {
+            print("getTargetSize(layoutPriority: .low) was expected to be 4000")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .finally) == 4000) {
-            print("getDesiredSize(layoutPriority: .finally) was expected to be 4000")
+        if !(flexer.getTargetSize(layoutPriority: .finally) == 4000) {
+            print("getTargetSize(layoutPriority: .finally) was expected to be 4000")
             #expect(Bool(false))
             return
         }
@@ -447,28 +447,28 @@ struct FlexerTests {
     
     @Test func test_size_flexer_initializer_4_b() {
         let flexer = Flexer(id: 0, flexerIdentifier: .unknown, 1000, nil, 2000, 3000, 4000)
-        if !(flexer.getDesiredSize(layoutPriority: .required) == 1000) {
-            print("getDesiredSize(layoutPriority: .required) was expected to be 1000")
+        if !(flexer.getTargetSize(layoutPriority: .required) == 1000) {
+            print("getTargetSize(layoutPriority: .required) was expected to be 1000")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .high) == 1000) {
-            print("getDesiredSize(layoutPriority: .high) was expected to be 1000")
+        if !(flexer.getTargetSize(layoutPriority: .high) == 1000) {
+            print("getTargetSize(layoutPriority: .high) was expected to be 1000")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .medium) == 2000) {
-            print("getDesiredSize(layoutPriority: .medium) was expected to be 2000")
+        if !(flexer.getTargetSize(layoutPriority: .medium) == 2000) {
+            print("getTargetSize(layoutPriority: .medium) was expected to be 2000")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .low) == 3000) {
-            print("getDesiredSize(layoutPriority: .low) was expected to be 3000")
+        if !(flexer.getTargetSize(layoutPriority: .low) == 3000) {
+            print("getTargetSize(layoutPriority: .low) was expected to be 3000")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .finally) == 4000) {
-            print("getDesiredSize(layoutPriority: .finally) was expected to be 4000")
+        if !(flexer.getTargetSize(layoutPriority: .finally) == 4000) {
+            print("getTargetSize(layoutPriority: .finally) was expected to be 4000")
             #expect(Bool(false))
             return
         }
@@ -476,28 +476,28 @@ struct FlexerTests {
     
     @Test func test_size_flexer_initializer_4_c() {
         let flexer = Flexer(id: 0, flexerIdentifier: .unknown, 1000, 2000, nil, 3000, 4000)
-        if !(flexer.getDesiredSize(layoutPriority: .required) == 1000) {
-            print("getDesiredSize(layoutPriority: .required) was expected to be 1000")
+        if !(flexer.getTargetSize(layoutPriority: .required) == 1000) {
+            print("getTargetSize(layoutPriority: .required) was expected to be 1000")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .high) == 2000) {
-            print("getDesiredSize(layoutPriority: .high) was expected to be 2000")
+        if !(flexer.getTargetSize(layoutPriority: .high) == 2000) {
+            print("getTargetSize(layoutPriority: .high) was expected to be 2000")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .medium) == 2000) {
-            print("getDesiredSize(layoutPriority: .medium) was expected to be 2000")
+        if !(flexer.getTargetSize(layoutPriority: .medium) == 2000) {
+            print("getTargetSize(layoutPriority: .medium) was expected to be 2000")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .low) == 3000) {
-            print("getDesiredSize(layoutPriority: .low) was expected to be 3000")
+        if !(flexer.getTargetSize(layoutPriority: .low) == 3000) {
+            print("getTargetSize(layoutPriority: .low) was expected to be 3000")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .finally) == 4000) {
-            print("getDesiredSize(layoutPriority: .finally) was expected to be 4000")
+        if !(flexer.getTargetSize(layoutPriority: .finally) == 4000) {
+            print("getTargetSize(layoutPriority: .finally) was expected to be 4000")
             #expect(Bool(false))
             return
         }
@@ -505,86 +505,86 @@ struct FlexerTests {
     
     @Test func test_size_flexer_initializer_4_d() {
         let flexer = Flexer(id: 0, flexerIdentifier: .unknown, 1000, 2000, 3000, nil, 4000)
-        if !(flexer.getDesiredSize(layoutPriority: .required) == 1000) {
-            print("getDesiredSize(layoutPriority: .required) was expected to be 1000")
+        if !(flexer.getTargetSize(layoutPriority: .required) == 1000) {
+            print("getTargetSize(layoutPriority: .required) was expected to be 1000")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .high) == 2000) {
-            print("getDesiredSize(layoutPriority: .high) was expected to be 2000")
+        if !(flexer.getTargetSize(layoutPriority: .high) == 2000) {
+            print("getTargetSize(layoutPriority: .high) was expected to be 2000")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .medium) == 3000) {
-            print("getDesiredSize(layoutPriority: .medium) was expected to be 3000")
+        if !(flexer.getTargetSize(layoutPriority: .medium) == 3000) {
+            print("getTargetSize(layoutPriority: .medium) was expected to be 3000")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .low) == 3000) {
-            print("getDesiredSize(layoutPriority: .low) was expected to be 3000")
+        if !(flexer.getTargetSize(layoutPriority: .low) == 3000) {
+            print("getTargetSize(layoutPriority: .low) was expected to be 3000")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .finally) == 4000) {
-            print("getDesiredSize(layoutPriority: .finally) was expected to be 4000")
+        if !(flexer.getTargetSize(layoutPriority: .finally) == 4000) {
+            print("getTargetSize(layoutPriority: .finally) was expected to be 4000")
             #expect(Bool(false))
             return
         }
     }
     
-    @Test func test_size_flexer_getDesiredSize_a() {
+    @Test func test_size_flexer_getTargetSize_a() {
         let flexer = Flexer(id: 0, flexerIdentifier: .unknown, 100, 200, 300, 400, 500)
-        if !(flexer.getDesiredSize(layoutPriority: .finally) == 500) {
-            print("getDesiredSize(layoutPriority: .finally) was expected to be 500")
+        if !(flexer.getTargetSize(layoutPriority: .finally) == 500) {
+            print("getTargetSize(layoutPriority: .finally) was expected to be 500")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .low) == 400) {
-            print("getDesiredSize(layoutPriority: .low) was expected to be 400")
+        if !(flexer.getTargetSize(layoutPriority: .low) == 400) {
+            print("getTargetSize(layoutPriority: .low) was expected to be 400")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .medium) == 300) {
-            print("getDesiredSize(layoutPriority: .medium) was expected to be 300")
+        if !(flexer.getTargetSize(layoutPriority: .medium) == 300) {
+            print("getTargetSize(layoutPriority: .medium) was expected to be 300")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .high) == 200) {
-            print("getDesiredSize(layoutPriority: .high) was expected to be 200")
+        if !(flexer.getTargetSize(layoutPriority: .high) == 200) {
+            print("getTargetSize(layoutPriority: .high) was expected to be 200")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .required) == 100) {
-            print("getDesiredSize(layoutPriority: .required) was expected to be 100")
+        if !(flexer.getTargetSize(layoutPriority: .required) == 100) {
+            print("getTargetSize(layoutPriority: .required) was expected to be 100")
             #expect(Bool(false))
             return
         }
     }
     
-    @Test func test_size_flexer_getDesiredSize_b() {
+    @Test func test_size_flexer_getTargetSize_b() {
         let flexer = Flexer(id: 0, flexerIdentifier: .unknown, 1, 2, 3, 4, 5)
-        if !(flexer.getDesiredSize(layoutPriority: .finally) == 5) {
-            print("getDesiredSize(layoutPriority: .finally) was expected to be 5")
+        if !(flexer.getTargetSize(layoutPriority: .finally) == 5) {
+            print("getTargetSize(layoutPriority: .finally) was expected to be 5")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .low) == 4) {
-            print("getDesiredSize(layoutPriority: .low) was expected to be 4")
+        if !(flexer.getTargetSize(layoutPriority: .low) == 4) {
+            print("getTargetSize(layoutPriority: .low) was expected to be 4")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .medium) == 3) {
-            print("getDesiredSize(layoutPriority: .medium) was expected to be 3")
+        if !(flexer.getTargetSize(layoutPriority: .medium) == 3) {
+            print("getTargetSize(layoutPriority: .medium) was expected to be 3")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .high) == 2) {
-            print("getDesiredSize(layoutPriority: .high) was expected to be 2")
+        if !(flexer.getTargetSize(layoutPriority: .high) == 2) {
+            print("getTargetSize(layoutPriority: .high) was expected to be 2")
             #expect(Bool(false))
             return
         }
-        if !(flexer.getDesiredSize(layoutPriority: .required) == 1) {
-            print("getDesiredSize(layoutPriority: .required) was expected to be 1")
+        if !(flexer.getTargetSize(layoutPriority: .required) == 1) {
+            print("getTargetSize(layoutPriority: .required) was expected to be 1")
             #expect(Bool(false))
             return
         }
@@ -692,69 +692,69 @@ struct FlexerTests {
     @Test func test_size_flexer_loops_basic() {
         var loops = 0
         let ceiling = 24
-        var desired_size_required = 0
-        while desired_size_required <= ceiling {
-            var desired_size_high = desired_size_required
-            while desired_size_high <= ceiling {
-                var desired_size_medium = desired_size_high
-                while desired_size_medium <= ceiling {
-                    var desired_size_low = desired_size_medium
-                    while desired_size_low <= ceiling {
-                        var desired_size_finally = desired_size_low
-                        while desired_size_finally <= ceiling {
+        var desiredSizeRequired = 0
+        while desiredSizeRequired <= ceiling {
+            var desiredSizeHigh = desiredSizeRequired
+            while desiredSizeHigh <= ceiling {
+                var desiredSizeMedium = desiredSizeHigh
+                while desiredSizeMedium <= ceiling {
+                    var desiredSizeLow = desiredSizeMedium
+                    while desiredSizeLow <= ceiling {
+                        var desiredSizeFinally = desiredSizeLow
+                        while desiredSizeFinally <= ceiling {
                             
-                            let flexor = Flexer(id: 0, flexerIdentifier: .unknown, desired_size_required,
-                                                            desired_size_high,
-                                                            desired_size_medium,
-                                                            desired_size_low,
-                                                            desired_size_finally)
+                            let flexor = Flexer(id: 0, flexerIdentifier: .unknown, desiredSizeRequired,
+                                                            desiredSizeHigh,
+                                                            desiredSizeMedium,
+                                                            desiredSizeLow,
+                                                            desiredSizeFinally)
                             if !flexor.validate_desired_sizes() {
                                 print("This was an invalid configuration.")
-                                print("desired_size_required = \(desired_size_required)")
-                                print("desired_size_high = \(desired_size_high)")
-                                print("desired_size_medium = \(desired_size_medium)")
-                                print("desired_size_low = \(desired_size_low)")
-                                print("desired_size_finally = \(desired_size_finally)")
+                                print("desiredSizeRequired = \(desiredSizeRequired)")
+                                print("desiredSizeHigh = \(desiredSizeHigh)")
+                                print("desiredSizeMedium = \(desiredSizeMedium)")
+                                print("desiredSizeLow = \(desiredSizeLow)")
+                                print("desiredSizeFinally = \(desiredSizeFinally)")
                                 
                                 #expect(Bool(false))
                                 return
                             }
                             
-                            if flexor.getDesiredSize(layoutPriority: .finally) != desired_size_finally {
+                            if flexor.getTargetSize(layoutPriority: .finally) != desiredSizeFinally {
                                 #expect(Bool(false))
                                 return
                             }
                             
-                            if flexor.getDesiredSize(layoutPriority: .low) != desired_size_low {
+                            if flexor.getTargetSize(layoutPriority: .low) != desiredSizeLow {
                                 #expect(Bool(false))
                                 return
                             }
                             
-                            if flexor.getDesiredSize(layoutPriority: .medium) != desired_size_medium {
+                            if flexor.getTargetSize(layoutPriority: .medium) != desiredSizeMedium {
                                 #expect(Bool(false))
                                 return
                             }
                             
-                            if flexor.getDesiredSize(layoutPriority: .high) != desired_size_high {
+                            if flexor.getTargetSize(layoutPriority: .high) != desiredSizeHigh {
                                 #expect(Bool(false))
                                 return
                             }
                             
-                            if flexor.getDesiredSize(layoutPriority: .required) != desired_size_required {
+                            if flexor.getTargetSize(layoutPriority: .required) != desiredSizeRequired {
                                 #expect(Bool(false))
                                 return
                             }
                             
                             loops += 1
-                            desired_size_finally += 1
+                            desiredSizeFinally += 1
                         }
-                        desired_size_low += 1
+                        desiredSizeLow += 1
                     }
-                    desired_size_medium += 1
+                    desiredSizeMedium += 1
                 }
-                desired_size_high += 1
+                desiredSizeHigh += 1
             }
-            desired_size_required += 1
+            desiredSizeRequired += 1
         }
         print("Tested with \(loops) loops. Success!")
     }
@@ -762,16 +762,16 @@ struct FlexerTests {
     @Test func test_size_flexer_loops_ingest() {
         var loops = 0
         let ceiling = 8
-        var desired_size_required = 0
-        while desired_size_required <= ceiling {
-            var desired_size_high = desired_size_required
-            while desired_size_high <= ceiling {
-                var desired_size_medium = desired_size_high
-                while desired_size_medium <= ceiling {
-                    var desired_size_low = desired_size_medium
-                    while desired_size_low <= ceiling {
-                        var desired_size_finally = desired_size_low
-                        while desired_size_finally <= ceiling {
+        var desiredSizeRequired = 0
+        while desiredSizeRequired <= ceiling {
+            var desiredSizeHigh = desiredSizeRequired
+            while desiredSizeHigh <= ceiling {
+                var desiredSizeMedium = desiredSizeHigh
+                while desiredSizeMedium <= ceiling {
+                    var desiredSizeLow = desiredSizeMedium
+                    while desiredSizeLow <= ceiling {
+                        var desiredSizeFinally = desiredSizeLow
+                        while desiredSizeFinally <= ceiling {
                             for layoutPriority in [LayoutPriority.required,
                                              LayoutPriority.high,
                                              LayoutPriority.medium,
@@ -785,26 +785,26 @@ struct FlexerTests {
                                         
                                         let available_space = Int.random(in: 0...512)
                                         
-                                        let flexor = Flexer(id: 0, flexerIdentifier: .unknown, desired_size_required,
-                                                            desired_size_high,
-                                                            desired_size_medium,
-                                                            desired_size_low,
-                                                            desired_size_finally)
+                                        let flexor = Flexer(id: 0, flexerIdentifier: .unknown, desiredSizeRequired,
+                                                            desiredSizeHigh,
+                                                            desiredSizeMedium,
+                                                            desiredSizeLow,
+                                                            desiredSizeFinally)
                                         flexor.currentSize = currentSize
                                         
                                         // Let's see what we expect the result to be.
                                         let expected_ceiling: Int
                                         switch layoutPriority {
                                         case .required:
-                                            expected_ceiling = desired_size_required
+                                            expected_ceiling = desiredSizeRequired
                                         case .high:
-                                            expected_ceiling = desired_size_high
+                                            expected_ceiling = desiredSizeHigh
                                         case .medium:
-                                            expected_ceiling = desired_size_medium
+                                            expected_ceiling = desiredSizeMedium
                                         case .low:
-                                            expected_ceiling = desired_size_low
+                                            expected_ceiling = desiredSizeLow
                                         case .finally:
-                                            expected_ceiling = desired_size_finally
+                                            expected_ceiling = desiredSizeFinally
                                         }
                                         
                                         let expected_result: Int
@@ -834,11 +834,11 @@ struct FlexerTests {
                                             #expect(Bool(false))
                                             
                                             print("This was an invalid configuration.")
-                                            print("desired_size_required = \(desired_size_required)")
-                                            print("desired_size_high = \(desired_size_high)")
-                                            print("desired_size_medium = \(desired_size_medium)")
-                                            print("desired_size_low = \(desired_size_low)")
-                                            print("desired_size_finally = \(desired_size_finally)")
+                                            print("desiredSizeRequired = \(desiredSizeRequired)")
+                                            print("desiredSizeHigh = \(desiredSizeHigh)")
+                                            print("desiredSizeMedium = \(desiredSizeMedium)")
+                                            print("desiredSizeLow = \(desiredSizeLow)")
+                                            print("desiredSizeFinally = \(desiredSizeFinally)")
                                             
                                             print("expected_result = \(expected_result)")
                                             print("expected_new_size = \(expected_new_size)")
@@ -858,15 +858,15 @@ struct FlexerTests {
                                     }
                                 }
                             }
-                            desired_size_finally += 1
+                            desiredSizeFinally += 1
                         }
-                        desired_size_low += 1
+                        desiredSizeLow += 1
                     }
-                    desired_size_medium += 1
+                    desiredSizeMedium += 1
                 }
-                desired_size_high += 1
+                desiredSizeHigh += 1
             }
-            desired_size_required += 1
+            desiredSizeRequired += 1
         }
         print("Tested with \(loops) loops. Success!")
     }

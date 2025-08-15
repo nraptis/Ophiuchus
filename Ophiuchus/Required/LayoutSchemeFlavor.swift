@@ -7,39 +7,16 @@
 
 import Foundation
 
-@frozen public enum LayoutSchemeFlavor: UInt8, Comparable {
-    case long = 4
-    case stackedLarge = 3
-    case stackedMedium = 2
-    case stackedSmall = 1
+public struct LayoutSchemeFlavor {
     
-    public static func < (lhs: LayoutSchemeFlavor, rhs: LayoutSchemeFlavor) -> Bool {
-        lhs.rawValue < rhs.rawValue
-    }
+    public let stackingFormat: LayoutStackingFormat
+    public let fontScale: LayoutUniversalFontScale
     
     public var isStacked: Bool {
-        switch self {
-        case .long:
-            false
-        case .stackedLarge:
-            true
-        case .stackedMedium:
-            true
-        case .stackedSmall:
-            true
-        }
+        stackingFormat.isStacked
     }
     
     public var isLong: Bool {
-        switch self {
-        case .long:
-            true
-        case .stackedLarge:
-            false
-        case .stackedMedium:
-            false
-        case .stackedSmall:
-            false
-        }
+        stackingFormat.isLong
     }
 }

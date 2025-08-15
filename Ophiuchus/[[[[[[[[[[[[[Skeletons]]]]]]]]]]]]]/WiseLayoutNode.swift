@@ -7,52 +7,209 @@
 
 import Foundation
 
-public class WiseLayoutNode {
+public class WiseLayoutNode: ExploderConforming {
+    
+    
+    static func generate(id: Int, pieces: [SkeletonPiece], flexers: [Flexer]) -> WiseLayoutNode {
+        let result = WiseLayoutNode(id: id,
+                                    pieces: pieces,
+                                    flexers: flexers)
+        result.currentSize = 0
+        for flexer in result.flexers {
+            result.currentSize += flexer.currentSize
+        }
+        for piece in result.pieces {
+            result.currentSize += piece.currentSize
+        }
+        result.childrenSize = result.currentSize
+        return result
+    }
+    
+    static func generate(pieces: [SkeletonPiece], flexers: [Flexer]) -> WiseLayoutNode {
+        let id = SkeletonIdentifierFactory.get_id()
+        let result = generate(id: id,
+                              pieces: pieces,
+                              flexers: flexers)
+        
+        return result
+    }
+    
+    static func generate(pieces: [SkeletonPiece]) -> WiseLayoutNode {
+        let id = SkeletonIdentifierFactory.get_id()
+        let result = generate(id: id,
+                              pieces: pieces,
+                              flexers: [])
+        return result
+    }
+    
+    static func generate(flexers: [Flexer]) -> WiseLayoutNode {
+        let id = SkeletonIdentifierFactory.get_id()
+        let result = generate(id: id,
+                              pieces: [],
+                              flexers: flexers)
+        return result
+    }
+    
+    public var currentSize = 0
+    public var childrenSize = 0
+    
+    var __snapshotCurrentSize = 0
+    var __expectedCurrentSize = 0
+    
+    
+    var didGrowOnCurrentPass = false
+    var requestedGrowthFromChildren = 0
+    //var requestedGrowthFromChildrenMaximum = 0
+    
+    var bubble = 0
+    
+    
+    var requestedGrowthForParent = 0
+    var temp = 0
+    //var proposedGrowthAmount = 0
+    
+    var isLockedAtEveryPriority = false
+    var isLockedAtCurrentPriority = false
     
     public let id: Int
-    public let recipe_id: Int
     public let toolInterfaceElement: ToolInterfaceElement
     public let toolInterfaceElementType: ToolInterfaceElementType
     public let interfaceProvider: InterfaceProvider
     public let configuration: Any
-    public let is_stacked: Bool
+    public let isStacked: Bool
     public let layoutScheme: LayoutScheme.Type
     public let layoutSchemeFlavor: LayoutSchemeFlavor
-    public let skeletonNodes: [SkeletonNode]
-    var x = 0
-    var width = 0
+    public var x = 0
+    public var width = 0
+    let pieces: [SkeletonPiece]
+    let flexers: [Flexer]
+    var segmentedPiecesAndFlexers: [SkeletonPiecesAndFlexers]?
     
-    public init(recipe_id: Int,
+    var isLeftOfCenter = false
+    
+    //TODO: Back to unowned..
+    var section: SkeletonSection!
+    //TODO: Back to unowned..
+    var row: SkeletonRow!
+    
+    unowned var group: ExploderGroup<WiseLayoutNode>!
+    
+    
+    public init(id: Int,
                 toolInterfaceElement: ToolInterfaceElement,
                 toolInterfaceElementType: ToolInterfaceElementType,
                 interfaceProvider: InterfaceProvider,
                 configuration: Any,
-                is_stacked: Bool,
+                isStacked: Bool,
                 layoutScheme: LayoutScheme.Type,
                 layoutSchemeFlavor: LayoutSchemeFlavor,
-                skeletonNodes: [SkeletonNode]) {
+                pieces: [SkeletonPiece],
+                flexers: [Flexer]) {
         
-        self.id = SkeletonIdentifierFactory.get_id()
-        self.recipe_id = recipe_id
+        self.id = id
         self.toolInterfaceElement = toolInterfaceElement
         self.toolInterfaceElementType = toolInterfaceElementType
         self.interfaceProvider = interfaceProvider
         self.configuration = configuration
-        self.is_stacked = is_stacked
+        self.isStacked = isStacked
         self.layoutScheme = layoutScheme
         self.layoutSchemeFlavor = layoutSchemeFlavor
-        self.skeletonNodes = skeletonNodes
+        self.flexers = flexers
+        self.pieces = pieces
+        for _piece in pieces {
+            _piece.node = self
+        }
+        for _flexer in flexers {
+            _flexer.node = self
+        }
         
-        var _x = 0
-        var _width = 0
-        if skeletonNodes.count > 0 {
-            _x = skeletonNodes[0].x
+    }
+    
+    public convenience init(id: Int,
+                            pieces: [SkeletonPiece],
+                            flexers: [Flexer]) {
+        let layoutSchemeFlavor = LayoutSchemeFlavor(stackingFormat: .invalid,
+                                                    fontScale: .large)
+        self.init(id: id,
+                  toolInterfaceElement: .invalid,
+                  toolInterfaceElementType: .invalid,
+                  interfaceProvider: .invalid,
+                  configuration: 0,
+                  isStacked: true,
+                  layoutScheme: EmptyLayoutScheme.self,
+                  layoutSchemeFlavor: layoutSchemeFlavor,
+                  pieces: pieces,
+                  flexers: flexers)
+    }
+    
+    public convenience init(id: Int,
+                            flexers: [Flexer]) {
+        let layoutSchemeFlavor = LayoutSchemeFlavor(stackingFormat: .invalid,
+                                                    fontScale: .large)
+        self.init(id: id,
+                  toolInterfaceElement: .invalid,
+                  toolInterfaceElementType: .invalid,
+                  interfaceProvider: .invalid,
+                  configuration: 0,
+                  isStacked: true,
+                  layoutScheme: EmptyLayoutScheme.self,
+                  layoutSchemeFlavor: layoutSchemeFlavor,
+                  pieces: [],
+                  flexers: flexers)
+    }
+    
+    public convenience init(id: Int,
+                            pieces: [SkeletonPiece]) {
+        let layoutSchemeFlavor = LayoutSchemeFlavor(stackingFormat: .invalid,
+                                                    fontScale: .large)
+        self.init(id: id,
+                  toolInterfaceElement: .invalid,
+                  toolInterfaceElementType: .invalid,
+                  interfaceProvider: .invalid,
+                  configuration: 0,
+                  isStacked: true,
+                  layoutScheme: EmptyLayoutScheme.self,
+                  layoutSchemeFlavor: layoutSchemeFlavor,
+                  pieces: pieces,
+                  flexers: [])
+    }
+    
+    func getFlexer(flexerIdentifier: FlexerIdentifier) -> Flexer? {
+        
+        for _flexer in flexers {
+            if _flexer.flexerIdentifier == flexerIdentifier {
+                return _flexer
+            }
         }
-        for skeletonNode in skeletonNodes {
-            _width += skeletonNode.width
+        
+        return nil
+    }
+    
+    func getPiece(pieceIdentifier: PieceIdentifier) -> SkeletonPiece? {
+        
+        for _piece in pieces {
+            if _piece.pieceIdentifier == pieceIdentifier {
+                return _piece
+            }
         }
-        self.x = _x
-        self.width = _width
+        
+        return nil
+    }
+    
+    func currentSizeMatchesChildren(offset: Int) -> Bool {
+        var sum = 0
+        for flexer in flexers {
+            sum += flexer.currentSize
+        }
+        for piece in pieces {
+            sum += piece.currentSize
+        }
+        if (sum + offset) == currentSize {
+            return true
+        } else {
+            return false
+        }
+                
     }
     
 }

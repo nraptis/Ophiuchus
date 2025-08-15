@@ -12,9 +12,9 @@ import Testing
 struct RowOverlapTests {
     
     func generate_row(x1: Int, width1: Int, x2: Int, width2: Int) -> SkeletonRow {
-        let section_a = GenerateSections.generate_section_already_placed(x: x1, width: width1)
-        let section_b = GenerateSections.generate_section_already_placed(x: x2, width: width2)
-        let result = GenerateRows.generate_Row(sections: [section_a, section_b], attemptedCenteredSection: nil)
+        let section_a = GenerateSections.generate_alreadyPlaced(x: x1, width: width1)
+        let section_b = GenerateSections.generate_alreadyPlaced(x: x2, width: width2)
+        let result = GenerateRows.generate(sections: [section_a, section_b], centeredSection: nil)
         return result
     }
     
@@ -57,7 +57,6 @@ struct RowOverlapTests {
             return
         }
     }
-    
     
     //a_left_of_b
     //a_short
