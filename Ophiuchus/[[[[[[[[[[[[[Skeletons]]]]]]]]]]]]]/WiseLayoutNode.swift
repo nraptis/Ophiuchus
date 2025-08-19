@@ -59,12 +59,24 @@ public class WiseLayoutNode: ExploderConforming {
     
     var didGrowOnCurrentPass = false
     var requestedGrowthFromChildren = 0
+    
+    var requestedGrowthFromChildrenMax = 0
+    var requestedGrowthFromChildrenMin = 0
+    
+    
+    var didChildRequestGrowthOnCurrentPass = false
+    //var didGrowOnCurrentPass = false
+    
     //var requestedGrowthFromChildrenMaximum = 0
     
-    var bubble = 0
+    //var bubble = 0
+    //var bubbleMin = 0
+    //var bubbleMax = 0
+    var gap = 0
     
+    var name = ""
     
-    var requestedGrowthForParent = 0
+    //var requestedGrowthForParent = 0
     var temp = 0
     //var proposedGrowthAmount = 0
     
@@ -196,7 +208,7 @@ public class WiseLayoutNode: ExploderConforming {
         return nil
     }
     
-    func currentSizeMatchesChildren(offset: Int) -> Bool {
+    func childrenSizeMatchesChildren() -> Bool {
         var sum = 0
         for flexer in flexers {
             sum += flexer.currentSize
@@ -204,12 +216,11 @@ public class WiseLayoutNode: ExploderConforming {
         for piece in pieces {
             sum += piece.currentSize
         }
-        if (sum + offset) == currentSize {
+        if (sum == childrenSize) {
             return true
         } else {
             return false
         }
-                
     }
     
 }

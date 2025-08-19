@@ -240,4 +240,45 @@ public class Flexer: ExploderConforming {
         }
     }
     
+    func toString() -> String {
+        
+        var result = "Flx"
+        if name.count > 0 {
+            result += "(\(name))"
+        }
+        result += "(\(flexerIdentifier)): "
+        
+        
+        result += "\(desiredSizeRequired)"
+        
+        if desiredSizeFinally == desiredSizeLow {
+            if desiredSizeLow == desiredSizeMedium {
+                if desiredSizeMedium == desiredSizeHigh {
+                    if desiredSizeHigh == desiredSizeRequired {
+                        
+                    } else {
+                        result += "|\(desiredSizeHigh)"
+                    }
+                    
+                } else {
+                    result += "|\(desiredSizeHigh)"
+                    result += "|\(desiredSizeMedium)"
+                }
+            } else {
+                result += "|\(desiredSizeHigh)"
+                result += "|\(desiredSizeMedium)"
+                result += "|\(desiredSizeLow)"
+            }
+            
+        } else {
+            
+            result += "|\(desiredSizeHigh)"
+            result += "|\(desiredSizeMedium)"
+            result += "|\(desiredSizeLow)"
+            result += "|\(desiredSizeFinally)"
+            
+            
+        }
+        return result
+    }
 }

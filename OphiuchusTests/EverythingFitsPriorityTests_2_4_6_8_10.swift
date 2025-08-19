@@ -181,7 +181,6 @@ struct EverythingFitsPriorityTests_2_4_6_8_10 {
         #expect(node.currentSize == 10)
         #expect(section.currentSize == 10)
         #expect(row.growthBudget == 990)
-        
     }
     
     @MainActor @Test func test_one_flexer_2_4_6_8_10_rule_kicks_in_at_2() {

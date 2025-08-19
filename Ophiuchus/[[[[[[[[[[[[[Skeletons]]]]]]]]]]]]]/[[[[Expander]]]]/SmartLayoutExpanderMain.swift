@@ -8,8 +8,6 @@
 import Foundation
 
 struct SmartLayoutExpanderMain {
-    
-    private static let maxExpandIterations = 4096
 
     static func positionContent(pages: [SkeletonPage],
                                 menuWidthWithSafeArea: Int,
@@ -23,14 +21,12 @@ struct SmartLayoutExpanderMain {
                         _node.width = _node.currentSize
                     }
                 }
-                
                 _row.positionContentAfterSizeComputation(menuWidthWithSafeArea: menuWidthWithSafeArea,
                                                          safeAreaLeft: safeAreaLeft,
                                                          safeAreaRight: safeAreaRight)
             }
         }
     }
-    
     
     public static func prepare(groupData: SkeletonLayoutGroupDataExploded) {
         
@@ -42,28 +38,30 @@ struct SmartLayoutExpanderMain {
         for pieceGroup in pieceGroups {
             pieceGroup.isLockedAtCurrentPriority = false
             pieceGroup.isLockedAtEveryPriority = false
+            pieceGroup.isMono = (pieceGroup.linkedList.count <= 1)
         }
         
         for flexerGroup in flexerGroups {
             flexerGroup.isLockedAtCurrentPriority = false
             flexerGroup.isLockedAtEveryPriority = false
+            flexerGroup.isMono = (flexerGroup.linkedList.count <= 1)
         }
         
-        for nodeGroup in groupData.nodeGroups {
+        for nodeGroup in nodeGroups {
             nodeGroup.isLockedAtCurrentPriority = false
             nodeGroup.isLockedAtEveryPriority = false
+            nodeGroup.isMono = (nodeGroup.linkedList.count <= 1)
             for node in nodeGroup.linkedList {
                 node.isLockedAtCurrentPriority = false
                 node.isLockedAtEveryPriority = false
             }
         }
         
-        for section in groupData.sections {
-            ListFactory_Groups.sectionListAdd(section: section)
+        for section in sections {
+            ListFactory_GroupsA.sectionListAdd(section: section)
             section.isLockedAtCurrentPriority = false
             section.isLockedAtEveryPriority = false
         }
     }
-    
     
 }

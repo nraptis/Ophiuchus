@@ -102,4 +102,25 @@ import Foundation
         }
     }
     
+    static var random: LayoutPriority {
+        let number = Int.random(in: 0...4)
+        if number == 0 {
+            return LayoutPriority.required
+        } else if number == 1 {
+            return LayoutPriority.high
+        }else if number == 2 {
+            return LayoutPriority.medium
+        }else if number == 3 {
+            return LayoutPriority.low
+        } else {
+            return LayoutPriority.finally
+        }
+    }
+    
+    
+    static var all: [LayoutPriority] {
+        let result = [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally]
+        return result
+    }
+    
 }

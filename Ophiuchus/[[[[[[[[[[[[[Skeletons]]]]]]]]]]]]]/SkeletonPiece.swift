@@ -54,6 +54,8 @@ public class SkeletonPiece: ExploderConforming {
     
     var didGrowOnCurrentPass = false
     
+    var name = ""
+    
     let originalSize: Int
     public let id: Int
     public let pieceIdentifier: PieceIdentifier
@@ -86,5 +88,15 @@ public class SkeletonPiece: ExploderConforming {
         return false
     }
     
+    func toString() -> String {
+        
+        var result = "Piece \(id): \(currentSize)/\(originalSize)"
+        if name.count > 0 {
+            result += "(\(name))"
+        }
+        result += "(\(pieceIdentifier)): "
+        result += "org: \(originalSize), cur: \(currentSize)"
+        return result
+    }
     
 }

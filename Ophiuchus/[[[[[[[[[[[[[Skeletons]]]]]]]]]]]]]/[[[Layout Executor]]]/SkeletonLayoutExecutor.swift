@@ -96,21 +96,12 @@ public struct SkeletonLayoutExecutor {
                                  safeAreaLeft: safeAreaLeft,
                                  safeAreaRight: safeAreaRight)
         
-        let layoutPriorities = [LayoutPriority.required, LayoutPriority.high, LayoutPriority.medium, LayoutPriority.low, LayoutPriority.finally]
-        
-        for layoutPriority in layoutPriorities {
-            SkeletonLayoutBruteForceExpander.expand_where_possible(pages: pages,
-                                                                   groupData: groupData,
-                                                                   layoutPriority: layoutPriority)
-        }
-        
-        // ( Section A   (Chunk A   (Piece A) ) )
-        
-        // Piece rule may link 1 piece to another.
-        // This rule means they are equal width.
-        // This is a HARD LINK.
-        
-        // When pieces are not in the same sec
+        SmartLayoutExpanderMain.prepare(groupData: groupData)
+        SmartLayoutExpanderPass.pass(groupData: groupData, layoutPriority: .required)
+        SmartLayoutExpanderPass.pass(groupData: groupData, layoutPriority: .high)
+        SmartLayoutExpanderPass.pass(groupData: groupData, layoutPriority: .medium)
+        SmartLayoutExpanderPass.pass(groupData: groupData, layoutPriority: .low)
+        SmartLayoutExpanderPass.pass(groupData: groupData, layoutPriority: .finally)
         
         SkeletonLayoutBruteForceExpander.positionContent(pages: pages,
                                                          menuWidthWithSafeArea: menuWidthWithSafeArea,

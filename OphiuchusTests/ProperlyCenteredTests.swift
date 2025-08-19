@@ -112,6 +112,11 @@ struct ProperlyCenteredTests {
             let menuWidthWithSafeArea = Int.random(in: 0...400)
             let safeAreaLeft = 0
             let safeAreaRight = 0
+            
+            var rowSize = (menuWidthWithSafeArea)
+            rowSize -= safeAreaLeft
+            rowSize -= safeAreaRight
+            
             let menuWidth = (menuWidthWithSafeArea - safeAreaLeft - safeAreaRight)
             let centerCenterX = (menuWidth / 2)
             let center2 = center / 2
@@ -122,6 +127,14 @@ struct ProperlyCenteredTests {
             if left > centerLeft { isExpectedToPass = false }
             let rightX = menuWidth - right
             if centerRight > rightX { isExpectedToPass = false }
+            
+            if center <= 0 {
+                if left + right <= rowSize {
+                    isExpectedToPass = true
+                } else {
+                    isExpectedToPass = false
+                }
+            }
             
             if SkeletonRow.isCenterSectionProperlyCentered(leftSize: left,
                                                             centerSize: center,
@@ -167,6 +180,14 @@ struct ProperlyCenteredTests {
             let rightX = (menuWidthWithSafeArea - safeAreaLeft - safeAreaRight - right)
             if rightX < centerRight { isExpectedToPass = false }
             
+            if center <= 0 {
+                if left + right <= rowSize {
+                    isExpectedToPass = true
+                } else {
+                    isExpectedToPass = false
+                }
+            }
+            
             if SkeletonRow.isCenterSectionProperlyCentered(leftSize: left,
                                                             centerSize: center,
                                                             rightSize: right,
@@ -193,6 +214,9 @@ struct ProperlyCenteredTests {
             let menuWidthWithSafeArea = Int.random(in: 0...1024)
             let safeAreaLeft = Int.random(in: 0...64)
             let safeAreaRight = Int.random(in: 0...64)
+            var rowSize = (menuWidthWithSafeArea)
+            rowSize -= safeAreaLeft
+            rowSize -= safeAreaRight
             
             var isExpectedToPass = true
             
@@ -205,6 +229,14 @@ struct ProperlyCenteredTests {
             
             if left_x > center_x1 { isExpectedToPass = false }
             if right_x < center_x2 { isExpectedToPass = false }
+            
+            if center <= 0 {
+                if left + right <= rowSize {
+                    isExpectedToPass = true
+                } else {
+                    isExpectedToPass = false
+                }
+            }
             
             if SkeletonRow.isCenterSectionProperlyCentered(leftSize: left,
                                                             centerSize: center,

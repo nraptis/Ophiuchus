@@ -11,210 +11,6 @@ import Testing
 
 struct PulseStepBTests {
     
-    @MainActor func testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: [WiseLayoutNode],
-                                                                                    sections: [SkeletonSection],
-                                                                                    rows: [SkeletonRow],
-                                                                                    book: SkeletonBook,
-                                                                                    times: Int) -> Bool {
-        
-        let groupData = SkeletonLayoutGrouper.getAll(book: book)
-        SmartLayoutExpanderMain.prepare(groupData: groupData)
-        SmartLayoutExpanderPass.prepare_naive(groupData: groupData, layoutPriority: .required)
-        let nodeGroups = GenerateAdvanced.generateUniqueNodeGroups(nodeGroups: groupData.nodeGroups)
-        if nodeGroups.count != groupData.nodeGroups.count {
-            fatalError("Hmm, something went wrong...")
-        }
-        
-        var expectedResult = false
-        let bags = GenerateAdvanced.generateBags(nodeGroups: groupData.nodeGroups)
-        var row_map = [Int: WrappedRow]()
-        var section_map = [Int: WrappedSection]()
-        var node_map = [Int: WrappedNode]()
-        
-        for row in rows {
-            let wrappedRow = WrappedRow(row: row)
-            wrappedRow.inject(row_map: &row_map,
-                              section_map: &section_map,
-                              node_map: &node_map)
-        }
-        
-        for row in rows {
-            guard row_map[row.id] !== nil else { fatalError("didn't linked row...") }
-            for section in row.sections {
-                guard section_map[section.id] !== nil else { fatalError("didn't linked section...") }
-                for node in section.nodes {
-                    guard node_map[node.id] !== nil else { fatalError("didn't linked node...") }
-                    
-                }
-            }
-        }
-        
-        var loop = 0
-        while loop < times {
-            for bag in bags {
-                let nodeGroup = bag.nodeGroup
-                var highest = Int.max
-                var lowest = Int.max
-                for sectionItem in bag.sectionItems {
-                    let section = sectionItem.section
-                    
-                    for node in sectionItem.nodes {
-                        let gap = node.currentSize - node.childrenSize
-                        if gap < 0 { fatalError("misconfiguration, gap \(gap)") }
-                        
-                        var bubble = node.requestedGrowthFromChildren - gap
-                        if bubble < 0 {
-                            bubble = 0
-                        }
-                        
-                        bubble += node.currentSize
-                        highest = min(highest, bubble)
-                        lowest = min(lowest, node.currentSize)
-                    }
-                    
-                }
-                
-                if highest == Int.max {
-                    fatalError("We need a node, this makes no sense..")
-                }
-                if lowest == Int.max {
-                    fatalError("We need a node, this makes no sense..")
-                }
-                
-                var chosen: Int?
-                var target = lowest
-                while target <= highest {
-                    
-                    for sectionItem in bag.sectionItems {
-                        let section = sectionItem.section
-                        guard let wrappedSection = section_map[section.id] else { fatalError("no wrapped section") }
-                        wrappedSection.temp = 0
-                        
-                        for node in sectionItem.nodes {
-                            
-                            guard let wrappedNode = node_map[node.id] else { fatalError("no wrapped node") }
-                            
-                            let gap = wrappedNode.expectedSize - node.childrenSize
-                            if gap < 0 { fatalError("misconfiguration, gap \(gap)") }
-                            let target = (target - gap)
-                            var amount = (target - wrappedNode.expectedSize)
-                            if amount < 0 { amount = 0 }
-                            wrappedSection.temp += amount
-                        }
-                    }
-                    
-                    var totalGrowth = 0
-                    for sectionItem in bag.sectionItems {
-                        let section = sectionItem.section
-                        guard let wrappedSection = section_map[section.id] else { fatalError("no wrapped section") }
-                        totalGrowth += wrappedSection.temp
-                    }
-                    
-                    
-                    var per_row = [Int: Int]()
-                    for sectionItem in bag.sectionItems {
-                        let section = sectionItem.section
-                        guard let wrappedSection = section_map[section.id] else { fatalError("no wrapped section") }
-                        let row = section.row!
-                        per_row[row.id, default: 0] += wrappedSection.temp
-                    }
-                    
-                    var isEveryRowCapable = true
-                    for row in rows {
-                        
-                        let requiredGrowth = per_row[row.id] ?? 0
-                        if row.growthBudget < requiredGrowth {
-                            isEveryRowCapable = false
-                        }
-                        
-                        
-                    }
-                    
-                    if isEveryRowCapable {
-                        chosen = target
-                    }
-                    target += 1
-                }
-                
-                if let chosen = chosen {
-                    
-                    // All the nodes will grow to exactly "chosen"
-                    for sectionItem in bag.sectionItems {
-                        let section = sectionItem.section
-                        guard let wrappedSection = section_map[section.id] else { fatalError("no wrapped section") }
-                        
-                        for node in sectionItem.nodes {
-                            
-                            guard let wrappedNode = node_map[node.id] else { fatalError("no wrapped node") }
-                            
-                            let gap = node.currentSize - node.childrenSize
-                            if gap < 0 { fatalError("misconfiguration, gap \(gap)") }
-                            
-                            let target = (chosen - gap)
-                            var amount = (target - wrappedNode.expectedSize)
-                            if amount < 0 { amount = 0 }
-                            wrappedNode.expectedSize += amount
-                            wrappedSection.expectedSize += amount
-                            let wrappedRow = wrappedSection.row!
-                            wrappedRow.expectedGrowthBudget -= amount
-                            
-                            if amount > 0 {
-                                expectedResult = true
-                            }
-                        }
-                    }
-                }
-            }
-            
-            let actualPulseResult = SmartLayoutFlooder
-                .attemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(uniqueNodeList: nodes,
-                                                                             uniqueNodeListCount: nodes.count)
-            
-            if (actualPulseResult != expectedResult) {
-                print("Expected pulse result: (\(expectedResult)), but got (\(actualPulseResult))...")
-                #expect(Bool(false))
-                return false
-            }
-            
-            for node in nodes {
-                guard let wrappedNode = node_map[node.id] else {
-                    print("Expect every node is wrapped...")
-                    #expect(Bool(false))
-                    return false
-                }
-                
-                if (wrappedNode.expectedSize != node.currentSize) {
-                    print("For node [\(node.id)] we expected a current size of \(wrappedNode.expectedSize), got size \(node.currentSize).")
-                    #expect(Bool(false))
-                    return false
-                }
-                
-                let section = node.section!
-                let wrappedSection = wrappedNode.section!
-                
-                if (wrappedSection.expectedSize != section.currentSize) {
-                    print("For section [\(node.id)] we expected a current size of \(wrappedSection.expectedSize), got size \(section.currentSize).")
-                    #expect(Bool(false))
-                    return false
-                }
-                
-                let row = node.row!
-                let wrappedRow = wrappedSection.row!
-                if (wrappedRow.expectedGrowthBudget != row.growthBudget) {
-                    print("For row [\(row.id)] we expected a growth budget of \(wrappedRow.expectedGrowthBudget), got budget \(row.growthBudget).")
-                    #expect(Bool(false))
-                    return false
-                }
-                
-            }
-            
-            loop += 1
-            
-        }
-        
-        return true
-    }
-    
     @MainActor @Test func grow_2_pieces_1_section_grow_by_1() {
         
         // We expect this to happen:
@@ -282,11 +78,11 @@ struct PulseStepBTests {
                                 nodeRules: [],
                                 flexerRules: [],
                                 pieceRules: [])
-        if !testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: nodes,
-                                                                            sections: sections,
-                                                                            rows: rows,
-                                                                            book: book,
-                                                                            times: 1) {
+        if !DoubleVerifyNodeGrowthTool.testFloodUniqueNodeGroupsByRequestedGrowthMinMaxFromChildren(nodes: nodes,
+                                                                                                    sections: sections,
+                                                                                                    rows: rows,
+                                                                                                    book: book,
+                                                                                                    times: 1) {
             #expect(Bool(false))
             return
         }
@@ -395,11 +191,11 @@ struct PulseStepBTests {
         
         row_a.growthBudget = 1000
         
-        if !testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: nodes,
-                                                                            sections: sections,
-                                                                            rows: rows,
-                                                                            book: book,
-                                                                            times: 1) {
+        if !DoubleVerifyNodeGrowthTool.testFloodUniqueNodeGroupsByRequestedGrowthMinMaxFromChildren(nodes: nodes,
+                                                                                                    sections: sections,
+                                                                                                    rows: rows,
+                                                                                                    book: book,
+                                                                                                    times: 1) {
             #expect(Bool(false))
             return
         }
@@ -501,11 +297,11 @@ struct PulseStepBTests {
         
         row_a.growthBudget = 20
         
-        if !testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: nodes,
-                                                                            sections: sections,
-                                                                            rows: rows,
-                                                                            book: book,
-                                                                            times: 1) {
+        if !DoubleVerifyNodeGrowthTool.testFloodUniqueNodeGroupsByRequestedGrowthMinMaxFromChildren(nodes: nodes,
+                                                                                                    sections: sections,
+                                                                                                    rows: rows,
+                                                                                                    book: book,
+                                                                                                    times: 1) {
             #expect(Bool(false))
             return
         }
@@ -605,11 +401,11 @@ struct PulseStepBTests {
         
         row_a.growthBudget = 20
         
-        if !testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: nodes,
-                                                                            sections: sections,
-                                                                            rows: rows,
-                                                                            book: book,
-                                                                            times: 1) {
+        if !DoubleVerifyNodeGrowthTool.testFloodUniqueNodeGroupsByRequestedGrowthMinMaxFromChildren(nodes: nodes,
+                                                                                                    sections: sections,
+                                                                                                    rows: rows,
+                                                                                                    book: book,
+                                                                                                    times: 1) {
             #expect(Bool(false))
             return
         }
@@ -670,6 +466,16 @@ struct PulseStepBTests {
         #expect(section_a.currentSize == 18)
         #expect(row_a.growthBudget == 1)
         
+        let stepResult2 = SmartLayoutExpanderPulse.step_b_apply_piece_group_rules()
+        #expect(stepResult2 == false)
+        
+        #expect(node_a.currentSize == 9)
+        #expect(node_a.childrenSize == 0)
+        #expect(node_b.currentSize == 9)
+        #expect(node_b.childrenSize == 0)
+        #expect(section_a.currentSize == 18)
+        #expect(row_a.growthBudget == 1)
+        
         for _ in 0..<4 {
             let extraCheck = SmartLayoutExpanderPulse.step_b_apply_piece_group_rules()
             #expect(extraCheck == false)
@@ -710,11 +516,11 @@ struct PulseStepBTests {
         
         row_a.growthBudget = 19
         
-        if !testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: nodes,
-                                                                            sections: sections,
-                                                                            rows: rows,
-                                                                            book: book,
-                                                                            times: 1) {
+        if !DoubleVerifyNodeGrowthTool.testFloodUniqueNodeGroupsByRequestedGrowthMinMaxFromChildren(nodes: nodes,
+                                                                                                    sections: sections,
+                                                                                                    rows: rows,
+                                                                                                    book: book,
+                                                                                                    times: 1) {
             #expect(Bool(false))
             return
         }
@@ -844,11 +650,11 @@ struct PulseStepBTests {
         
         row_a.growthBudget = 1000
         
-        if !testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: nodes,
-                                                                            sections: sections,
-                                                                            rows: rows,
-                                                                            book: book,
-                                                                            times: 1) {
+        if !DoubleVerifyNodeGrowthTool.testFloodUniqueNodeGroupsByRequestedGrowthMinMaxFromChildren(nodes: nodes,
+                                                                                                    sections: sections,
+                                                                                                    rows: rows,
+                                                                                                    book: book,
+                                                                                                    times: 1) {
             #expect(Bool(false))
             return
         }
@@ -933,11 +739,11 @@ struct PulseStepBTests {
                                 pieceRules: [])
         row_a.growthBudget = 100
         
-        if !testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: nodes,
-                                                                            sections: sections,
-                                                                            rows: rows,
-                                                                            book: book,
-                                                                            times: 1) {
+        if !DoubleVerifyNodeGrowthTool.testFloodUniqueNodeGroupsByRequestedGrowthMinMaxFromChildren(nodes: nodes,
+                                                                                                    sections: sections,
+                                                                                                    rows: rows,
+                                                                                                    book: book,
+                                                                                                    times: 1) {
             #expect(Bool(false))
             return
         }
@@ -1089,19 +895,17 @@ struct PulseStepBTests {
         
         row_a.growthBudget = 60
         
-        if !testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: nodes,
-                                                                            sections: sections,
-                                                                            rows: rows,
-                                                                            book: book,
-                                                                            times: 8) {
+        if !DoubleVerifyNodeGrowthTool.testFloodUniqueNodeGroupsByRequestedGrowthMinMaxFromChildren(nodes: nodes,
+                                                                                                    sections: sections,
+                                                                                                    rows: rows,
+                                                                                                    book: book,
+                                                                                                    times: 8) {
             #expect(Bool(false))
             return
         }
-        
     }
     
     @MainActor @Test func grow_5_nodes_mixed_ownership_b() {
-        
         
         let nr_a = GenerateNodes.generate_growing_pieces(childrenSize: 10, currentSize: 15, growCount: 5, amount: 1)
         let node_a = nr_a.0
@@ -1246,11 +1050,11 @@ struct PulseStepBTests {
         
         row_a.growthBudget = 90
         
-        if !testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: nodes,
-                                                                            sections: sections,
-                                                                            rows: rows,
-                                                                            book: book,
-                                                                            times: 10) {
+        if !DoubleVerifyNodeGrowthTool.testFloodUniqueNodeGroupsByRequestedGrowthMinMaxFromChildren(nodes: nodes,
+                                                                                                    sections: sections,
+                                                                                                    rows: rows,
+                                                                                                    book: book,
+                                                                                                    times: 10) {
             #expect(Bool(false))
             return
         }
@@ -1260,8 +1064,11 @@ struct PulseStepBTests {
         
         let nnod_a = GenerateNodes.generate_growing_pieces(childrenSize: 1, currentSize: 2, growCount: 2, amount: 1)
         let nod_a = nnod_a.0
+        nod_a.name = "A"
+        
         let nnod_b = GenerateNodes.generate_growing_pieces(childrenSize: 2, currentSize: 2, growCount: 0, amount: 1)
         let nod_b = nnod_b.0
+        nod_b.name = "B"
         
         let sec_a = GenerateSections.generate(nodes: [nod_a, nod_b])
         sec_a.currentSize = 4
@@ -1269,7 +1076,6 @@ struct PulseStepBTests {
         
         let row_a = GenerateRows.generate(sections:  [sec_a])
         row_a.growthBudget = 1000
-        
         
         var pieceRules = [SkeletonLinkageRule_Pieces]()
         pieceRules.append(nnod_a.1)
@@ -1349,11 +1155,11 @@ struct PulseStepBTests {
                                 pieceRules: pieceRules)
         
         
-        if !testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: nodes,
-                                                                            sections: sections,
-                                                                            rows: rows,
-                                                                            book: book,
-                                                                            times: 3) {
+        if !DoubleVerifyNodeGrowthTool.testFloodUniqueNodeGroupsByRequestedGrowthMinMaxFromChildren(nodes: nodes,
+                                                                                                    sections: sections,
+                                                                                                    rows: rows,
+                                                                                                    book: book,
+                                                                                                    times: 3) {
             #expect(Bool(false))
             return
         }
@@ -1448,11 +1254,11 @@ struct PulseStepBTests {
                 
                 //book.codegen_grow_node_with_piece_group()
                 
-                if !testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: nodes,
-                                                                                    sections: sections,
-                                                                                    rows: rows,
-                                                                                    book: book,
-                                                                                    times: 1) {
+                if !DoubleVerifyNodeGrowthTool.testFloodUniqueNodeGroupsByRequestedGrowthMinMaxFromChildren(nodes: nodes,
+                                                                                                            sections: sections,
+                                                                                                            rows: rows,
+                                                                                                            book: book,
+                                                                                                            times: 1) {
                     
                     
                     
@@ -1549,11 +1355,11 @@ struct PulseStepBTests {
                     row.growthBudget = Int.random(in: 0...200)
                 }
                 
-                if !testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: nodes,
-                                                                                    sections: sections,
-                                                                                    rows: rows,
-                                                                                    book: book,
-                                                                                    times: 6) {
+                if !DoubleVerifyNodeGrowthTool.testFloodUniqueNodeGroupsByRequestedGrowthMinMaxFromChildren(nodes: nodes,
+                                                                                                            sections: sections,
+                                                                                                            rows: rows,
+                                                                                                            book: book,
+                                                                                                            times: 6) {
                     
                     
                     
@@ -1650,11 +1456,11 @@ struct PulseStepBTests {
                     row.growthBudget = Int.random(in: 0...200)
                 }
                 
-                if !testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: nodes,
-                                                                                    sections: sections,
-                                                                                    rows: rows,
-                                                                                    book: book,
-                                                                                    times: 12) {
+                if !DoubleVerifyNodeGrowthTool.testFloodUniqueNodeGroupsByRequestedGrowthMinMaxFromChildren(nodes: nodes,
+                                                                                                            sections: sections,
+                                                                                                            rows: rows,
+                                                                                                            book: book,
+                                                                                                            times: 12) {
                     
                     
                     
@@ -1750,11 +1556,11 @@ struct PulseStepBTests {
                     row.growthBudget = Int.random(in: 0...400)
                 }
                 
-                if !testAttemptToFloodUniqueNodeGroupsByRequestedGrowthFromChildren(nodes: nodes,
-                                                                                    sections: sections,
-                                                                                    rows: rows,
-                                                                                    book: book,
-                                                                                    times: 24) {
+                if !DoubleVerifyNodeGrowthTool.testFloodUniqueNodeGroupsByRequestedGrowthMinMaxFromChildren(nodes: nodes,
+                                                                                                            sections: sections,
+                                                                                                            rows: rows,
+                                                                                                            book: book,
+                                                                                                            times: 24) {
                     
                     #expect(Bool(false))
                     return

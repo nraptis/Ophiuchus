@@ -15,9 +15,13 @@ public class ExploderGroup<Element: ExploderConforming> {
     let layoutPriority: LayoutPriority
     var smallestList = [Element]()
     
-    var isActiveAtCurrentPriorityOrMono = false
+    //var isActiveAtCurrentPriorityOrMono = false
+    //var isActiveAtCurrentPriority = false
     var isActiveAtCurrentPriority = false
-    var isInactiveAtCurrentPriorityOrMono = false
+    var isMono = false
+    
+    //var isUbiquitousA = false
+    //var isUbiquitousB = false
     
     
     var isLockedAtEveryPriority = false

@@ -746,8 +746,5 @@ struct PulseStepATests {
         print("partitions_test_medium_discard => tested_count_5 = \(tested_count_5)")
         print("partitions_test_medium_discard => number_of_grows = \(number_of_grows)")
         print("partitions_test_medium_discard => number_of_not_grows = \(number_of_not_grows)")
-    }
-    
-
-    
+    }    
 }

@@ -1,13 +1,13 @@
 //
-//  ListFactory_Groups.swift
+//  ListFactory_GroupsB.swift
 //  Ophiuchus
 //
-//  Created by Nick on 8/11/25.
+//  Created by Nick on 8/15/25.
 //
 
 import Foundation
 
-public struct ListFactory_Groups {
+public struct ListFactory_GroupsB {
     
     
     private(set) static var flexerGroupList = [ExploderGroup<Flexer>]()

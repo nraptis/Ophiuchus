@@ -146,18 +146,16 @@ public class SkeletonSection {
             layout_x += _node.currentSize
         }
     }
-    
-    func currentSizeMatchesChildren(offset: Int) -> Bool {
+
+    func currentSizeMatchesChildren() -> Bool {
         var sum = 0
         for node in nodes {
             sum += node.currentSize
         }
-        if (sum + offset) == currentSize {
+        if (sum == currentSize) {
             return true
         } else {
             return false
         }
-                
     }
-    
 }

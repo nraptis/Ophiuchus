@@ -1,5 +1,5 @@
 //
-//  ListFactory_Unique.swift
+//  ListFactory_UniqueA.swift
 //  Ophiuchus
 //
 //  Created by Nick on 8/14/25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ListFactory_Unique {
+struct ListFactory_UniqueA {
     
     private static var nodeSet = Set<Int>()
     private(set) static var nodeList = [WiseLayoutNode]()

@@ -239,6 +239,70 @@ public class SkeletonBook {
         }
         
         
+        var piece_rule_list = [String]()
+        
+        for pieceRule in pieceRules {
+            
+            var pieces_array_string = "["
+            
+            var list_of_piece_names = [String]()
+            for piece in pieceRule.pieces {
+                let piece_name = piece_names[piece.id]!
+                list_of_piece_names.append(piece_name)
+            }
+            
+            pieces_array_string += list_of_piece_names.joined(separator: ",\n")
+            pieces_array_string += "]"
+            
+            let prio = pieceRule.layoutPriority.toString()
+            
+            piece_rule_list.append("SkeletonLinkageRule_Pieces(pieces: \(pieces_array_string), layoutPriority: \(prio))")
+            
+        }
+        
+        var piece_rule_array_string = "["
+        piece_rule_array_string += piece_rule_list.joined(separator: ",\n")
+        piece_rule_array_string += "]"
+        print("let rows = [\(row_names_list.joined(separator: ", "))]")
+        print("let sections = [\(section_names_list.joined(separator: ", "))]")
+        print("let pieces = [\(piece_names_list.joined(separator: ", "))]")
+        
+        print("let pieceRules = \(piece_rule_array_string)")
+        
+        
+        
+        var flexer_rule_list = [String]()
+        
+        for flexerRule in flexerRules {
+            
+            var flexers_array_string = "["
+            
+            var list_of_flexer_names = [String]()
+            for flexer in flexerRule.flexers {
+                let flexer_name = flexer_names[flexer.id]!
+                list_of_flexer_names.append(flexer_name)
+            }
+            
+            flexers_array_string += list_of_flexer_names.joined(separator: ",\n")
+            flexers_array_string += "]"
+            
+            let prio = flexerRule.layoutPriority.toString()
+            
+            flexer_rule_list.append("SkeletonLinkageRule_Flexers(flexers: \(flexers_array_string), layoutPriority: \(prio))")
+            
+        }
+        
+        var flexer_rule_array_string = "["
+        flexer_rule_array_string += flexer_rule_list.joined(separator: ",\n")
+        flexer_rule_array_string += "]"
+        print("let rows = [\(row_names_list.joined(separator: ", "))]")
+        print("let sections = [\(section_names_list.joined(separator: ", "))]")
+        print("let flexers = [\(flexer_names_list.joined(separator: ", "))]")
+        
+        print("let flexerRules = \(flexer_rule_array_string)")
+        
+        
+        
         var node_rule_list = [String]()
         
         for nodeRule in nodeRules {
@@ -263,8 +327,6 @@ public class SkeletonBook {
         var node_rule_array_string = "["
         node_rule_array_string += node_rule_list.joined(separator: ",\n")
         node_rule_array_string += "]"
-        
-        
         print("let rows = [\(row_names_list.joined(separator: ", "))]")
         print("let sections = [\(section_names_list.joined(separator: ", "))]")
         print("let nodes = [\(node_names_list.joined(separator: ", "))]")
@@ -278,7 +340,6 @@ public class SkeletonBook {
         //public let pieceRules: [SkeletonLinkageRule_Pieces]
         
     }
-    
     
     func codegen_grow_node_with_piece_group() {
         

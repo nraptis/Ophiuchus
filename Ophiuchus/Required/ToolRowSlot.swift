@@ -9,4 +9,9 @@ import Foundation
 
 @frozen public enum ToolRowSlot: UInt8 {
     case unknown
+    case normal_1
+}
+
+enum ToolMenuPagePortion {
+    case standardTopHalf
 }

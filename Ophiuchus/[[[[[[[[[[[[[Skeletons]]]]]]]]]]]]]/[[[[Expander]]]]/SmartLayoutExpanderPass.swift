@@ -12,17 +12,16 @@ struct SmartLayoutExpanderPass {
     public static func pass(groupData: SkeletonLayoutGroupDataExploded,
                             layoutPriority: LayoutPriority) {
         SmartLayoutExpanderPass.prepare_intelligent(groupData: groupData, layoutPriority: layoutPriority)
-        var max_loops = 1000
         var fudge = 0
-        while fudge < max_loops {
+        while fudge < 4096 {
             if SmartLayoutExpanderPulse.pulse() {
                 fudge += 1
             } else {
                 break
             }
         }
-        if fudge == max_loops {
-            fatalError("TODO: Remove. We got stuck on a loop...")
+        if fudge >= 4096 {
+            print("FATAL: Looks like we got stuck in a loop...")
         }
     }
     
@@ -31,10 +30,10 @@ struct SmartLayoutExpanderPass {
         
         groupData.calculateFlexerTargetSizeCurrentPriority(layoutPriority: layoutPriority)
         
-        ListFactory_Groups.flexerGroupListReset()
-        ListFactory_Groups.pieceGroupListReset()
-        ListFactory_Groups.nodeGroupListReset()
-        ListFactory_Groups.sectionListReset()
+        ListFactory_GroupsA.flexerGroupListReset()
+        ListFactory_GroupsA.pieceGroupListReset()
+        ListFactory_GroupsA.nodeGroupListReset()
+        ListFactory_GroupsA.sectionListReset()
         
         let flexerGroups = groupData.flexerGroups
         let pieceGroups = groupData.pieceGroups
@@ -42,41 +41,77 @@ struct SmartLayoutExpanderPass {
         let sections = groupData.sections
         
         for pieceGroup in pieceGroups {
-            ListFactory_Groups.pieceGroupListAdd(pieceGroup: pieceGroup)
+            ListFactory_GroupsA.pieceGroupListAdd(pieceGroup: pieceGroup)
             pieceGroup.isLockedAtCurrentPriority = false
-            pieceGroup.isActiveAtCurrentPriorityOrMono = pieceGroup.matchesPriorityOrMono(layoutPriority: layoutPriority)
+            
+            pieceGroup.isMono = (pieceGroup.linkedList.count <= 1)
+            pieceGroup.isActiveAtCurrentPriority = pieceGroup.matchesPriority(layoutPriority: layoutPriority)
+            
         }
         
         for flexerGroup in flexerGroups {
-            ListFactory_Groups.flexerGroupListAdd(flexerGroup: flexerGroup)
+            ListFactory_GroupsA.flexerGroupListAdd(flexerGroup: flexerGroup)
             flexerGroup.isLockedAtCurrentPriority = false
             
-            if flexerGroup.linkedList.count <= 1 {
-                flexerGroup.isInactiveAtCurrentPriorityOrMono = true
-            } else {
-                if flexerGroup.matchesPriority(layoutPriority: layoutPriority) {
-                    flexerGroup.isInactiveAtCurrentPriorityOrMono = false
-                } else {
-                    flexerGroup.isInactiveAtCurrentPriorityOrMono = true
-                }
-            }
+            flexerGroup.isMono = (flexerGroup.linkedList.count <= 1)
+            flexerGroup.isActiveAtCurrentPriority = flexerGroup.matchesPriority(layoutPriority: layoutPriority)
+            
         }
         
-        for nodeGroup in groupData.nodeGroups {
-            ListFactory_Groups.nodeGroupListAdd(nodeGroup: nodeGroup)
+        for nodeGroup in nodeGroups {
+            ListFactory_GroupsA.nodeGroupListAdd(nodeGroup: nodeGroup)
             nodeGroup.isLockedAtCurrentPriority = false
-            nodeGroup.isActiveAtCurrentPriorityOrMono = nodeGroup.matchesPriorityOrMono(layoutPriority: layoutPriority)
+            
+            nodeGroup.isMono = (nodeGroup.linkedList.count <= 1)
+            nodeGroup.isActiveAtCurrentPriority = nodeGroup.matchesPriority(layoutPriority: layoutPriority)
         }
         
         for section in groupData.sections {
-            ListFactory_Groups.sectionListAdd(section: section)
+            ListFactory_GroupsA.sectionListAdd(section: section)
             section.isLockedAtCurrentPriority = false
         }
     }
     
     public static func prepare_intelligent(groupData: SkeletonLayoutGroupDataExploded, layoutPriority: LayoutPriority) {
-        prepare_naive(groupData: groupData,
-                      layoutPriority: layoutPriority)
+        
+        groupData.calculateFlexerTargetSizeCurrentPriority(layoutPriority: layoutPriority)
+        
+        ListFactory_GroupsA.flexerGroupListReset()
+        ListFactory_GroupsA.pieceGroupListReset()
+        ListFactory_GroupsA.nodeGroupListReset()
+        ListFactory_GroupsA.sectionListReset()
+        
+        let flexerGroups = groupData.flexerGroups
+        let pieceGroups = groupData.pieceGroups
+        let nodeGroups = groupData.nodeGroups
+        let sections = groupData.sections
+        
+        for pieceGroup in pieceGroups {
+            if pieceGroup.isLockedAtEveryPriority { continue }
+            ListFactory_GroupsA.pieceGroupListAdd(pieceGroup: pieceGroup)
+            pieceGroup.isLockedAtCurrentPriority = false
+            pieceGroup.isActiveAtCurrentPriority = pieceGroup.matchesPriority(layoutPriority: layoutPriority)
+        }
+        
+        for flexerGroup in flexerGroups {
+            if flexerGroup.isLockedAtEveryPriority { continue }
+            ListFactory_GroupsA.flexerGroupListAdd(flexerGroup: flexerGroup)
+            flexerGroup.isLockedAtCurrentPriority = false
+            flexerGroup.isActiveAtCurrentPriority = flexerGroup.matchesPriority(layoutPriority: layoutPriority)
+        }
+        
+        for nodeGroup in nodeGroups {
+            if nodeGroup.isLockedAtEveryPriority { continue }
+            ListFactory_GroupsA.nodeGroupListAdd(nodeGroup: nodeGroup)
+            nodeGroup.isLockedAtCurrentPriority = false
+            nodeGroup.isActiveAtCurrentPriority = nodeGroup.matchesPriority(layoutPriority: layoutPriority)
+        }
+        
+        for section in groupData.sections {
+            ListFactory_GroupsA.sectionListAdd(section: section)
+            section.isLockedAtCurrentPriority = false
+        }
+        
     }
     
     

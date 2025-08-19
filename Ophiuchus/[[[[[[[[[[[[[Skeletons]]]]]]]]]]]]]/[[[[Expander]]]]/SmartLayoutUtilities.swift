@@ -17,13 +17,13 @@ struct SmartLayoutUtilities {
      static func attemptToFloodNodesByRequestedGrowthFromChildren(nodes: [WiseLayoutNode], nodeCount: Int) -> Bool {
      
      var result = false
-     ListFactory_GroupsUnique.resetNodeGroupList()
+     ListFactory_GroupsUniqueA.resetNodeGroupList()
      for nodeIndex in 0..<ListFactory_Growth.nodeListCount {
      let node = ListFactory_Growth.nodeList[nodeIndex]
      let nodeGroup = node.group!
      
      if nodeGroup.isActiveAtCurrentPriorityOrMono {
-     ListFactory_GroupsUnique.intake(nodeGroup: nodeGroup, node: node)
+     ListFactory_GroupsUniqueA.intake(nodeGroup: nodeGroup, node: node)
      } else {
      
      if attemptToFloodOneNodeByAmountWithoutConsideringGroup(node: node, amount: node.requestedGrowthFromChildren) {
@@ -32,15 +32,15 @@ struct SmartLayoutUtilities {
      }
      
      
-     ListFactory_GroupsUnique.intake(nodeGroup: nodeGroup)
+     ListFactory_GroupsUniqueA.intake(nodeGroup: nodeGroup)
      }
      
      
      
-     for nodeGroupIndex in 0..<ListFactory_GroupsUnique.nodeGroupListCount {
-     let nodeGroup = ListFactory_GroupsUnique.nodeGroupList[nodeGroupIndex]
-     let nodes = ListFactory_GroupsUnique.nodeGroupPairedNodeList[nodeGroupIndex]
-     let nodeCount = ListFactory_GroupsUnique.nodeGroupPairedNodeListCounts[nodeGroupIndex]
+     for nodeGroupIndex in 0..<ListFactory_GroupsUniqueA.nodeGroupListCount {
+     let nodeGroup = ListFactory_GroupsUniqueA.nodeGroupList[nodeGroupIndex]
+     let nodes = ListFactory_GroupsUniqueA.nodeGroupPairedNodeList[nodeGroupIndex]
+     let nodeCount = ListFactory_GroupsUniqueA.nodeGroupPairedNodeListCounts[nodeGroupIndex]
      
      print("We got a node group, \(nodeGroup.linkedList.map { $0.id })")
      for nodeIndex in 0..<nodeCount {
@@ -166,6 +166,49 @@ struct SmartLayoutUtilities {
         return false
     }
     
+    static func isEveryFlexerTryingToGrowAtCurrentPriority_AndNoNodesAreLocked(flexers: [Flexer], flexerCount: Int) -> Bool {
+        var result = true
+        for flexerIndex in 0..<flexerCount {
+            let flexer = flexers[flexerIndex]
+            if flexer.currentSize >= flexer.targetSizeCurrentPriority {
+                result = false
+                break
+            }
+            let node = flexer.node!
+            if node.isLockedAtCurrentPriority || node.isLockedAtEveryPriority {
+                result = false
+                break
+            }
+        }
+        return result
+    }
+    
+    static func isEveryFlexerWhereNoNodesAreUnlocked(flexers: [Flexer], flexerCount: Int) -> Bool {
+        var result = true
+        for flexerIndex in 0..<flexerCount {
+            let flexer = flexers[flexerIndex]
+            let node = flexer.node!
+            if node.isLockedAtCurrentPriority || node.isLockedAtEveryPriority {
+                result = false
+                break
+            }
+        }
+        return result
+    }
+    
+    static func isAnyFlexerTryingToGrowAtCurrentPriority_AndNoNodesAreLocked(flexers: [Flexer], flexerCount: Int) -> Bool {
+        for flexerIndex in 0..<flexerCount {
+            let flexer = flexers[flexerIndex]
+            if flexer.currentSize < flexer.targetSizeCurrentPriority {
+                let node = flexer.node!
+                if (node.isLockedAtCurrentPriority == false) && (node.isLockedAtEveryPriority == false) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
     static func isAnyFlexerPossiblyAbleToGrowAtCurrentPriority(flexers: [Flexer], flexerCount: Int) -> Bool {
         for flexerIndex in 0..<flexerCount {
             let flexer = flexers[flexerIndex]
@@ -284,6 +327,7 @@ struct SmartLayoutUtilities {
         return true
     }
     
+    /*
     //
     // @Precondition: All the flexers have the exact same currentSize
     // @Precondition: All the flexers are in the same group.
@@ -298,6 +342,11 @@ struct SmartLayoutUtilities {
         if true {
             let expectedSize = flexers[0].currentSize
             let expectedGroup = flexers[0].group!
+            
+            if expectedGroup.isMono {
+                
+            }
+            
             
             if (expectedGroup.isActiveAtCurrentPriorityOrMono == false) {
                 fatalError("TODO: Remove Error. Should be active or mono at given priority.")
@@ -339,6 +388,7 @@ struct SmartLayoutUtilities {
         }
         return true
     }
+    */
     
     /*
      static func isAnySectionOrNodeLocked(nodes: [WiseLayoutNode], nodeCount: Int) -> Bool {
@@ -407,6 +457,7 @@ struct SmartLayoutUtilities {
         return result
     }
     
+    // Used
     static func canAllPiecesGrowByOne_WithoutGrowingNodes(pieces: [SkeletonPiece], pieceCount: Int) -> Bool {
         for pieceIndex in 0..<pieceCount { pieces[pieceIndex].node!.temp = 0 }
         for pieceIndex in 0..<pieceCount {
@@ -414,13 +465,15 @@ struct SmartLayoutUtilities {
             let node = piece.node!
             node.temp += 1
             if (node.currentSize - node.childrenSize) < node.temp {
-                print("node.currentSize = \(node.currentSize), node.childrenSize = \(node.childrenSize), node.temp = \(node.temp)")
+                
+                
                 return false
             }
         }
         return true
     }
     
+    // Used
     static func canAllFlexersGrowByOne_WithoutGrowingNodes_InactiveGroupOrMono(flexers: [Flexer], flexerCount: Int) -> Bool {
         for flexerIndex in 0..<flexerCount { flexers[flexerIndex].node!.temp = 0 }
         for flexerIndex in 0..<flexerCount {
@@ -436,11 +489,21 @@ struct SmartLayoutUtilities {
         return true
     }
     
+    static func canOneFlexersGrowByOne_WithoutGrowingNodes(flexer: Flexer) -> Bool {
+        if flexer.currentSize >= flexer.targetSizeCurrentPriority {
+            return false
+        }
+        let node = flexer.node!
+        if (node.currentSize - node.childrenSize) < 1 {
+            return false
+        }
+        return true
+    }
+    
     static func canAllFlexersGrowByOne_WithoutGrowingNodes_ActiveSmallestList(flexers: [Flexer], flexerCount: Int) -> Bool {
         for flexerIndex in 0..<flexerCount { flexers[flexerIndex].node!.temp = 0 }
         for flexerIndex in 0..<flexerCount {
             let flexer = flexers[flexerIndex]
-            
                 let node = flexer.node!
                 node.temp += 1
                 if (node.currentSize - node.childrenSize) < node.temp {
@@ -516,6 +579,7 @@ struct SmartLayoutUtilities {
         piece.currentSize += 1
         let node = piece.node!
         if (node.childrenSize < node.currentSize) {
+            node.didGrowOnCurrentPass = true
             node.childrenSize += 1
             return
         }
@@ -541,14 +605,13 @@ struct SmartLayoutUtilities {
     }
     
     static func growFlexerByOne_Unsafe(flexer: Flexer) {
-        
         flexer.currentSize += 1
         let node = flexer.node!
         if (node.childrenSize < node.currentSize) {
             node.childrenSize += 1
+            node.didGrowOnCurrentPass = true
             return
         }
-        
         growNodeByOne_Unsafe(node: node)
         node.childrenSize += 1
     }
@@ -564,8 +627,14 @@ struct SmartLayoutUtilities {
         let section = node.section!
         let row = node.row!
         node.currentSize += 1
+        node.didGrowOnCurrentPass = true
         section.currentSize += 1
         row.growthBudget -= 1
+        
+        if row.growthBudget < 0 {
+            print("FATAL! Row growth budget went negative! \(row.growthBudget)")
+        }
+        
         if row.centeredSection !== nil {
             if section.indexInRow < row.centeredSectionIndex {
                 row.leftSizeWithCenteredSection += 1
@@ -580,18 +649,25 @@ struct SmartLayoutUtilities {
     static func growNodeByAmount_Unsafe(node: WiseLayoutNode, amount: Int) {
         let section = node.section!
         let row = node.row!
-        node.currentSize += amount
-        section.currentSize += amount
-        row.growthBudget -= amount
-        if row.centeredSection !== nil {
-            if section.indexInRow < row.centeredSectionIndex {
-                row.leftSizeWithCenteredSection += amount
-            } else if section.indexInRow > row.centeredSectionIndex {
-                row.rightSizeWithCenteredSection += amount
-            } else {
-                row.centerSizeWithCenteredSection += amount
+        if amount > 0 {
+            node.didGrowOnCurrentPass = true
+            node.currentSize += amount
+            section.currentSize += amount
+            row.growthBudget -= amount
+            
+            if row.growthBudget < 0 {
+                print("FATAL! Row growth budget went negative, it is \(row.growthBudget), on \(row.debug_slot), \(row.debug_page)")
+            }
+            
+            if row.centeredSection !== nil {
+                if section.indexInRow < row.centeredSectionIndex {
+                    row.leftSizeWithCenteredSection += amount
+                } else if section.indexInRow > row.centeredSectionIndex {
+                    row.rightSizeWithCenteredSection += amount
+                } else {
+                    row.centerSizeWithCenteredSection += amount
+                }
             }
         }
     }
-    
 }
