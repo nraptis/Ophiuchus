@@ -10,12 +10,9 @@ import Foundation
 public struct SkeletonLayoutGrouper {
     
     static func getAll(book: SkeletonBook) -> SkeletonLayoutGroupDataExploded {
-        
         let pieces = SkeletonLayoutGrouper.getPieceGroups(baseId: 1000,
                                                           pages: book.pages,
                                                           rules: book.pieceRules)
-        
-        
         let flexers = SkeletonLayoutGrouper.getFlexerGroups(baseId: 2000,
                                                             pages: book.pages,
                                                             rules: book.flexerRules)

@@ -10,9 +10,9 @@ import Foundation
 struct SmartLayoutExpanderMain {
 
     static func positionContent(pages: [SkeletonPage],
-                                menuWidthWithSafeArea: Int,
-                                safeAreaLeft: Int,
-                                safeAreaRight: Int) {
+                                menuWidthWithSafeArea: Int = 1000,
+                                safeAreaLeft: Int = 100,
+                                safeAreaRight: Int = 100) {
         for _page in pages {
             for _row in _page.rows {
                 for _section in _row.sections {
@@ -28,7 +28,10 @@ struct SmartLayoutExpanderMain {
         }
     }
     
-    public static func prepare(groupData: SkeletonLayoutGroupDataExploded) {
+    public static func prepare(groupData: SkeletonLayoutGroupDataExploded,
+                               menuWidthWithSafeArea: Int = 1000,
+                               safeAreaLeft: Int = 100,
+                               safeAreaRight: Int = 100) {
         
         let flexerGroups = groupData.flexerGroups
         let pieceGroups = groupData.pieceGroups
@@ -54,6 +57,40 @@ struct SmartLayoutExpanderMain {
             for node in nodeGroup.linkedList {
                 node.isLockedAtCurrentPriority = false
                 node.isLockedAtEveryPriority = false
+                
+                if let sliderWidthCategory = node.info as? ToolInterfaceElementSliderWidthCategory {
+                    switch sliderWidthCategory {
+                    case .fullWidth:
+                        let fullWidth = (menuWidthWithSafeArea - safeAreaLeft - safeAreaRight)
+                        if node.currentSize < fullWidth {
+                            let amount = fullWidth - node.currentSize
+                            SmartLayoutUtilities.growNodeByAmount_Unsafe(node: node,
+                                                                         amount: amount)
+                        }
+                        node.isLockedAtEveryPriority = true
+                    case .stretch:
+                        break
+                    case .halfWidthLeft:
+                        let fullWidth = (menuWidthWithSafeArea - safeAreaLeft - safeAreaRight)
+                        let leftWidth = fullWidth / 2
+                        if node.currentSize < leftWidth {
+                            let amount = leftWidth - node.currentSize
+                            SmartLayoutUtilities.growNodeByAmount_Unsafe(node: node,
+                                                                         amount: amount)
+                        }
+                        node.isLockedAtEveryPriority = true
+                    case .halfWidthRight:
+                        let fullWidth = (menuWidthWithSafeArea - safeAreaLeft - safeAreaRight)
+                        let leftWidth = fullWidth / 2
+                        let rightWidth = (fullWidth - leftWidth)
+                        if node.currentSize < rightWidth {
+                            let amount = rightWidth - node.currentSize
+                            SmartLayoutUtilities.growNodeByAmount_Unsafe(node: node,
+                                                                         amount: amount)
+                        }
+                        node.isLockedAtEveryPriority = true
+                    }
+                }
             }
         }
         

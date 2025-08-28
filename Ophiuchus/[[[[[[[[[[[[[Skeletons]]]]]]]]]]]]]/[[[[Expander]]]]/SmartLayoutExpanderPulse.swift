@@ -89,14 +89,14 @@ struct SmartLayoutExpanderPulse {
             if pieceGroup.computeSmallestIfNotAllEqual() {
                 
                 // These pieces all want to grow by 1.
-                if SmartLayoutUtilities.isAnyNodeLockedAtEveryPriority(pieces: pieceGroup.smallestList,
+                if SmartLayoutUtilities.isAnyNodeLockedAtEveryPriorityAndUnableToSustainGrowth(pieces: pieceGroup.smallestList,
                                                                        pieceCount: pieceGroup.smallestList.count) {
                     pieceGroup.isLockedAtEveryPriority = true
                     continue
                 }
                 
                 
-                if SmartLayoutUtilities.isAnyNodeLockedAtCurrentPriority(pieces: pieceGroup.smallestList,
+                if SmartLayoutUtilities.isAnyNodeLockedAtCurrentPriorityAndUnableToSustainGrowth(pieces: pieceGroup.smallestList,
                                                                          pieceCount: pieceGroup.smallestList.count) {
                     pieceGroup.isLockedAtCurrentPriority = true
                     continue

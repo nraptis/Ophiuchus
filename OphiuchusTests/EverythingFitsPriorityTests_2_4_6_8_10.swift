@@ -28,7 +28,10 @@ struct EverythingFitsPriorityTests_2_4_6_8_10 {
         let groupData = SkeletonLayoutGrouper.getAll(book: book)
         
         
-        SmartLayoutExpanderMain.prepare(groupData: groupData)
+        SmartLayoutExpanderMain.prepare(groupData: groupData,
+                                        menuWidthWithSafeArea: 1000,
+        safeAreaLeft: 100,
+        safeAreaRight: 100)
         
         #expect(flexer.currentSize == 0)
         #expect(flexer.targetSizeCurrentPriority == 0)

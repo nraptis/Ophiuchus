@@ -25,6 +25,14 @@ public enum FlexerIdentifier: UInt8 {
     case accentPaddingLeft
     case accentPaddingRight
     
+    case valuePaddingLeft
+    case valuePaddingRight
+    
+    //case namePaddingLeft
+    //case namePaddingRight
+    
+    case sliderBar
+    
 }
 
 public class Flexer: ExploderConforming {
@@ -124,6 +132,21 @@ public class Flexer: ExploderConforming {
                   standard,
                   relaxed,
                   relaxed)
+    }
+    
+    public convenience init(id: Int,
+                            flexerIdentifier: FlexerIdentifier,
+                            squeezed: Int,
+                            standard: Int,
+                            relaxed: Int,
+                            finally: Int) {
+        self.init(id: id,
+                  flexerIdentifier: flexerIdentifier,
+                  squeezed,
+                  standard,
+                  standard,
+                  relaxed,
+                  finally)
     }
     
     public init(id: Int,

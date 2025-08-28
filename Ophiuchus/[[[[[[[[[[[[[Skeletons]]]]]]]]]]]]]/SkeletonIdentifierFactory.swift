@@ -8,7 +8,6 @@
 import Foundation
 
 public struct SkeletonIdentifierFactory {
-    
     static let id_queue = DispatchQueue(label: "skeleton_id_queue")
     nonisolated(unsafe) private static var __id = 0
     public static func get_id() -> Int {
@@ -20,5 +19,4 @@ public struct SkeletonIdentifierFactory {
         }
         return result
     }
-    
 }

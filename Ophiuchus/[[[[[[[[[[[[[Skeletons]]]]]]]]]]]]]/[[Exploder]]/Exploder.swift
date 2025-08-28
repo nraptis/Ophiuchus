@@ -44,11 +44,15 @@ struct Exploder<Element: ExploderConforming> {
         }
         
         // Group nodes by root id
-        var grouped: [Int: [Element]] = [:]
+        var grouped = [Int: [Element]]()
+        var rootsInOrder = [Int]()
+        rootsInOrder.reserveCapacity(nodes.count)
+        
         for node in nodes {
             let root = find(node.id)
             if grouped[root] == nil {
                 grouped[root] = [node]
+                rootsInOrder.append(root)
             } else {
                 grouped[root]!.append(node)
             }
@@ -77,19 +81,21 @@ struct Exploder<Element: ExploderConforming> {
         
         var offsetId = 0
         var result = [ExploderGroup<Element>]()
-        for groupNodes in grouped.values {
-            var max_layoutPriority = LayoutPriority.finally
-            for node in groupNodes {
-                if let _layoutPriority = layoutPriority_map[node.id] {
-                    if _layoutPriority.gte(layoutPriority: max_layoutPriority) {
-                        max_layoutPriority = _layoutPriority
+        for root in rootsInOrder {
+            if let groupNodes = grouped[root] {
+                var maxLayoutPriority = LayoutPriority.finally
+                for node in groupNodes {
+                    if let _layoutPriority = layoutPriority_map[node.id] {
+                        if _layoutPriority.gte(layoutPriority: maxLayoutPriority) {
+                            maxLayoutPriority = _layoutPriority
+                        }
                     }
                 }
+                result.append(ExploderGroup(id: baseId + offsetId,
+                                            linkedList: groupNodes,
+                                            layoutPriority: maxLayoutPriority))
+                offsetId += 1
             }
-            result.append(ExploderGroup(id: baseId + offsetId,
-                                        linkedList: groupNodes,
-                                        layoutPriority: max_layoutPriority))
-            offsetId += 1
         }
         return result
     }

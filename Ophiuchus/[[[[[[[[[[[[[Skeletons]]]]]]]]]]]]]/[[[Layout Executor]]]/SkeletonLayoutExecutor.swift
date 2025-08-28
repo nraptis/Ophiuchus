@@ -9,7 +9,6 @@ import Foundation
 
 public struct SkeletonLayoutExecutor {
     
-    // Row[ Section[ Chunk[] Chunk[Piece]] Section[ Chunk[Piece, Piece], Chunk[Piece]]]
     public static func prepare_and_snap_minimum(pages: [SkeletonPage],
                                                 menuWidthWithSafeArea: Int,
                                                 safeAreaLeft: Int,
@@ -35,6 +34,7 @@ public struct SkeletonLayoutExecutor {
                 }
             }
         }
+        
         for _page in pages {
             for _row in _page.rows {
                 for _section in _row.sections {
@@ -60,6 +60,7 @@ public struct SkeletonLayoutExecutor {
                                                        safeAreaRight: safeAreaRight)
             }
         }
+        
     }
     
     public static func layout(pages: [SkeletonPage],
@@ -75,7 +76,6 @@ public struct SkeletonLayoutExecutor {
                safeAreaRight: safeAreaRight)
     }
     
-    // Row[ Section[ Chunk[] Chunk[Piece]] Section[ Chunk[Piece, Piece], Chunk[Piece]]]
     public static func layout(pages: [SkeletonPage],
                               pieceRules: [SkeletonLinkageRule_Pieces],
                               flexerRules: [SkeletonLinkageRule_Flexers],
@@ -85,9 +85,9 @@ public struct SkeletonLayoutExecutor {
                               safeAreaRight: Int) {
         
         let book = SkeletonBook(pages: pages,
-                                      nodeRules: nodeRules,
-                                      flexerRules: flexerRules,
-                                      pieceRules: pieceRules)
+                                nodeRules: nodeRules,
+                                flexerRules: flexerRules,
+                                pieceRules: pieceRules)
         
         let groupData = SkeletonLayoutGrouper.getAll(book: book)
         
@@ -96,7 +96,10 @@ public struct SkeletonLayoutExecutor {
                                  safeAreaLeft: safeAreaLeft,
                                  safeAreaRight: safeAreaRight)
         
-        SmartLayoutExpanderMain.prepare(groupData: groupData)
+        SmartLayoutExpanderMain.prepare(groupData: groupData,
+                                        menuWidthWithSafeArea: menuWidthWithSafeArea,
+                                        safeAreaLeft: safeAreaLeft,
+                                        safeAreaRight: safeAreaRight)
         SmartLayoutExpanderPass.pass(groupData: groupData, layoutPriority: .required)
         SmartLayoutExpanderPass.pass(groupData: groupData, layoutPriority: .high)
         SmartLayoutExpanderPass.pass(groupData: groupData, layoutPriority: .medium)
@@ -108,29 +111,6 @@ public struct SkeletonLayoutExecutor {
                                                          safeAreaLeft: safeAreaLeft,
                                                          safeAreaRight: safeAreaRight)
         
-        /*
-         for page in pages {
-         for row in page.rows {
-         for section in row.sections {
-         section.width = section.currentSize
-         for node in section.skeletonNodes {
-         node.width = node.currentSize
-         for chunk in node.chunks {
-         chunk.width = chunk.currentSize
-         }
-         }
-         }
-         }
-         }
-         
-         for page in pages {
-         for row in page.rows {
-         row.positionContentAfterSizeComputation(menuWidthWithSafeArea: menuWidthWithSafeArea,
-         safeAreaLeft: safeAreaLeft,
-         safeAreaRight: safeAreaRight)
-         }
-         }
-         */
     }
     
     // For the font scaling...

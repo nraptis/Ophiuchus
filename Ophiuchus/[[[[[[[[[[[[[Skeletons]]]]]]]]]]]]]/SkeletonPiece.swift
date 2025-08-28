@@ -12,10 +12,17 @@ import Foundation
     
     case heroStacked
     
-    case accentIcon
-    
     case heroLongIcon
     case heroLongLabel
+    
+    case accentIcon
+    
+    case slaveIcon
+    
+    case nameLabel
+    
+    case valueLabel
+    
 }
 
 public class SkeletonPiece: ExploderConforming {

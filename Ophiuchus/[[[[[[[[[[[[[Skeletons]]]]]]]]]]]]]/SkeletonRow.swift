@@ -251,8 +251,8 @@ public class SkeletonRow: CustomStringConvertible {
         }
         
         let _max_size_2 = (_max_size / 2)
-        let _center_size_2 = (centerSize / 2)
-        let _center_left_x = _max_size_2 - _center_size_2
+        let _centerSize_2 = (centerSize / 2)
+        let _center_left_x = _max_size_2 - _centerSize_2
         if leftSize > _center_left_x {
             // In this case, the left is too large.
             return false
@@ -296,13 +296,13 @@ public class SkeletonRow: CustomStringConvertible {
         if let centeredSection = centeredSection {
             if isStrictCenteringRequired {
                 
-                let _center_size = centeredSection.width
-                let _center_size_2 = (_center_size / 2)
+                let _centerSize = centeredSection.width
+                let _centerSize_2 = (_centerSize / 2)
                 
                 let _max_size = menuWidthWithSafeArea - safeAreaLeft - safeAreaRight
                 let _max_size_2 = (_max_size / 2)
                 
-                let valid_x = safeAreaLeft + _max_size_2 - _center_size_2
+                let valid_x = safeAreaLeft + _max_size_2 - _centerSize_2
                 if centeredSection.x != valid_x { return false }
             }
         }

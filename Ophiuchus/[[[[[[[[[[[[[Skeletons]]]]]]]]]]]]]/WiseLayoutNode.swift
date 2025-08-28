@@ -96,6 +96,7 @@ public class WiseLayoutNode: ExploderConforming {
     let pieces: [SkeletonPiece]
     let flexers: [Flexer]
     var segmentedPiecesAndFlexers: [SkeletonPiecesAndFlexers]?
+    public var info: Any?
     
     var isLeftOfCenter = false
     
@@ -197,6 +198,18 @@ public class WiseLayoutNode: ExploderConforming {
         return nil
     }
     
+    func getFlexers(flexerIdentifier: FlexerIdentifier) -> [Flexer] {
+        
+        var result = [Flexer]()
+        for _flexer in flexers {
+            if _flexer.flexerIdentifier == flexerIdentifier {
+                result.append(_flexer)
+            }
+        }
+        
+        return result
+    }
+    
     func getPiece(pieceIdentifier: PieceIdentifier) -> SkeletonPiece? {
         
         for _piece in pieces {
@@ -206,6 +219,16 @@ public class WiseLayoutNode: ExploderConforming {
         }
         
         return nil
+    }
+    
+    func getPieces(pieceIdentifier: PieceIdentifier) -> [SkeletonPiece] {
+        var result = [SkeletonPiece]()
+        for _piece in pieces {
+            if _piece.pieceIdentifier == pieceIdentifier {
+                result.append(_piece)
+            }
+        }
+        return result
     }
     
     func childrenSizeMatchesChildren() -> Bool {

@@ -102,7 +102,7 @@ public class SkeletonBook {
         var piece_map = [Int: SkeletonPiece]()
         
         var flexer_names_list = [String]()
-        var flexer_id_list = [Int]()
+        var flexerId_list = [Int]()
         var flexer_map = [Int: Flexer]()
         
         
@@ -148,7 +148,7 @@ public class SkeletonBook {
                         for flexer in node.flexers {
                             flexer_names[flexerNumber] = "flx_" + name_list[flexerNumber]
                             flexer_names_list.append("flx_" + name_list[flexerNumber])
-                            flexer_id_list.append(flexer.id)
+                            flexerId_list.append(flexer.id)
                             flexer_map[flexer.id] = flexer
                             flexerNumber += 1
                         }
@@ -168,7 +168,7 @@ public class SkeletonBook {
         
         if flexer_names_list.count > 0 {
             for (index, flexer_name) in flexer_names_list.enumerated() {
-                let flexer = flexer_map[flexer_id_list[index]]!
+                let flexer = flexer_map[flexerId_list[index]]!
                 
                 let desiredSizeRequired = flexer.desiredSizeRequired
                 let desiredSizeHigh = flexer.desiredSizeHigh
@@ -279,8 +279,9 @@ public class SkeletonBook {
             
             var list_of_flexer_names = [String]()
             for flexer in flexerRule.flexers {
-                let flexer_name = flexer_names[flexer.id]!
-                list_of_flexer_names.append(flexer_name)
+                if let flexer_name = flexer_names[flexer.id] {
+                    list_of_flexer_names.append(flexer_name)
+                }
             }
             
             flexers_array_string += list_of_flexer_names.joined(separator: ",\n")
@@ -311,8 +312,9 @@ public class SkeletonBook {
             
             var list_of_node_names = [String]()
             for node in nodeRule.nodes {
-                let node_name = node_names[node.id]!
-                list_of_node_names.append(node_name)
+                if let node_name = node_names[node.id] {
+                    list_of_node_names.append(node_name)
+                }
             }
             
             nodes_array_string += list_of_node_names.joined(separator: ",\n")
@@ -386,7 +388,7 @@ public class SkeletonBook {
         var piece_map = [Int: SkeletonPiece]()
         
         var flexer_names_list = [String]()
-        var flexer_id_list = [Int]()
+        var flexerId_list = [Int]()
         var flexer_map = [Int: Flexer]()
         
         

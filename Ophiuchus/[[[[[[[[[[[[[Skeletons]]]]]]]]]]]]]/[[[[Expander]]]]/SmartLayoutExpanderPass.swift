@@ -38,7 +38,6 @@ struct SmartLayoutExpanderPass {
         let flexerGroups = groupData.flexerGroups
         let pieceGroups = groupData.pieceGroups
         let nodeGroups = groupData.nodeGroups
-        let sections = groupData.sections
         
         for pieceGroup in pieceGroups {
             ListFactory_GroupsA.pieceGroupListAdd(pieceGroup: pieceGroup)
@@ -84,7 +83,6 @@ struct SmartLayoutExpanderPass {
         let flexerGroups = groupData.flexerGroups
         let pieceGroups = groupData.pieceGroups
         let nodeGroups = groupData.nodeGroups
-        let sections = groupData.sections
         
         for pieceGroup in pieceGroups {
             if pieceGroup.isLockedAtEveryPriority { continue }
